@@ -17,8 +17,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@color/white"
             android:gravity="center"
-            app:popupTheme="@style/Theme.EVtalk.PopupOverlay"
-            app:titleTextColor="@color/black" />
+            app:popupTheme="@style/Theme.EVtalk.PopupOverlay"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 
