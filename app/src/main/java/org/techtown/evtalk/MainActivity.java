@@ -5,12 +5,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.core.view.accessibility.AccessibilityViewCommand;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -23,10 +26,14 @@ import com.kakao.auth.AuthType;
 import com.kakao.auth.Session;
 import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
+import com.naver.maps.geometry.LatLng;
+import com.naver.maps.map.MapFragment;
+import com.naver.maps.map.NaverMap;
+import com.naver.maps.map.OnMapReadyCallback;
 
 import org.w3c.dom.Text;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private AppBarConfiguration mAppBarConfiguration;
 
@@ -50,10 +57,8 @@ public class MainActivity extends AppCompatActivity {
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
-                .setDrawerLayout(drawer)
-                .build();
+        mAppBarConfiguration = new AppBarConfiguration.Builder(R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow).setDrawerLayout(drawer).build();
+
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
@@ -63,8 +68,31 @@ public class MainActivity extends AppCompatActivity {
         View headerView = navigationView.getHeaderView(0);
         TextView test = (TextView) headerView.findViewById(R.id.textView);
         test.setText("안뇽");
-        
 
+
+
+
+        // 지도 객체 만들기
+        FragmentManager fm = getSupportFragmentManager();
+        MapFragment mapFragment = (MapFragment)fm.findFragmentById(R.id.map);
+        if (mapFragment == null) {
+            mapFragment = MapFragment.newInstance();
+            fm.beginTransaction().add(R.id.map, mapFragment).commit();
+        }
+
+        mapFragment.getMapAsync(this);
+        //지도 객체 만들기
+
+
+
+        //좌표 객체 만들기
+        LatLng coord = new LatLng(37.5670135, 126.9783740);
+
+        Toast.makeText(getApplicationContext(),
+                "위도: " + coord.latitude + ", 경도: " + coord.longitude,
+                Toast.LENGTH_SHORT).show();
+
+        //좌표 객체 만들기
     }
 
     @Override
@@ -79,5 +107,10 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    @Override
+    public void onMapReady(@NonNull NaverMap naverMap) {
+
     }
 }
