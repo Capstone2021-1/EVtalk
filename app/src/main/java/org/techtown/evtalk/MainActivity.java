@@ -2,6 +2,7 @@ package org.techtown.evtalk;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.widget.TextView;
@@ -35,11 +36,18 @@ import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    public User user;   //사용자
     private AppBarConfiguration mAppBarConfiguration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //로그인한 사용자 id, name 값 받아 user에 저장
+        Intent intent = getIntent();
+        user = new User(intent.getExtras().getLong("id"), intent.getExtras().getString("name"));
+
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.app_name);
@@ -67,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // navigation drawer 회원이름 변경 // DB연동 시 user의 이름을 넣을 예정
         View headerView = navigationView.getHeaderView(0);
         TextView test = (TextView) headerView.findViewById(R.id.textView);
-        test.setText("안뇽");
+        test.setText(""+user.getName());
 
 
 

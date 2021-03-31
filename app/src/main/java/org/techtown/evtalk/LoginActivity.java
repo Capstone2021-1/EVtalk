@@ -25,17 +25,38 @@ import com.kakao.util.exception.KakaoException;
 
 import org.techtown.evtalk.ui.home.HomeFragment;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class LoginActivity extends AppCompatActivity {
 
     private Button btn_custom_login;
     private Button testbtn;
     private SessionCallback sessionCallback = new SessionCallback();
     Session session;
+    private long p_id;
+    private String p_name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        //레트로핏으로 서버 '/' 접속
+        RetrofitConnection retrofit = new RetrofitConnection();
+        retrofit.server.connect().enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if(response.isSuccessful())
+                    Log.d("success", "서버 접속 완료 " + response.body());
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.d("failure", "" + t.toString());
+            }
+        });
 
         btn_custom_login = (Button) findViewById(R.id.btn_custom_login);
         Button testbtn = (Button) findViewById(R.id.testbtn);
@@ -63,6 +84,8 @@ public class LoginActivity extends AppCompatActivity {
 
     public void toMainActivity(){
         final Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("id", p_id);
+        intent.putExtra("name", p_name);
         startActivity(intent);
         overridePendingTransition(0,0); // 전환효과 제거
         finish();
@@ -116,7 +139,6 @@ public class LoginActivity extends AppCompatActivity {
 
                         @Override
                         public void onSuccess(MeV2Response result) {
-                            toMainActivity();
                             Log.i("KAKAO_API", "사용자 아이디: " + result.getId());
 
                             UserAccount kakaoAccount = result.getKakaoAccount();
@@ -144,13 +166,35 @@ public class LoginActivity extends AppCompatActivity {
                                     Log.d("KAKAO_API", "profile image: " + profile.getProfileImageUrl());
                                     Log.d("KAKAO_API", "thumbnail image: " + profile.getThumbnailImageUrl());
 
+                                    //레트로핏으로 서버 연결
+                                    User user = new User(result.getId(), profile.getNickname());
+                                    p_id = user.getId();
+                                    p_name = user.getName();
+                                    RetrofitConnection retrofit = new RetrofitConnection();
+                                    retrofit.server.getUser(user).enqueue(new Callback<String>() {
+                                        @Override
+                                        public void onResponse(Call<String> call, Response<String> response) {
+                                            if(!response.isSuccessful()) {
+                                                Log.d("sucess", "but not response");
+                                            }
+                                            Log.d("sucess", "" + response.code() + " " + response.message() + " " + response.body().toString());
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<String> call, Throwable t) {
+                                            Log.d("failure", "" + t.toString());
+                                        }
+                                    });
+
                                 } else if (kakaoAccount.profileNeedsAgreement() == OptionalBoolean.TRUE) {
                                     // 동의 요청 후 프로필 정보 획득 가능
 
                                 } else {
                                     // 프로필 획득 불가
                                 }
+
                             }
+                            toMainActivity();
                         }
                     });
         }
