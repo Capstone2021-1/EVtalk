@@ -34,19 +34,19 @@ public class SlideshowFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_slideshow, container, false);
 
         Intent intent = new Intent(getActivity(), LoginActivity.class);
-        btn_login_out = (Button)root.findViewById(R.id.btn_login_out);
-        btn_login_out.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
-                    @Override
-                    public void onCompleteLogout() {
-                        getActivity().finish();
-                        startActivity(intent);
-                    }
-                });
-            }
-        });
+//        btn_login_out = (Button)root.findViewById(R.id.btn_login_out);
+//        btn_login_out.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                UserManagement.getInstance().requestLogout(new LogoutResponseCallback() {
+//                    @Override
+//                    public void onCompleteLogout() {
+//                        getActivity().finish();
+//                        startActivity(intent);
+//                    }
+//                });
+//            }
+//        });
         return root;
     }
 }
