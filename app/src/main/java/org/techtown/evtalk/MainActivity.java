@@ -34,6 +34,12 @@ import com.naver.maps.map.OnMapReadyCallback;
 
 import org.w3c.dom.Text;
 
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     public User user;   //사용자
@@ -43,10 +49,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //로그인한 사용자 id, name 값 받아 user에 저장
+        //로그인한 사용자 id값 넘겨받아 객체생성
         Intent intent = getIntent();
-        user = new User(intent.getExtras().getLong("id"), intent.getExtras().getString("name"));
-
+        user = new User(intent.getExtras().getLong("id")
+                        , intent.getExtras().getString("name")
+                        , intent.getExtras().getString("image"));
+        getUserInfo();
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -75,7 +83,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // navigation drawer 회원이름 변경 // DB연동 시 user의 이름을 넣을 예정
         View headerView = navigationView.getHeaderView(0);
         TextView test = (TextView) headerView.findViewById(R.id.textView);
-        test.setText(""+user.getName());
+        if(user.getName() == null)
+            test.setText("로그인 해주세요");
+        else
+            test.setText(""+user.getName());
 
 
 
@@ -120,5 +131,29 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
 
+    }
+
+    //메인 엑티비티 실행 시 DB에서 유저 정보 받아오기
+    public void getUserInfo() {
+        RetrofitConnection retrofit = new RetrofitConnection();
+        retrofit.server.getUserInfo(user.getId()).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                User resource = response.body();
+                if(resource.getCar_number() != null)
+                    user.setCar_number(resource.getCar_number());
+                else
+                    user.setCar_number("");
+                if(resource.getMessage() != null)
+                    user.setMessage(resource.getMessage());
+                else
+                    user.setMessage("");
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Log.i("failure", "사용자 정보 받아오기 실패");
+            }
+        });
     }
 }

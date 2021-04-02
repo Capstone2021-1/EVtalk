@@ -9,9 +9,19 @@ public class User {
     @SerializedName("name")
     private String name;
 
-    public User(long id, String name) {
+    @SerializedName("profile_image")
+    private String profile_image;
+
+    @SerializedName("message")
+    private String message;
+
+    @SerializedName("car_number")
+    private String car_number;
+
+    public User(long id, String name, String profile_image) {
         this.id = id;
         this.name = name;
+        this.profile_image = profile_image;
     }
 
     public long getId() {
@@ -20,5 +30,29 @@ public class User {
 
     public String getName() {
         return name;
+    }
+
+    public String getProfile_image() {
+        return profile_image;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public String getCar_number() {
+        return car_number;
+    }
+
+    public void setProfile_image(String profile_image) {
+        this.profile_image = profile_image;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public void setCar_number(String car_number) {
+        this.car_number = car_number;
     }
 }
