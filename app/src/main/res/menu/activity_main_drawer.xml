@@ -14,7 +14,7 @@
             android:title="gallery" />
         <item
             android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@android:drawable/btn_star_big_off"
             android:title="회원정보" />
     </group>
 </menu>

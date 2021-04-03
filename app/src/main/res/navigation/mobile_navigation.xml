@@ -14,12 +14,12 @@
     <fragment
         android:id="@+id/nav_gallery"
         android:name="org.techtown.evtalk.ui.gallery.GalleryFragment"
-        android:label="gallery"
+        android:label="테스트"
         tools:layout="@layout/fragment_gallery" />
 
     <fragment
         android:id="@+id/nav_slideshow"
         android:name="org.techtown.evtalk.ui.slideshow.SlideshowFragment"
-        android:label="테스트"
+        android:label="마이 페이지"
         tools:layout="@layout/fragment_slideshow" />
 </navigation>
