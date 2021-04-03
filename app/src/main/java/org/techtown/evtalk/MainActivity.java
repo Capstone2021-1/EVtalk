@@ -42,7 +42,7 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    public User user;   //사용자
+    public static User user;   //사용자
     private AppBarConfiguration mAppBarConfiguration;
 
     @Override
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         NavigationUI.setupWithNavController(navigationView, navController);
 
 
-        // navigation drawer 회원이름 변경 // DB연동 시 user의 이름을 넣을 예정
+        // navigation drawer 회원이름 변경
         View headerView = navigationView.getHeaderView(0);
         TextView test = (TextView) headerView.findViewById(R.id.textView);
         if(user.getName() == null)

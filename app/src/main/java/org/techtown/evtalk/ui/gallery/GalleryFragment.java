@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,13 @@ import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.kakao.usermgmt.callback.UnLinkResponseCallback;
 
 import org.techtown.evtalk.LoginActivity;
+import org.techtown.evtalk.MainActivity;
 import org.techtown.evtalk.R;
+import org.techtown.evtalk.RetrofitConnection;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class GalleryFragment extends Fragment {
     private Button btn_t1;
@@ -91,6 +98,19 @@ public class GalleryFragment extends Fragment {
 
                                     @Override
                                     public void onSuccess(Long result) { //회원탈퇴에 성공하면
+                                        //DB에서 회원 삭제
+                                        RetrofitConnection retrofit = new RetrofitConnection();
+                                        retrofit.server.deleteUser(MainActivity.user.getId()).enqueue(new Callback<Void>() {
+                                            @Override
+                                            public void onResponse(Call<Void> call, Response<Void> response) {
+                                                Log.d("success", "DB 회원삭제 성공");
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<Void> call, Throwable t) {
+                                                Log.d("failure", "DB 회원삭제 실패");
+                                            }
+                                        });
                                         //"회원탈퇴에 성공했습니다."라는 Toast 메세지를 띄우고 로그인 창으로 이동함
                                         Toast.makeText(getActivity(), "회원탈퇴에 성공했습니다.", Toast.LENGTH_SHORT).show();
                                         Intent intent = new Intent(getActivity(), LoginActivity.class);
