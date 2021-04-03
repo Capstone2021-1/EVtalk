@@ -37,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     Session session;
     private long p_id;
     private String p_name;
+    private String p_image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +87,7 @@ public class LoginActivity extends AppCompatActivity {
         final Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("id", p_id);
         intent.putExtra("name", p_name);
+        intent.putExtra("image", p_image);
         startActivity(intent);
         overridePendingTransition(0,0); // 전환효과 제거
         finish();
@@ -162,14 +164,15 @@ public class LoginActivity extends AppCompatActivity {
                                 Profile profile = kakaoAccount.getProfile();
 
                                 if (profile != null) {
-                                    Log.d("KAKAO_API", "nickname: " + profile.getNickname());
-                                    Log.d("KAKAO_API", "profile image: " + profile.getProfileImageUrl());
-                                    Log.d("KAKAO_API", "thumbnail image: " + profile.getThumbnailImageUrl());
+                                    Log.i("KAKAO_API", "nickname: " + profile.getNickname());
+                                    Log.i("KAKAO_API", "profile image: " + profile.getProfileImageUrl());
+                                    Log.i("KAKAO_API", "thumbnail image: " + profile.getThumbnailImageUrl());
 
                                     //레트로핏으로 서버 연결
-                                    User user = new User(result.getId(), profile.getNickname());
+                                    User user = new User(result.getId(), profile.getNickname(), profile.getThumbnailImageUrl());
                                     p_id = user.getId();
                                     p_name = user.getName();
+                                    p_image = user.getProfile_image();
                                     RetrofitConnection retrofit = new RetrofitConnection();
                                     retrofit.server.getUser(user).enqueue(new Callback<String>() {
                                         @Override
@@ -177,7 +180,7 @@ public class LoginActivity extends AppCompatActivity {
                                             if(!response.isSuccessful()) {
                                                 Log.d("sucess", "but not response");
                                             }
-                                            Log.d("sucess", "" + response.code() + " " + response.message() + " " + response.body().toString());
+                                            Log.d("sucess", "");
                                         }
 
                                         @Override
