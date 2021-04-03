@@ -9,7 +9,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="240dp"
+        android:layout_height="260dp"
         android:background="@color/maincolor" />
 
     <ScrollView
@@ -109,6 +109,12 @@
                     </LinearLayout>
 
                 </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_login_out"
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:background="@drawable/logout_24dp" />
             </LinearLayout>
 
             <!--Option Bar-->
@@ -151,21 +157,37 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1" />
 
-                            <TextView
+                            <Button
+                                android:id="@+id/btn_status_edit"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginEnd="10dp"
-                                android:fontFamily="@font/proximanovaregular"
+                                android:layout_weight="0"
+                                android:background="@android:color/transparent"
                                 android:text="Edit"
-                                android:textColor="@color/maincolor"
-                                android:textSize="14sp" />
+                                android:textColor="@color/maincolor" />
+
                         </LinearLayout>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:text="@string/my_status" />
+                        <ScrollView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical" >
+
+                                <EditText
+                                    android:id="@+id/status_txt"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="10dp"
+                                    android:background="@null"
+                                    android:focusableInTouchMode="false"
+                                    android:focusable="false"
+                                    android:text="@string/my_status" />
+                            </LinearLayout>
+                        </ScrollView>
                     </LinearLayout>
 
                 </LinearLayout>
@@ -187,7 +209,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/proximanovaregular"
-                            android:text="@string/personal_info"
+                            android:text="@string/personal_car"
                             android:textSize="17sp"
                             android:textStyle="bold" />
 
@@ -196,13 +218,15 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1" />
 
-                        <TextView
+                        <Button
+                            android:id="@+id/btn_car_edit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="10dp"
+                            android:layout_weight="0"
+                            android:background="@android:color/transparent"
                             android:text="Edit"
-                            android:textColor="@color/maincolor"
-                            android:textSize="14sp" />
+                            android:textColor="@color/maincolor" />
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -212,76 +236,62 @@
                         android:orientation="vertical">
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:paddingRight="8dp">
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2"
+                            android:gravity="center_vertical">
 
-                            <ImageView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:background="@drawable/circular_grey_bordersolid"
-                                android:padding="10dp"
-                                android:src="@drawable/ic_call_24dp" />
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                app:cardCornerRadius="6dp"
+                                app:cardElevation="0dp">
 
-                            <TextView
+                                <ImageView
+                                    android:id="@+id/imageView4"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/ionic" />
+                            </androidx.cardview.widget.CardView>
+
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="20dp"
-                                android:fontFamily="@font/proximanovaregular"
-                                android:text="010-0000-0000"
-                                android:textColor="@color/goodgrey"
-                                android:textSize="15sp" />
-                        </LinearLayout>
+                                android:layout_marginLeft="10dp"
+                                android:orientation="vertical">
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:gravity="center_vertical"
-                            android:paddingRight="8dp">
-
-                            <ImageView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:background="@drawable/circular_grey_bordersolid"
-                                android:padding="10dp"
-                                android:src="@drawable/ic_email_24dp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="20dp"
-                                android:fontFamily="@font/proximanovaregular"
-                                android:text="chungang@cau.ac.kr"
-                                android:textColor="@color/goodgrey"
-                                android:textSize="15sp" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="3dp"
+                                    android:text="@string/car_name"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
                         </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginTop="10dp"
+                            android:layout_height="wrap_content"
                             android:gravity="center_vertical"
                             android:paddingRight="8dp">
 
                             <ImageView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:background="@drawable/circular_grey_bordersolid"
-                                android:padding="10dp"
-                                android:src="@drawable/ic_baseline_date_range_24" />
-
-                            <TextView
-                                android:id="@+id/textView2"
+                                android:id="@+id/imageView7"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="20dp"
+                                android:layout_weight="0"
+                                android:src="@drawable/number_plate" />
+
+                            <EditText
+                                android:id="@+id/car_number"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:fontFamily="@font/proximanovaregular"
-                                android:text="1991년 11월 11일"
-                                android:textColor="@color/goodgrey"
-                                android:textSize="15sp" />
+                                android:background="@null"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:text="123가4567" />
 
                         </LinearLayout>
 
@@ -294,86 +304,6 @@
             <!--Experience Bottom Cards-->
 
             <!--Review Bottom Cards-->
-            <LinearLayout
-                android:id="@+id/car_info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/circularbordersolid"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/proximanovaregular"
-                            android:text="@string/personal_car"
-                            android:textSize="17sp"
-                            android:textStyle="bold" />
-
-                        <Space
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="10dp"
-                            android:text="Edit"
-                            android:textColor="@color/maincolor"
-                            android:textSize="14sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:gravity="center_vertical">
-
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
-                            app:cardCornerRadius="6dp"
-                            app:cardElevation="0dp">
-
-                            <ImageView
-                                android:id="@+id/imageView4"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:src="@drawable/ionic" />
-                        </androidx.cardview.widget.CardView>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="3dp"
-                                android:text="@string/car_name"
-                                android:textSize="12sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-
-                </LinearLayout>
-
-            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/member_card_info"
@@ -407,13 +337,15 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1" />
 
-                        <TextView
+                        <Button
+                            android:id="@+id/btn_mcard_edit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="10dp"
+                            android:layout_weight="0"
+                            android:background="@android:color/transparent"
                             android:text="Edit"
-                            android:textColor="@color/maincolor"
-                            android:textSize="14sp" />
+                            android:textColor="@color/maincolor" />
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -530,13 +462,15 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1" />
 
-                        <TextView
+                        <Button
+                            android:id="@+id/btn_pcard_edit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="10dp"
+                            android:layout_weight="0"
+                            android:background="@android:color/transparent"
                             android:text="Edit"
-                            android:textColor="@color/maincolor"
-                            android:textSize="14sp" />
+                            android:textColor="@color/maincolor" />
+
                     </LinearLayout>
 
                     <LinearLayout
