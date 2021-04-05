@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context=".ui.slideshow.SlideshowFragment" >
+    tools:context=".ui.slideshow.SlideshowFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,18 +34,14 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <androidx.cardview.widget.CardView
-                    android:layout_width="150dp"
-                    android:layout_height="90dp"
-                    app:cardCornerRadius="6dp"
-                    app:cardElevation="0dp">
-
-                    <ImageView
-                        android:id="@+id/imageView3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/jordy" />
-                </androidx.cardview.widget.CardView>
+                <de.hdodenhof.circleimageview.CircleImageView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/profile_image"
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:src="@drawable/jordy"
+                    app:civ_border_width="1dp"
+                    app:civ_border_color="@color/maincolor"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -110,16 +106,30 @@
 
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/btn_login_out"
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
-                    android:background="@drawable/logout_24dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btn_login_out"
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:background="@drawable/logout_24dp" />
+
+                </LinearLayout>
+
             </LinearLayout>
 
             <!--Option Bar-->
 
             <!--Bootom Cards with sections-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"></LinearLayout>
+
             <LinearLayout
                 android:id="@+id/personal_info"
                 android:layout_width="match_parent"
@@ -175,7 +185,7 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:orientation="vertical" >
+                                android:orientation="vertical">
 
                                 <EditText
                                     android:id="@+id/status_txt"
@@ -183,8 +193,8 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="10dp"
                                     android:background="@null"
-                                    android:focusableInTouchMode="false"
                                     android:focusable="false"
+                                    android:focusableInTouchMode="false"
                                     android:text="@string/my_status" />
                             </LinearLayout>
                         </ScrollView>
