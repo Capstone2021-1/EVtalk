@@ -14,6 +14,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -48,5 +49,9 @@ dependencies {
     implementation "androidx.cardview:cardview:1.0.0"
     implementation fileTree(dir: 'libs', include: ['*.jar']) // 원형 프로필 위함
     implementation 'de.hdodenhof:circleimageview:3.1.0'  // 원형 프로필 위함
+    implementation 'com.github.pedroSG94:AutoPermissions:1.0.3' // 위험 권한 자동 부여 라이브러리
+
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.google.android.gms:play-services-location:16.0.0' // 구글 FusedLocationSource
 
 }

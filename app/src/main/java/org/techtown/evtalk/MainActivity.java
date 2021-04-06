@@ -1,7 +1,11 @@
 package org.techtown.evtalk;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -24,9 +28,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.naver.maps.geometry.LatLng;
+import com.naver.maps.map.CameraPosition;
+import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
+import com.naver.maps.map.NaverMapOptions;
 import com.naver.maps.map.OnMapReadyCallback;
+import com.naver.maps.map.UiSettings;
+import com.naver.maps.map.overlay.LocationOverlay;
+import com.naver.maps.map.util.FusedLocationSource;
+import com.naver.maps.map.widget.LocationButtonView;
+import com.naver.maps.map.widget.ZoomControlView;
+import com.pedro.library.AutoPermissions;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,8 +47,12 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
+    private FusedLocationSource locationSource;
     public static User user;   //사용자
     private AppBarConfiguration mAppBarConfiguration;
+    private NaverMap naverMap;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +61,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //로그인한 사용자 id값 넘겨받아 객체생성
         Intent intent = getIntent();
         user = new User(intent.getExtras().getLong("id")
-                        , intent.getExtras().getString("name")
-                        , intent.getExtras().getString("image"));
+                , intent.getExtras().getString("name")
+                , intent.getExtras().getString("image"));
         getUserInfo();
 
         setContentView(R.layout.activity_main);
@@ -67,36 +84,64 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // navigation drawer 회원이름 변경
         View headerView = navigationView.getHeaderView(0);
         TextView test = (TextView) headerView.findViewById(R.id.textView);
-        if(user.getName() == null)
+        if (user.getName() == null)
             test.setText("로그인 해주세요");
         else
-            test.setText(""+user.getName());
-
-
+            test.setText("" + user.getName());
 
 
         // 지도 객체 만들기
         FragmentManager fm = getSupportFragmentManager();
-        MapFragment mapFragment = (MapFragment)fm.findFragmentById(R.id.map);
+        MapFragment mapFragment = (MapFragment) fm.findFragmentById(R.id.map);
         if (mapFragment == null) {
-            mapFragment = MapFragment.newInstance();
+            Log.d("Map", "Make mapFragement");
+            NaverMapOptions options = new NaverMapOptions().locationButtonEnabled(false);
+            mapFragment = MapFragment.newInstance(options);
             fm.beginTransaction().add(R.id.map, mapFragment).commit();
         }
 
         mapFragment.getMapAsync(this);
         //지도 객체 만들기
 
+        // FusedLocationSource 생성하고 Navermap에 지정
+        locationSource = new FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE);
+
+//        CameraPosition cameraPosition = new CameraPosition(
+//                new LatLng(37.5666102, 126.9783881), // 대상 지점
+//                16, // 줌 레벨
+//                20, // 기울임 각도
+//                180 // 베어링 각도
+//        );
+
+//        Toast.makeText(this,
+//                "대상 지점 위도: " + cameraPosition.target.latitude + ", " +
+//                        "대상 지점 경도: " + cameraPosition.target.longitude + ", " +
+//                        "줌 레벨: " + cameraPosition.zoom + ", " +
+//                        "기울임 각도: " + cameraPosition.tilt + ", " +
+//                        "베어링 각도: " + cameraPosition.bearing,
+//                Toast.LENGTH_SHORT).show();
 
 
-        //좌표 객체 만들기
-        LatLng coord = new LatLng(37.5670135, 126.9783740);
+        AutoPermissions.Companion.loadAllPermissions(this, 101);
 
-        Toast.makeText(getApplicationContext(),
-                "위도: " + coord.latitude + ", 경도: " + coord.longitude,
-                Toast.LENGTH_SHORT).show();
-
-        //좌표 객체 만들기
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,  @NonNull int[] grantResults) {
+        if (locationSource.onRequestPermissionsResult(
+                requestCode, permissions, grantResults)) {
+            if (!locationSource.isActivated()) { // 권한 거부됨
+                naverMap.setLocationTrackingMode(LocationTrackingMode.None);
+            }
+            return;
+        }
+        super.onRequestPermissionsResult(
+                requestCode, permissions, grantResults);
+    }
+
+    //Log.d("Current Location", "locationSource deactivated");
+    //Log.d("Current Location", "locationSource activated");
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -114,8 +159,32 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
+        Log.d("onMapRead", "onMapReady Method Begin");
 
+        // FusedLocationSource 생성하고 Navermap에 지정
+        this.naverMap = naverMap;
+        naverMap.setLocationSource(locationSource);
+
+
+        // 지도 옵션 주기
+        naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_BUILDING, true); // 지도 건물 모양 보이게
+        naverMap.setBuildingHeight(0.5f); // 지도가 기울어지면 건물 입체적으로 표시
+        naverMap.setLayerGroupEnabled(NaverMap.LAYER_GROUP_TRAFFIC, false); // 실시간 교통 상황
+
+
+        // UI 설정 하기
+        UiSettings uiSettings = naverMap.getUiSettings();
+        uiSettings.setScaleBarEnabled(true);  // 지도 스케일 표시
+        LocationButtonView locationButtonView = findViewById(R.id.location); // 현재 위치 버튼 설정
+        locationButtonView.setMap(naverMap); // 현재 위치 버튼 설정
+
+        naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
+
+        // 현재 위치 표시
+        LocationOverlay locationOverlay = naverMap.getLocationOverlay();
+        locationOverlay.setVisible(true);
     }
+
 
     //메인 엑티비티 실행 시 DB에서 유저 정보 받아오기
     public void getUserInfo() {
@@ -124,11 +193,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 User resource = response.body();
-                if(resource.getCar_number() != null)
+                if (resource.getCar_number() != null)
                     user.setCar_number(resource.getCar_number());
                 else
                     user.setCar_number("");
-                if(resource.getMessage() != null)
+                if (resource.getMessage() != null)
                     user.setMessage(resource.getMessage());
                 else
                     user.setMessage("");

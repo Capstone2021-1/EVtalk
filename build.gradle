@@ -23,6 +23,8 @@ allprojects {
         maven { url 'http://devrepo.kakao.com:8088/nexus/content/groups/public/' }
         //네이버
         maven { url 'https://naver.jfrog.io/artifactory/maven/'}
+        //위험 권한
+        maven { url 'https://jitpack.io' }
     }
 }
 

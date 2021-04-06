@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -34,7 +35,9 @@ import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.LogoutResponseCallback;
 
 import org.techtown.evtalk.LoginActivity;
+import org.techtown.evtalk.MainActivity;
 import org.techtown.evtalk.R;
+import org.w3c.dom.Text;
 
 import java.io.InputStream;
 
@@ -49,10 +52,9 @@ public class SlideshowFragment extends Fragment {
     private CircleImageView profile_image;  // 원형 프로필
 
     final String TAG = "Profile_image";
-
+    String name = MainActivity.user.getName();
     // Request Code
     final static int PICK_IMAGE = 1; //갤러리에서 사진선택
-    final static int CAPTURE_IMAGE = 2;  //카메라로찍은 사진선택
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -85,6 +87,12 @@ public class SlideshowFragment extends Fragment {
             }
         });
 
+        // 이름 설정
+
+        TextView name_txt =(TextView) root.findViewById(R.id.name_txt);
+        if(name!=null){
+            name_txt.setText(MainActivity.user.getName());
+        }
 
         // 상태 메시지 수정하기 버튼
         Button status_edit = (Button) root.findViewById(R.id.btn_status_edit);
