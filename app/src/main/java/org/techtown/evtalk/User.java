@@ -2,6 +2,8 @@ package org.techtown.evtalk;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class User {
     @SerializedName("id")
     private long id;
@@ -17,6 +19,12 @@ public class User {
 
     @SerializedName("car_number")
     private String car_number;
+
+    @SerializedName("membership")
+    private List<String> membership;
+
+    @SerializedName("payment")
+    private List<String> payment;
 
     public User(long id, String name, String profile_image) {
         this.id = id;
@@ -54,5 +62,13 @@ public class User {
 
     public void setCar_number(String car_number) {
         this.car_number = car_number;
+    }
+
+    public List<String> getMembership() {
+        return membership;
+    }
+
+    public List<String> getPayment() {
+        return payment;
     }
 }

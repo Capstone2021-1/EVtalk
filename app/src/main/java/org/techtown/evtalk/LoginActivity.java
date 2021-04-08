@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,12 +15,17 @@ import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import com.kakao.usermgmt.callback.MeV2ResponseCallback;
 import com.kakao.usermgmt.response.MeV2Response;
 import com.kakao.usermgmt.response.model.Profile;
 import com.kakao.usermgmt.response.model.UserAccount;
 import com.kakao.util.OptionalBoolean;
 import com.kakao.util.exception.KakaoException;
+
+import org.techtown.evtalk.ui.home.HomeFragment;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -55,6 +61,21 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        //DB에서 충전소 기본 정보 받아오기
+        retrofit.server.getChargingStation().enqueue(new Callback<List<ChargingStation>>() {
+            @Override
+            public void onResponse(Call<List<ChargingStation>> call, Response<List<ChargingStation>> response) {
+                List<ChargingStation> temp = response.body();
+                for(ChargingStation i : temp)
+                    MainActivity.chargingStation.add(i);
+            }
+
+            @Override
+            public void onFailure(Call<List<ChargingStation>> call, Throwable t) {
+                Log.d("failure", "충전소 정보 받아오기 실패");
+            }
+        });
+
         btn_custom_login = (Button) findViewById(R.id.btn_custom_login);
         Button testbtn = (Button) findViewById(R.id.testbtn);
 
@@ -69,6 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                 session.open(AuthType.KAKAO_LOGIN_ALL, LoginActivity.this);
             }
         });
+
 
         testbtn.setOnClickListener(new View.OnClickListener() {
             @Override

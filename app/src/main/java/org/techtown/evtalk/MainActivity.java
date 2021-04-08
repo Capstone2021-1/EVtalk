@@ -35,6 +35,9 @@ import com.naver.maps.map.util.FusedLocationSource;
 import com.naver.maps.map.widget.LocationButtonView;
 import com.pedro.library.AutoPermissions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -45,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
     private FusedLocationSource locationSource;
     public static User user;   //사용자
+    public static List<ChargingStation> chargingStation = new ArrayList<>();;
     private AppBarConfiguration mAppBarConfiguration;
     private NaverMap naverMap;
 
@@ -57,7 +61,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         user = new User(intent.getExtras().getLong("id")
                 , intent.getExtras().getString("name")
                 , intent.getExtras().getString("image"));
-        getUserInfo();
+        if(user != null)
+            getUserInfo();
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);

@@ -1,10 +1,13 @@
 package org.techtown.evtalk;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -21,5 +24,11 @@ public interface Service {
 
     @DELETE("/delete/{id}")
     Call<Void> deleteUser(@Path("id") long id);
+
+    @PUT("/userInfo/update/{id}")
+    Call<Void> updateUserInfo(@Path("id") long id, @Body User user);
+
+    @GET("/chargingStation")
+    Call<List<ChargingStation>> getChargingStation();
 
 }

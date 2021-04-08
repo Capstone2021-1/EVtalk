@@ -27,10 +27,14 @@ import com.kakao.usermgmt.callback.LogoutResponseCallback;
 import org.techtown.evtalk.LoginActivity;
 import org.techtown.evtalk.MainActivity;
 import org.techtown.evtalk.R;
+import org.techtown.evtalk.RetrofitConnection;
 
 import java.io.InputStream;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class UserInfoActivity extends AppCompatActivity {
@@ -72,6 +76,7 @@ public class UserInfoActivity extends AppCompatActivity {
                 });
             }
         });
+
 
         // 프로필 사진 선택
         profile_image = (CircleImageView) findViewById(R.id.profile_image);
@@ -191,6 +196,25 @@ public class UserInfoActivity extends AppCompatActivity {
         AlertDialog alert = alt_bld.create();
         alert.show();
     }
+
+    public void onPause() {
+        super.onPause();
+
+        //수정된 정보를 DB에 저장
+        RetrofitConnection retrofit = new RetrofitConnection();
+        retrofit.server.updateUserInfo(MainActivity.user.getId(), MainActivity.user).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Log.d("sucess", "정보 수정 완료");
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("failure", "정보 수정 실패");
+            }
+        });
+    }
+
 }
 
 //  정규식 필터 추가( 작동이 제대로 안되어서 주석 처리해둠)
