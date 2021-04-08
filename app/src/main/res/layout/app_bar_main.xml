@@ -17,7 +17,18 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@color/white"
             android:gravity="center"
-            app:popupTheme="@style/Theme.EVtalk.PopupOverlay"/>
+            app:popupTheme="@style/Theme.EVtalk.PopupOverlay">
+
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="EVTalk"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 

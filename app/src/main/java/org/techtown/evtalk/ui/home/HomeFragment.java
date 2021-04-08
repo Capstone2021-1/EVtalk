@@ -2,8 +2,6 @@ package org.techtown.evtalk.ui.home;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -19,8 +17,6 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
-
-        setHasOptionsMenu(true);
 
 
         FloatingActionButton fab1 = (FloatingActionButton) root.findViewById(R.id.fab1);
@@ -51,12 +47,6 @@ public class HomeFragment extends Fragment {
         });
 
         return root;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) { // home fragment 충전소 검색 메뉴
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.frag_menu_home, menu);
     }
 }
 

@@ -1,34 +1,29 @@
 package org.techtown.evtalk;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Menu;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.navigation.NavigationView;
-
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
-import com.naver.maps.geometry.LatLng;
-import com.naver.maps.map.CameraPosition;
+import com.google.android.material.navigation.NavigationView;
 import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.NaverMap;
@@ -38,7 +33,6 @@ import com.naver.maps.map.UiSettings;
 import com.naver.maps.map.overlay.LocationOverlay;
 import com.naver.maps.map.util.FusedLocationSource;
 import com.naver.maps.map.widget.LocationButtonView;
-import com.naver.maps.map.widget.ZoomControlView;
 import com.pedro.library.AutoPermissions;
 
 import retrofit2.Call;
@@ -46,13 +40,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
-
+    private long backKeyPressedTime = 0;
+    private Toast toast;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
     private FusedLocationSource locationSource;
     public static User user;   //사용자
     private AppBarConfiguration mAppBarConfiguration;
     private NaverMap naverMap;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +61,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.app_name);
         setSupportActionBar(toolbar);
+        ActionBar ac = getSupportActionBar();
+        ac.setDisplayShowCustomEnabled(true);
+        ac.setDisplayShowTitleEnabled(false);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -80,7 +76,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-
         // navigation drawer 회원이름 변경
         View headerView = navigationView.getHeaderView(0);
         TextView test = (TextView) headerView.findViewById(R.id.textView);
@@ -88,7 +83,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             test.setText("로그인 해주세요");
         else
             test.setText("" + user.getName());
-
 
         // 지도 객체 만들기
         FragmentManager fm = getSupportFragmentManager();
@@ -121,9 +115,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //                        "베어링 각도: " + cameraPosition.bearing,
 //                Toast.LENGTH_SHORT).show();
 
-
         AutoPermissions.Companion.loadAllPermissions(this, 101);
+    }
 
+    @Override // home 에서 뒤로가기 두번 클릭 시 종료됩니다
+    public void onBackPressed() {
+        // 마지막으로 뒤로가기 버튼을 눌렀던 시간에 2초를 더해 현재시간과 비교 후 2초가 지났으면 Toast Show
+        if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
+            backKeyPressedTime = System.currentTimeMillis();
+            toast = Toast.makeText(this, "\'뒤로가기\' 버튼을 한번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT);
+            toast.show();
+            return;
+        }
+        // 마지막으로 뒤로가기 버튼을 눌렀던 시간에 2초를 더해 현재시간과 비교 후 2초가 지나지 않았으면 종료
+        if (System.currentTimeMillis() <= backKeyPressedTime + 2000) {
+            ActivityCompat.finishAffinity(this); // 앱 종료
+            toast.cancel(); // 현재 표시된 Toast 취소
+        }
     }
 
     @Override
@@ -146,12 +154,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.frag_menu_other, menu);
+        getMenuInflater().inflate(R.menu.menu_home, menu);
         return true;
     }
 
     @Override
-    public boolean onSupportNavigateUp() { // AppBar에 생성된 뒤로가기 버튼을 눌렀을 때 home fragment로 이동
+    public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
@@ -184,7 +192,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         LocationOverlay locationOverlay = naverMap.getLocationOverlay();
         locationOverlay.setVisible(true);
     }
-
 
     //메인 엑티비티 실행 시 DB에서 유저 정보 받아오기
     public void getUserInfo() {

@@ -11,15 +11,15 @@
         android:label="EVtalk"
         tools:layout="@layout/fragment_home" />
 
-    <fragment
-        android:id="@+id/nav_gallery"
-        android:name="org.techtown.evtalk.ui.gallery.GalleryFragment"
-        android:label="테스트"
-        tools:layout="@layout/fragment_gallery" />
+    <activity
+        android:id="@+id/nav_test"
+        android:name="org.techtown.evtalk.ui.test.TestActivity"
+        android:label="테스트페이지"
+        tools:layout="@layout/activity_test" />
 
-    <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="org.techtown.evtalk.ui.slideshow.SlideshowFragment"
+    <activity
+        android:id="@+id/nav_userinfo"
+        android:name="org.techtown.evtalk.ui.userinfo.UserInfoActivity"
         android:label="마이 페이지"
-        tools:layout="@layout/fragment_slideshow" />
+        tools:layout="@layout/activity_user_info" />
 </navigation>

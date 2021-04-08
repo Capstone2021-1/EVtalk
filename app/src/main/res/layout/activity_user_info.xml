@@ -5,21 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context=".ui.slideshow.SlideshowFragment">
+    tools:context=".ui.userinfo.UserInfoActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="260dp"
-        android:background="@color/maincolor" />
+    <include
+        layout="@layout/toolbar_back"
+        android:id="@+id/toolbar"/>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
         android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/maincolor"
             android:orientation="vertical"
             android:paddingLeft="20dp"
             android:paddingTop="10dp"
@@ -34,14 +35,13 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/profile_image"
                     android:layout_width="96dp"
                     android:layout_height="96dp"
                     android:src="@drawable/jordy"
-                    app:civ_border_width="1dp"
-                    app:civ_border_color="@color/maincolor"/>
+                    app:civ_border_color="@color/maincolor"
+                    app:civ_border_width="1dp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
