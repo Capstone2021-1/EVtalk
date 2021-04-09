@@ -50,7 +50,7 @@ public class TestActivity extends AppCompatActivity {
         ac.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼
         textView.setText("테스트 페이지"); // 타이틀 수정
 
-        Intent intent = new Intent(this, LoginActivity.class);
+        Intent intent = new Intent(TestActivity.this, LoginActivity.class);
         btn_t1 = findViewById(R.id.btn_t1);
         btn_t1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +62,7 @@ public class TestActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                 });
-                Toast.makeText(getApplicationContext(),"정상적으로 로그아웃 되었습니다.",Toast.LENGTH_SHORT).show();
+                Toast.makeText(TestActivity.this,"정상적으로 로그아웃 되었습니다.",Toast.LENGTH_SHORT).show();
             }
 
         });
@@ -71,7 +71,7 @@ public class TestActivity extends AppCompatActivity {
         btn_t2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { //회원탈퇴 버튼 클릭 시
-                new AlertDialog.Builder(getApplicationContext()) //탈퇴 여부를 묻는 팝업창 실행
+                new AlertDialog.Builder(TestActivity.this) //탈퇴 여부를 묻는 팝업창 실행
                         .setMessage("탈퇴하시겠습니까?") //팝업창의 메세지 설정
                         .setPositiveButton("네", new DialogInterface.OnClickListener() { //"예" 버튼 클릭 시 -> 회원탈퇴 수행
                             @Override
