@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="#E3DADA"
     android:orientation="vertical"
     tools:context=".ui.userinfo.UserInfoActivity">
 
     <include
-        layout="@layout/toolbar_back"
-        android:id="@+id/toolbar"/>
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_back" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -104,20 +105,6 @@
                                 android:textSize="12sp" />
                         </LinearLayout>
                     </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/btn_login_out"
-                        android:layout_width="14dp"
-                        android:layout_height="14dp"
-                        android:background="@drawable/logout_24dp" />
 
                 </LinearLayout>
 
@@ -435,12 +422,8 @@
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
-
-
                 </LinearLayout>
-
             </LinearLayout>
-
             <LinearLayout
                 android:id="@+id/pay_card_info"
                 android:layout_width="match_parent"
@@ -524,16 +507,41 @@
                                     android:textStyle="bold" />
                             </LinearLayout>
                         </LinearLayout>
-
                     </LinearLayout>
-
-
                 </LinearLayout>
-
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
 
+                <Button
+                    android:id="@+id/btn_delete"
+                    android:layout_width="20dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/circularbordersolid"
+                    android:elevation="30dp"
+                    android:text="회원탈퇴"
+                    android:textColor="@color/black"
+                    app:backgroundTint="@color/white" />
+
+                <Button
+                    android:id="@+id/btn_logout"
+                    android:layout_width="20dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/circularbordersolid"
+                    android:elevation="30dp"
+                    android:text="로그아웃"
+                    android:textColor="@color/black"
+                    app:backgroundTint="@color/white" />
+            </LinearLayout>
         </LinearLayout>
-
-
     </ScrollView>
 </RelativeLayout>
