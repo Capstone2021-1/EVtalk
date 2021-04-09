@@ -18,7 +18,6 @@
         android:theme="@style/Theme.EVtalk"
         android:usesCleartextTraffic="true">
         <activity android:name=".ui.userinfo.UserInfoActivity" />
-        <activity android:name=".ui.test.TestActivity"/>
         <activity android:name=".gethash" />
         <activity
             android:name=".MainActivity"

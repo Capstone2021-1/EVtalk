@@ -12,12 +12,6 @@
         tools:layout="@layout/fragment_home" />
 
     <activity
-        android:id="@+id/nav_test"
-        android:name="org.techtown.evtalk.ui.test.TestActivity"
-        android:label="테스트페이지"
-        tools:layout="@layout/activity_test" />
-
-    <activity
         android:id="@+id/nav_userinfo"
         android:name="org.techtown.evtalk.ui.userinfo.UserInfoActivity"
         android:label="마이 페이지"
