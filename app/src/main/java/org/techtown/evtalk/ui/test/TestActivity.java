@@ -1,6 +1,6 @@
 package org.techtown.evtalk.ui.test;
 
-import android.app.AlertDialog;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -29,7 +30,6 @@ import org.techtown.evtalk.RetrofitConnection;
 
 import retrofit2.Call;
 import retrofit2.Callback;
-
 
 public class TestActivity extends AppCompatActivity {
     private TextView textView;
@@ -82,17 +82,17 @@ public class TestActivity extends AppCompatActivity {
                                         int result = errorResult.getErrorCode();
 
                                         if(result == ApiErrorCode.CLIENT_ERROR_CODE) {
-                                            Toast.makeText(getApplicationContext(), "네트워크 연결이 불안정합니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(TestActivity.this, "네트워크 연결이 불안정합니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show();
                                         } else {
-                                            Toast.makeText(getApplicationContext(), "회원탈퇴에 실패했습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(TestActivity.this, "회원탈퇴에 실패했습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show();
                                         }
                                     }
 
                                     @Override
                                     public void onSessionClosed(ErrorResult errorResult) { //로그인 세션이 닫혀있을 시
                                         //다시 로그인해달라는 Toast 메세지를 띄우고 로그인 창으로 이동함
-                                        Toast.makeText(getApplicationContext(), "로그인 세션이 닫혔습니다. 다시 로그인해 주세요.", Toast.LENGTH_SHORT).show();
-                                        final Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                                        Toast.makeText(TestActivity.this, "로그인 세션이 닫혔습니다. 다시 로그인해 주세요.", Toast.LENGTH_SHORT).show();
+                                        final Intent intent = new Intent(TestActivity.this, LoginActivity.class);
                                         startActivity(intent);
                                         finish();
                                     }
@@ -100,8 +100,8 @@ public class TestActivity extends AppCompatActivity {
                                     @Override
                                     public void onNotSignedUp() { //가입되지 않은 계정에서 회원탈퇴 요구 시
                                         //가입되지 않은 계정이라는 Toast 메세지를 띄우고 로그인 창으로 이동함
-                                        Toast.makeText(getApplicationContext(), "가입되지 않은 계정입니다. 다시 로그인해 주세요.", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                                        Toast.makeText(TestActivity.this, "가입되지 않은 계정입니다. 다시 로그인해 주세요.", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(TestActivity.this, LoginActivity.class);
                                         startActivity(intent);
                                         finish();
                                     }
@@ -123,8 +123,8 @@ public class TestActivity extends AppCompatActivity {
                                             }
                                         });
                                         //"회원탈퇴에 성공했습니다."라는 Toast 메세지를 띄우고 로그인 창으로 이동함
-                                        Toast.makeText(getApplicationContext(), "회원탈퇴에 성공했습니다.", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                                        Toast.makeText(TestActivity.this, "회원탈퇴에 성공했습니다.", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(TestActivity.this, LoginActivity.class);
                                         startActivity(intent);
                                         finish();
                                     }

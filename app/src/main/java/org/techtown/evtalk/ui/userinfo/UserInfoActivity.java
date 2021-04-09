@@ -1,5 +1,6 @@
 package org.techtown.evtalk.ui.userinfo;
 
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -36,7 +37,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
 public class UserInfoActivity extends AppCompatActivity {
     private TextView textView;
     Button btn_login_out;
@@ -49,7 +49,7 @@ public class UserInfoActivity extends AppCompatActivity {
     final static int PICK_IMAGE = 1; //갤러리에서 사진선택
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
 
@@ -108,7 +108,7 @@ public class UserInfoActivity extends AppCompatActivity {
                     status_txt.setFocusableInTouchMode(false);
                     status_txt.setFocusable(false);
                     status_edit.setText("Edit");
-                    Toast.makeText(getApplicationContext(), "상태 메시지 수정 완료", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UserInfoActivity.this, "상태 메시지 수정 완료", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -129,7 +129,7 @@ public class UserInfoActivity extends AppCompatActivity {
                     car_number.setFocusableInTouchMode(false);
                     car_number.setFocusable(false);
                     car_edit.setText("Edit");
-                    Toast.makeText(getApplicationContext(), "차량 번호 수정 완료", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UserInfoActivity.this, "차량 번호 수정 완료", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -170,7 +170,7 @@ public class UserInfoActivity extends AppCompatActivity {
     // 다이얼로그 보여주기
     private void photoDialogRadio() {
         final CharSequence[] PhotoModels = {"앨범에서 사진 선택", "기본사진으로 설정", "취소"};
-        AlertDialog.Builder alt_bld = new AlertDialog.Builder(getApplicationContext());
+        AlertDialog.Builder alt_bld = new AlertDialog.Builder(UserInfoActivity.this);
         //alt_bld.setIcon(R.drawable.icon);
         alt_bld.setTitle("프로필 사진 설정");
         alt_bld.setSingleChoiceItems(PhotoModels, -1, new DialogInterface.OnClickListener() {
