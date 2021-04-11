@@ -31,4 +31,13 @@ public interface Service {
     @GET("/chargingStation")
     Call<List<ChargingStation>> getChargingStation();
 
+    @GET("/userInfo/car")
+    Call<Car> getCarInfo(@Query("id") long id);
+
+    @GET("/userInfo/membership")
+    Call<List<Card>> getMembershipInfo(@Query("id") long id);
+
+    @GET("/userInfo/payment")
+    Call<List<Card>> getPaymentInfo(@Query("id") long id);
+
 }

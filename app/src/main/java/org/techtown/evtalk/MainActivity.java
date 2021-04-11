@@ -54,7 +54,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
     private FusedLocationSource locationSource;
     public static User user;   //사용자
-    public static List<ChargingStation> chargingStation = new ArrayList<>();;
+    public static Car car;     //사용자 차량 정보
+    public static List<Card> membership = new ArrayList<>();    //사용자 회원카드 정보
+    public static List<Card> payment = new ArrayList<>();
+    public static List<ChargingStation> chargingStation = new ArrayList<>();;   //충전소 기본 정보
     private AppBarConfiguration mAppBarConfiguration;
     private NaverMap naverMap;
 
@@ -293,7 +296,56 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Log.i("failure", "사용자 정보 받아오기 실패");
             }
         });
+
+        retrofit.server.getMembershipInfo(user.getId()).enqueue(new Callback<List<Card>>() {
+            @Override
+            public void onResponse(Call<List<Card>> call, Response<List<Card>> response) {
+                if(response.isSuccessful()) {
+                    List<Card> result = response.body();
+                    for(Card i : result) {
+                        membership.add(i);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Card>> call, Throwable t) {
+                Log.i("failure", "회원카드 받아오기 실패");
+            }
+        });
+
+        retrofit.server.getPaymentInfo(user.getId()).enqueue(new Callback<List<Card>>() {
+            @Override
+            public void onResponse(Call<List<Card>> call, Response<List<Card>> response) {
+                if(response.isSuccessful()) {
+                    List<Card> result = response.body();
+                    for(Card i : result) {
+                        payment.add(i);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Card>> call, Throwable t) {
+                Log.i("failure", "결제카드 받아오기 실패");
+            }
+        });
+
+        retrofit.server.getCarInfo(user.getId()).enqueue(new Callback<Car>() {
+            @Override
+            public void onResponse(Call<Car> call, Response<Car> response) {
+                if(response.body() != null) {
+                    car = response.body();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Car> call, Throwable t) {
+                Log.i("failure", "차량 정보 받아오기 실패");
+            }
+        });
     }
+
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
