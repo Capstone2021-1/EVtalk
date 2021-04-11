@@ -1,4 +1,4 @@
-package org.techtown.evtalk;
+package org.techtown.evtalk.user;
 
 import android.app.Application;
 import android.content.Context;
