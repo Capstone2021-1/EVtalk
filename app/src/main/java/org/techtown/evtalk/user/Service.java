@@ -1,4 +1,4 @@
-package org.techtown.evtalk;
+package org.techtown.evtalk.user;
 
 import java.util.List;
 

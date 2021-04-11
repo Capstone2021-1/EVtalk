@@ -31,7 +31,7 @@ import com.kakao.usermgmt.callback.UnLinkResponseCallback;
 import org.techtown.evtalk.LoginActivity;
 import org.techtown.evtalk.MainActivity;
 import org.techtown.evtalk.R;
-import org.techtown.evtalk.RetrofitConnection;
+import org.techtown.evtalk.user.RetrofitConnection;
 
 import java.io.InputStream;
 

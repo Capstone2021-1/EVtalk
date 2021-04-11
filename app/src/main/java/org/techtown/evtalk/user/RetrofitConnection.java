@@ -1,4 +1,4 @@
-package org.techtown.evtalk;
+package org.techtown.evtalk.user;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

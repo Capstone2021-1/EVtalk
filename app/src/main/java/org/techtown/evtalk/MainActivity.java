@@ -41,6 +41,11 @@ import com.naver.maps.map.widget.LocationButtonView;
 import com.pedro.library.AutoPermissions;
 
 import org.techtown.evtalk.ui.userinfo.UserInfoActivity;
+import org.techtown.evtalk.user.Car;
+import org.techtown.evtalk.user.Card;
+import org.techtown.evtalk.user.ChargingStation;
+import org.techtown.evtalk.user.RetrofitConnection;
+import org.techtown.evtalk.user.User;
 
 import java.util.ArrayList;
 import java.util.List;
