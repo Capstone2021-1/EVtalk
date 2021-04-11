@@ -40,6 +40,8 @@ import com.naver.maps.map.util.FusedLocationSource;
 import com.naver.maps.map.widget.LocationButtonView;
 import com.pedro.library.AutoPermissions;
 
+import org.techtown.evtalk.ui.userinfo.UserInfoActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -127,9 +129,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //                Toast.LENGTH_SHORT).show();
 
         AutoPermissions.Companion.loadAllPermissions(this, 101);
-
-
-
     }
 
     @Override // home 에서 뒤로가기 두번 클릭 시 종료됩니다
@@ -146,6 +145,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             ActivityCompat.finishAffinity(this); // 앱 종료
             toast.cancel(); // 현재 표시된 Toast 취소
         }
+    }
+
+    public void startUserInfoActivity(View view){
+        Intent intent = new Intent(MainActivity.this, UserInfoActivity.class);
+        startActivity(intent);
     }
 
     @Override

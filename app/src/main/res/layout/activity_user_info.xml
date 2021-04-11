@@ -249,7 +249,7 @@
                                     android:id="@+id/imageView4"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:src="@drawable/ionic" />
+                                    android:src="@drawable/testcar" />
                             </androidx.cardview.widget.CardView>
 
                             <LinearLayout
@@ -367,7 +367,7 @@
                                 <ImageView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:src="@drawable/membership_card" />
+                                    android:src="@drawable/testmembershipcard" />
                             </androidx.cardview.widget.CardView>
 
                             <LinearLayout
@@ -403,7 +403,7 @@
                                     android:id="@+id/imageView5"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:src="@drawable/everon" />
+                                    android:src="@drawable/testmembershipcard" />
                             </androidx.cardview.widget.CardView>
 
                             <LinearLayout
@@ -489,7 +489,7 @@
                                     android:id="@+id/imageView6"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:src="@drawable/card_ev" />
+                                    android:src="@drawable/testpaymentcard" />
                             </androidx.cardview.widget.CardView>
 
                             <LinearLayout
