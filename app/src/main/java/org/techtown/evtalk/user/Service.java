@@ -3,6 +3,7 @@ package org.techtown.evtalk.user;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.CallAdapter;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
@@ -39,5 +40,14 @@ public interface Service {
 
     @GET("/userInfo/payment")
     Call<List<Card>> getPaymentInfo(@Query("id") long id);
+
+    @GET("/info/car_list")
+    Call<List<Car>> getCar_list();
+
+    @GET("/info/membership_list")
+    Call<List<Card>> getMembership_list();
+
+    @GET("/info/payment_list")
+    Call<List<Card>> getPayment_list();
 
 }

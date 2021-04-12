@@ -31,9 +31,13 @@ import com.kakao.usermgmt.callback.UnLinkResponseCallback;
 import org.techtown.evtalk.LoginActivity;
 import org.techtown.evtalk.MainActivity;
 import org.techtown.evtalk.R;
+import org.techtown.evtalk.user.Car;
+import org.techtown.evtalk.user.Card;
 import org.techtown.evtalk.user.RetrofitConnection;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
@@ -46,6 +50,9 @@ public class UserInfoActivity extends AppCompatActivity {
     private CircleImageView profile_image;  // 원형 프로필
     private Button btn_delete;
     private Button btn_logout;
+    private static List<Card> membership_list = new ArrayList<>();     //회원카드 리스트
+    private static List<Card> payment_list = new ArrayList<>();        //결제카드 리스트
+    private static List<Car> car_list = new ArrayList<>();             //차량 리스트(getVehicle() : 차량이름, getYear() : 차량 년도 만 들어있습니다.)
 
     final String TAG = "Profile_image";
     String name = MainActivity.user.getName();
@@ -56,6 +63,8 @@ public class UserInfoActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
+
+        getInfo();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -297,6 +306,62 @@ public class UserInfoActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 Log.d("failure", "정보 수정 실패");
+            }
+        });
+    }
+
+    //DB에서 차량, 회원카드, 결제카드 리스트 받아오기
+    public void getInfo() {
+        RetrofitConnection retrofit = new RetrofitConnection();
+        retrofit.server.getCar_list().enqueue(new Callback<List<Car>>() {
+            @Override
+            public void onResponse(Call<List<Car>> call, Response<List<Car>> response) {
+                if(response.isSuccessful()) {
+                    List<Car> result = response.body();
+                    int count = 0;
+                    for(Car i : result) {
+                        car_list.add(i);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Car>> call, Throwable t) {
+                    Log.d("failure", "실패");
+            }
+        });
+        retrofit.server.getMembership_list().enqueue(new Callback<List<Card>>() {
+            @Override
+            public void onResponse(Call<List<Card>> call, Response<List<Card>> response) {
+                if(response.isSuccessful()) {
+                    int count = 0;
+                    List<Card> result = response.body();
+                    for(Card i : result) {
+                        membership_list.add(i);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Card>> call, Throwable t) {
+                Log.d("failure", "실패");
+            }
+        });
+        retrofit.server.getPayment_list().enqueue(new Callback<List<Card>>() {
+            @Override
+            public void onResponse(Call<List<Card>> call, Response<List<Card>> response) {
+                if(response.isSuccessful()) {
+                    int count = 0;
+                    List<Card> result = response.body();
+                    for(Card i : result) {
+                        payment_list.add(i);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Card>> call, Throwable t) {
+                Log.d("failure", "실패");
             }
         });
     }
