@@ -54,7 +54,4 @@ dependencies {
 
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.google.android.gms:play-services-location:16.0.0' // 구글 FusedLocationSource
-
-    implementation 'com.github.bumptech.glide:glide:4.9.0' // url을 가지고 ImageView에 이미지 가져오기 위함
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0' // url을 가지고 ImageView에 이미지 가져오기 위함
 }
