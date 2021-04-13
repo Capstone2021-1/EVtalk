@@ -392,9 +392,18 @@ public class UserInfoActivity extends AppCompatActivity {
                         car_image.setImageBitmap(getBitmap(i.getImage()));      // 마이 페이지 차량 이미지 바꾸기
 
 //                        // MainActivity.car (개인 차량 정보 설정)
-                        MainActivity.car.setImage(i.getImage());
-                        MainActivity.car.setVehicle(i.getVehicle());
-                        MainActivity.car.setYear(i.getYear());
+                        RetrofitConnection retrofit = new RetrofitConnection();
+                        retrofit.server.updateUserCarInfo(MainActivity.user.getId(), i).enqueue(new Callback<Car>() {
+                            @Override
+                            public void onResponse(Call<Car> call, Response<Car> response) {
+                                MainActivity.car = response.body();
+                            }
+
+                            @Override
+                            public void onFailure(Call<Car> call, Throwable t) {
+                                Log.d("failure", "정보 수정 ㄴㄴ");
+                            }
+                        });
 
                     }
                 }

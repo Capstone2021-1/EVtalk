@@ -36,7 +36,7 @@ public interface Service {
     Call<Void> updateUserPayInfo(@Path("id") long id, @Body List<Card> payment);
 
     @PUT("/userInfo/update/car/{id}")
-    Call<Void> updateUserCarInfo(@Path("id") long id, @Body Car car);
+    Call<Car> updateUserCarInfo(@Path("id") long id, @Body Car car);
 
     @GET("/chargingStation")
     Call<List<ChargingStation>> getChargingStation();
