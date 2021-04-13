@@ -30,7 +30,7 @@ public class MembershipSettingActivity extends AppCompatActivity {
         GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new CardAdapter();
+        adapter = new CardAdapter("membership");
 
         // 카드 화면에 추가
         for(Card i: UserInfoActivity.membership_list){
@@ -43,9 +43,7 @@ public class MembershipSettingActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new OnCardItemClickListener() {
             @Override
             public void onItemClick(CardAdapter.ViewHolder holder, View view, int position) {
-                Card item = adapter.getItem(position);
-                showToast(item.getName()+" 선택됨");
-
+                //Card item = adapter.getItem(position);
             }
         });
 
@@ -55,7 +53,8 @@ public class MembershipSettingActivity extends AppCompatActivity {
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), Integer.toString(UserInfoActivity.membership_list.size()), Toast.LENGTH_LONG).show();
+//                Toast.makeText(getApplicationContext(), Integer.toString(UserInfoActivity.membership_list.size()), Toast.LENGTH_LONG).show();
+                finish();
             }
         });
 

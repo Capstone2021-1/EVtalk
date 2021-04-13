@@ -86,11 +86,6 @@ public class UserInfoActivity extends AppCompatActivity {
         textView.setText("마이 페이지"); // 타이틀 수정
 
 
-//        for(int i=0; i<membership_list.size(); i++){
-//            Log.d("UserInfo", local_membership_list.get(i).getName());
-//        }
-
-
 
         // 프로필 사진 선택
         profile_image = (CircleImageView) findViewById(R.id.profile_image);
@@ -134,13 +129,18 @@ public class UserInfoActivity extends AppCompatActivity {
         });
 
         //차량 번호 수정하기 버튼
-        Button car_edit = (Button) findViewById(R.id.btn_car_edit);
+        Button car_edit = (Button) findViewById(R.id.btn_carnum_edit);
         EditText car_number = (EditText) findViewById(R.id.car_number);
-        car_number.setFilters(new InputFilter[]{new InputFilter.LengthFilter(8) /*,new CustomInputFilter()*/});   // 필터 여러개 적용
+
+        // 서버에 설정 해둔 차량 번호가 있다면 그걸로 설정
+        if(!MainActivity.user.getCar_number().equals("")){
+            car_number.setText(MainActivity.user.getCar_number());
+        }
+        car_number.setFilters(new InputFilter[]{new InputFilter.LengthFilter(8) /*,new CustomInputFilter()*/});   // 필터 적용
         car_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (car_number.isFocusable() == false) {
+                if (!car_number.isFocusable()) {
                     car_number.setFocusableInTouchMode(true);
                     car_number.setFocusable(true);
                     car_edit.setText("Done");
@@ -149,6 +149,7 @@ public class UserInfoActivity extends AppCompatActivity {
                     car_number.setFocusable(false);
                     car_edit.setText("Edit");
                     Toast.makeText(UserInfoActivity.this, "차량 번호 수정 완료", Toast.LENGTH_SHORT).show();
+                    MainActivity.user.setCar_number(car_number.getText().toString());
                 }
             }
         });
@@ -270,24 +271,16 @@ public class UserInfoActivity extends AppCompatActivity {
 
     public void toCardSettingActivity(){
         Intent intent = new Intent(this, MembershipSettingActivity.class);
-//        intent.putExtra("id", p_id);
-//        intent.putExtra("name", p_name);
-//        intent.putExtra("image", p_image);
         startActivity(intent);
         overridePendingTransition(0,0); // 전환효과 제거
 
-        finish();
     }
 
     public void toPaymentSettingActivity(){
         Intent intent = new Intent(this, PaymentSettingActivity.class);
-//        intent.putExtra("id", p_id);
-//        intent.putExtra("name", p_name);
-//        intent.putExtra("image", p_image);
         startActivity(intent);
         overridePendingTransition(0,0); // 전환효과 제거
 
-        finish();
     }
 
     @Override // 뒤로가기 버튼 동작 구현

@@ -36,9 +36,4 @@ public class Card {
         return image;
     }
 
-    private boolean select = false;
-    public void setSelect() {
-        select = !select;
-    }
-    public boolean getSelect() { return select; }
 }

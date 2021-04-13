@@ -250,7 +250,7 @@
                                 android:background="@null"
                                 android:focusable="false"
                                 android:focusableInTouchMode="false"
-                                android:text="123가4567" />
+                                android:text="000가0000" />
 
                         </LinearLayout>
 

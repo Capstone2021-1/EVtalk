@@ -14,13 +14,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.techtown.evtalk.MainActivity;
 import org.techtown.evtalk.R;
 import org.techtown.evtalk.user.Card;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -29,7 +29,13 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
 
     OnCardItemClickListener listener;
 
-    LinearLayout membership_layout;
+    LinearLayout card_layout;
+
+    static String card_kinds;
+
+    CardAdapter(String card_kinds){
+        this.card_kinds = card_kinds;
+    }
 
     @NonNull
     @Override
@@ -72,31 +78,44 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         this.listener = listener;
     }
 
+    // 아이템 터치했을 때 작동하는 부분
     public void onItemClick(CardAdapter.ViewHolder holder, View view, int position) {
-        membership_layout = view.findViewById(R.id.membership_layout);
+        card_layout = view.findViewById(R.id.card_layout);
         if (listener != null) {
             listener.onItemClick(holder, view, position);
-            if(items.get(position).getSelect()){
-                membership_layout.setBackgroundColor(R.color.maincolor);
-            }else{
-                membership_layout.setBackgroundColor(Color.WHITE);
+
+            if(card_kinds.equals("membership")) {
+                if (MainActivity.membership.contains(items.get(position))) {
+                    MainActivity.membership.remove(items.get(position));
+                    card_layout.setBackgroundColor(Color.WHITE);
+                } else {
+                    MainActivity.membership.add(items.get(position));
+                    card_layout.setBackgroundColor(Color.CYAN);
+                }
+            }else if(card_kinds.equals("payment")){
+                if (MainActivity.payment.contains(items.get(position))) {
+                    MainActivity.payment.remove(items.get(position));
+                    card_layout.setBackgroundColor(Color.WHITE);
+                } else {
+                    MainActivity.payment.add(items.get(position));
+                    card_layout.setBackgroundColor(Color.CYAN);
+                }
             }
-            items.get(position).setSelect();
         }
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView membership_image;
-        TextView membership_text;
-        LinearLayout membership_layout;
+        ImageView card_image;
+        TextView card_text;
+        LinearLayout card_layout;
         Bitmap bmImg;
 
         public ViewHolder(View itemView, final OnCardItemClickListener listener) {
             super(itemView);
             Log.d("cardadapter", "4");
-            membership_image = itemView.findViewById(R.id.membership_image);
-            membership_text = itemView.findViewById(R.id.membership_text);
-            membership_layout = itemView.findViewById(R.id.membership_layout);
+            card_image = itemView.findViewById(R.id.card_image);
+            card_text = itemView.findViewById(R.id.card_text);
+            card_layout = itemView.findViewById(R.id.card_layout);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -110,16 +129,31 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
             });
         }
 
+
+        // 처음에 아이템 설정해주는 부분
         public void setItem(Card item) {
             Log.d("cardadapter", "5");
-            membership_image.setImageBitmap(getBitmap(item.getImage()));
-            membership_text.setText(item.getName());
-            if(item.getSelect()){
-                membership_layout.setBackgroundColor(R.color.maincolor);
-            }else{
-                membership_layout.setBackgroundColor(Color.WHITE);
+            card_image.setImageBitmap(getBitmap(item.getImage()));
+            card_text.setText(item.getName());
+
+            if(card_kinds.equals("membership")){
+                if(!MainActivity.membership.isEmpty()){
+                    if(MainActivity.membership.contains(item)){
+                        card_layout.setBackgroundColor(Color.CYAN);
+                    }else{
+                        card_layout.setBackgroundColor(Color.WHITE);
+                    }
+                }
+            }else if(card_kinds.equals("payment")){
+                if(!MainActivity.payment.isEmpty()){
+                    if(MainActivity.payment.contains(item)){
+                        card_layout.setBackgroundColor(Color.CYAN);
+                    }else{
+                        card_layout.setBackgroundColor(Color.WHITE);
+                    }
+                }
             }
-            //item.setSelect();
+
         }
 
 

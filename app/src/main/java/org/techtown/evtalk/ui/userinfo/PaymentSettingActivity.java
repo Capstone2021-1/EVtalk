@@ -25,7 +25,7 @@ public class PaymentSettingActivity extends AppCompatActivity {
         GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(layoutManager);
 
-        CardAdapter adapter = new CardAdapter();
+        CardAdapter adapter = new CardAdapter("payment");
 
         for(Card i: UserInfoActivity.payment_list){
             adapter.addItem(i);
@@ -38,8 +38,8 @@ public class PaymentSettingActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new OnCardItemClickListener() {
             @Override
             public void onItemClick(CardAdapter.ViewHolder holder, View view, int position) {
-                Card item = adapter.getItem(position);
-                showToast("아이템 선택됨: "+item.getName());
+                //Card item = adapter.getItem(position);
+                //showToast("아이템 선택됨: "+item.getName());
             }
         });
 
@@ -49,7 +49,8 @@ public class PaymentSettingActivity extends AppCompatActivity {
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), Integer.toString(UserInfoActivity.payment_list.size()), Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), Integer.toString(UserInfoActivity.payment_list.size()), Toast.LENGTH_LONG).show();
+                finish();
             }
         });
     }
