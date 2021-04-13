@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.util.Log;
@@ -25,6 +24,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.kakao.network.ApiErrorCode;
 import com.kakao.network.ErrorResult;
@@ -59,6 +60,9 @@ public class UserInfoActivity extends AppCompatActivity {
     public static List<Car> car_list = new ArrayList<>();             //차량 리스트(getVehicle() : 차량이름, getYear() : 차량 년도 만 들어있습니다.)
 
     private static int flag = 0; // 서버에서 로컬로 정보 한번만 받아오는 flag
+
+    UserInfoAdapter adapter; // 멤버쉽 카드 보여주기 위한 어뎁터
+    UserInfoAdapter adapter2;  // 결제 카드를 보여주기 위한 어뎁터
 
 
     final String TAG = "Profile_image";
@@ -154,7 +158,7 @@ public class UserInfoActivity extends AppCompatActivity {
             }
         });
 
-       // 멤버쉽 카드 정보 수정
+       // 멤버쉽 카드 정보 수정 버튼
         Button membership_edit = (Button) findViewById(R.id.btn_membership_edit);
 
         membership_edit.setOnClickListener(new View.OnClickListener() {
@@ -163,6 +167,23 @@ public class UserInfoActivity extends AppCompatActivity {
                 toCardSettingActivity();
             }
         });
+
+        // 멤버쉽 카드 정보 수정 액티비티 화면 구성
+        RecyclerView recyclerView = findViewById(R.id.recyclerView_info_m);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+
+        adapter = new UserInfoAdapter();
+
+        // 카드 화면에 추가
+        for(Card i: MainActivity.membership){
+            adapter.addItem(i);
+        }
+        recyclerView.setAdapter(adapter);
+
+
+
 
         // 결제 카드 정보 수정
         Button payment_edit = (Button) findViewById(R.id.btn_pcard_edit);
@@ -173,6 +194,20 @@ public class UserInfoActivity extends AppCompatActivity {
                 toPaymentSettingActivity();
             }
         });
+
+        // 결제 카드 정보 수정 액티비티 화면 구성
+        RecyclerView recyclerView2 = findViewById(R.id.recyclerView_info_p);
+
+        LinearLayoutManager layoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        recyclerView2.setLayoutManager(layoutManager2);
+
+        adapter2 = new UserInfoAdapter();
+
+        // 카드 화면에 추가
+        for(Card i: MainActivity.payment){
+            adapter2.addItem(i);
+        }
+        recyclerView2.setAdapter(adapter2);
 
         // 로그아웃 기능
         Intent intent = new Intent(UserInfoActivity.this, LoginActivity.class);
@@ -436,6 +471,38 @@ public class UserInfoActivity extends AppCompatActivity {
         return super.dispatchTouchEvent(ev);
     }
 
+
+    // 카드 선택 액티비티에서 돌아오면 새로고침해서 정보 반영해주는 부분
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        RecyclerView recyclerView = findViewById(R.id.recyclerView_info_m);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+
+        adapter = new UserInfoAdapter();
+
+        // 카드 화면에 추가
+        for(Card i: MainActivity.membership){
+            adapter.addItem(i);
+        }
+        recyclerView.setAdapter(adapter);
+
+        RecyclerView recyclerView2 = findViewById(R.id.recyclerView_info_p);
+
+        LinearLayoutManager layoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        recyclerView2.setLayoutManager(layoutManager2);
+
+        adapter2 = new UserInfoAdapter();
+
+        // 카드 화면에 추가
+        for(Card i: MainActivity.payment){
+            adapter2.addItem(i);
+        }
+        recyclerView2.setAdapter(adapter2);
+    }
 }
 
 //  정규식 필터 추가( 작동이 제대로 안되어서 주석 처리해둠)
