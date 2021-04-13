@@ -113,10 +113,6 @@
             <!--Option Bar-->
 
             <!--Bootom Cards with sections-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"></LinearLayout>
 
             <LinearLayout
                 android:id="@+id/personal_info"
@@ -207,6 +203,76 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/proximanovaregular"
+                            android:text="@string/personal_carnum"
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
+
+                        <Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+                        <Button
+                            android:id="@+id/btn_carnum_edit"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:background="@android:color/transparent"
+                            android:text="Edit"
+                            android:textColor="@color/maincolor" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:paddingRight="8dp">
+
+                            <ImageView
+                                android:id="@+id/imageView7"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0"
+                                android:src="@drawable/number_plate" />
+
+                            <EditText
+                                android:id="@+id/car_number"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@null"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:text="123가4567" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/circularbordersolid"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/proximanovaregular"
                             android:text="@string/personal_car"
                             android:textSize="17sp"
                             android:textStyle="bold" />
@@ -266,31 +332,6 @@
                                     android:textSize="12sp"
                                     android:textStyle="bold" />
                             </LinearLayout>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:paddingRight="8dp">
-
-                            <ImageView
-                                android:id="@+id/imageView7"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="0"
-                                android:src="@drawable/number_plate" />
-
-                            <EditText
-                                android:id="@+id/car_number"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:background="@null"
-                                android:focusable="false"
-                                android:focusableInTouchMode="false"
-                                android:text="123가4567" />
-
                         </LinearLayout>
 
                     </LinearLayout>
