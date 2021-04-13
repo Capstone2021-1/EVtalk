@@ -210,7 +210,7 @@ public class UserInfoActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
 
-        // 결제 카드 정보 수정
+        // 결제 카드 정보 수정 버튼
         Button payment_edit = (Button) findViewById(R.id.btn_pcard_edit);
 
         payment_edit.setOnClickListener(new View.OnClickListener() {
@@ -571,6 +571,7 @@ public class UserInfoActivity extends AppCompatActivity {
             adapter.addItem(i);
         }
         recyclerView.setAdapter(adapter);
+
 
         RecyclerView recyclerView2 = findViewById(R.id.recyclerView_info_p);
 

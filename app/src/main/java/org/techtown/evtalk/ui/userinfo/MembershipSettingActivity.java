@@ -77,7 +77,7 @@ public class MembershipSettingActivity extends AppCompatActivity {
         retrofit.server.updateUserMemInfo(MainActivity.user.getId(), MainActivity.membership).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                Log.d("sucess", "정보 수정 완료");
+                Log.d("success", "정보 수정 완료");
             }
 
             @Override
