@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.util.Log;
@@ -50,9 +51,12 @@ public class UserInfoActivity extends AppCompatActivity {
     private CircleImageView profile_image;  // 원형 프로필
     private Button btn_delete;
     private Button btn_logout;
-    private static List<Card> membership_list = new ArrayList<>();     //회원카드 리스트
-    private static List<Card> payment_list = new ArrayList<>();        //결제카드 리스트
-    private static List<Car> car_list = new ArrayList<>();             //차량 리스트(getVehicle() : 차량이름, getYear() : 차량 년도 만 들어있습니다.)
+    public static List<Card> membership_list = new ArrayList<>();     //회원카드 리스트
+    public static List<Card> payment_list = new ArrayList<>();        //결제카드 리스트
+    public static List<Car> car_list = new ArrayList<>();             //차량 리스트(getVehicle() : 차량이름, getYear() : 차량 년도 만 들어있습니다.)
+
+    private static int flag = 0; // 서버에서 로컬로 정보 한번만 받아오는 flag
+
 
     final String TAG = "Profile_image";
     String name = MainActivity.user.getName();
@@ -64,7 +68,10 @@ public class UserInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
 
-        getInfo();
+        if(flag == 0) {
+            getInfo();
+            flag = 1;
+        }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -75,6 +82,10 @@ public class UserInfoActivity extends AppCompatActivity {
         ac.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼
         textView.setText("마이 페이지"); // 타이틀 수정
 
+
+//        for(int i=0; i<membership_list.size(); i++){
+//            Log.d("UserInfo", local_membership_list.get(i).getName());
+//        }
 
 
 
@@ -114,7 +125,6 @@ public class UserInfoActivity extends AppCompatActivity {
         });
 
         //차량 번호 수정하기 버튼
-
         Button car_edit = (Button) findViewById(R.id.btn_car_edit);
         EditText car_number = (EditText) findViewById(R.id.car_number);
         car_number.setFilters(new InputFilter[]{new InputFilter.LengthFilter(8) /*,new CustomInputFilter()*/});   // 필터 여러개 적용
@@ -133,6 +143,27 @@ public class UserInfoActivity extends AppCompatActivity {
                 }
             }
         });
+
+       // 멤버쉽 카드 정보 수정
+        Button membership_edit = (Button) findViewById(R.id.btn_membership_edit);
+
+        membership_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toCardSettingActivity();
+            }
+        });
+
+        // 결제 카드 정보 수정
+        Button payment_edit = (Button) findViewById(R.id.btn_pcard_edit);
+
+        payment_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toPaymentSettingActivity();
+            }
+        });
+
         // 로그아웃 기능
         Intent intent = new Intent(UserInfoActivity.this, LoginActivity.class);
         btn_logout = findViewById(R.id.btn_logout);
@@ -226,8 +257,28 @@ public class UserInfoActivity extends AppCompatActivity {
             }
         });
 
+    }
 
+    public void toCardSettingActivity(){
+        Intent intent = new Intent(this, MembershipSettingActivity.class);
+//        intent.putExtra("id", p_id);
+//        intent.putExtra("name", p_name);
+//        intent.putExtra("image", p_image);
+        startActivity(intent);
+        overridePendingTransition(0,0); // 전환효과 제거
 
+        finish();
+    }
+
+    public void toPaymentSettingActivity(){
+        Intent intent = new Intent(this, PaymentSettingActivity.class);
+//        intent.putExtra("id", p_id);
+//        intent.putExtra("name", p_name);
+//        intent.putExtra("image", p_image);
+        startActivity(intent);
+        overridePendingTransition(0,0); // 전환효과 제거
+
+        finish();
     }
 
     @Override // 뒤로가기 버튼 동작 구현

@@ -17,6 +17,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EVtalk"
         android:usesCleartextTraffic="true">
+        <activity android:name=".ui.userinfo.PaymentSettingActivity"></activity>
+        <activity android:name=".ui.userinfo.MembershipSettingActivity" />
         <activity android:name=".ui.userinfo.UserInfoActivity" />
         <activity android:name=".gethash" />
         <activity

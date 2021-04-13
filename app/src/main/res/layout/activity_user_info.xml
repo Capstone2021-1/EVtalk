@@ -336,7 +336,7 @@
                             android:layout_weight="1" />
 
                         <Button
-                            android:id="@+id/btn_mcard_edit"
+                            android:id="@+id/btn_membership_edit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0"

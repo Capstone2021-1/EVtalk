@@ -39,6 +39,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0'
     implementation 'androidx.mediarouter:mediarouter:1.2.2'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
@@ -54,4 +55,6 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.google.android.gms:play-services-location:16.0.0' // 구글 FusedLocationSource
 
+    implementation 'com.github.bumptech.glide:glide:4.9.0' // url을 가지고 ImageView에 이미지 가져오기 위함
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0' // url을 가지고 ImageView에 이미지 가져오기 위함
 }
