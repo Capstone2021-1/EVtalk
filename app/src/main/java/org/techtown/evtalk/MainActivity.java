@@ -354,22 +354,4 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
     }
-
-    // 화면 다른 부분 터치 시 키보드 내리기
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        View focusView = getCurrentFocus();
-        if (focusView != null) {
-            Rect rect = new Rect();
-            focusView.getGlobalVisibleRect(rect);
-            int x = (int) ev.getX(), y = (int) ev.getY();
-            if (!rect.contains(x, y)) {
-                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                if (imm != null)
-                    imm.hideSoftInputFromWindow(focusView.getWindowToken(), 0);
-                focusView.clearFocus();
-            }
-        }
-        return super.dispatchTouchEvent(ev);
-    }
 }

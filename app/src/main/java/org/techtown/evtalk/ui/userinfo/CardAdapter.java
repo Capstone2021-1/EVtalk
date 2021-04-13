@@ -2,11 +2,13 @@ package org.techtown.evtalk.ui.userinfo;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,6 +28,8 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
     ArrayList<Card> items = new ArrayList<Card>();
 
     OnCardItemClickListener listener;
+
+    LinearLayout membership_layout;
 
     @NonNull
     @Override
@@ -69,14 +73,22 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
     }
 
     public void onItemClick(CardAdapter.ViewHolder holder, View view, int position) {
+        membership_layout = view.findViewById(R.id.membership_layout);
         if (listener != null) {
             listener.onItemClick(holder, view, position);
+            if(items.get(position).getSelect()){
+                membership_layout.setBackgroundColor(R.color.maincolor);
+            }else{
+                membership_layout.setBackgroundColor(Color.WHITE);
+            }
+            items.get(position).setSelect();
         }
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView membership_image;
         TextView membership_text;
+        LinearLayout membership_layout;
         Bitmap bmImg;
 
         public ViewHolder(View itemView, final OnCardItemClickListener listener) {
@@ -84,6 +96,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
             Log.d("cardadapter", "4");
             membership_image = itemView.findViewById(R.id.membership_image);
             membership_text = itemView.findViewById(R.id.membership_text);
+            membership_layout = itemView.findViewById(R.id.membership_layout);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -100,8 +113,13 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         public void setItem(Card item) {
             Log.d("cardadapter", "5");
             membership_image.setImageBitmap(getBitmap(item.getImage()));
-            //membership_image.setImageBitmap(UtoB(item.getImage()));
             membership_text.setText(item.getName());
+            if(item.getSelect()){
+                membership_layout.setBackgroundColor(R.color.maincolor);
+            }else{
+                membership_layout.setBackgroundColor(Color.WHITE);
+            }
+            //item.setSelect();
         }
 
 

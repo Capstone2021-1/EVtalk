@@ -6,12 +6,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -108,6 +111,11 @@ public class UserInfoActivity extends AppCompatActivity {
         // 상태 메시지 수정하기 버튼
         Button status_edit = (Button) findViewById(R.id.btn_status_edit);
         EditText status_txt = (EditText) findViewById(R.id.status_txt);
+
+        // 서버에 설정 해둔 상태 메시지가 있다면 그걸로 설정
+        if(!MainActivity.user.getMessage().equals("")){
+            status_txt.setText(MainActivity.user.getMessage());
+        }
         status_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -120,6 +128,7 @@ public class UserInfoActivity extends AppCompatActivity {
                     status_txt.setFocusable(false);
                     status_edit.setText("Edit");
                     Toast.makeText(UserInfoActivity.this, "상태 메시지 수정 완료", Toast.LENGTH_SHORT).show();
+                    MainActivity.user.setMessage(status_txt.getText().toString());  // 서버에 수정된 메시지 반영
                 }
             }
         });
@@ -415,6 +424,23 @@ public class UserInfoActivity extends AppCompatActivity {
                 Log.d("failure", "실패");
             }
         });
+    }
+    // 화면 다른 부분 터치 시 키보드 내리기
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        View focusView = getCurrentFocus();
+        if (focusView != null) {
+            Rect rect = new Rect();
+            focusView.getGlobalVisibleRect(rect);
+            int x = (int) ev.getX(), y = (int) ev.getY();
+            if (!rect.contains(x, y)) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                if (imm != null)
+                    imm.hideSoftInputFromWindow(focusView.getWindowToken(), 0);
+                focusView.clearFocus();
+            }
+        }
+        return super.dispatchTouchEvent(ev);
     }
 
 }

@@ -1,12 +1,14 @@
 package org.techtown.evtalk.ui.userinfo;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import org.techtown.evtalk.R;
@@ -42,7 +44,8 @@ public class MembershipSettingActivity extends AppCompatActivity {
             @Override
             public void onItemClick(CardAdapter.ViewHolder holder, View view, int position) {
                 Card item = adapter.getItem(position);
-                showToast("아이템 선택됨: "+item.getName());
+                showToast(item.getName()+" 선택됨");
+
             }
         });
 

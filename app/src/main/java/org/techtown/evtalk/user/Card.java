@@ -35,4 +35,10 @@ public class Card {
     public String getImage() {
         return image;
     }
+
+    private boolean select = false;
+    public void setSelect() {
+        select = !select;
+    }
+    public boolean getSelect() { return select; }
 }
