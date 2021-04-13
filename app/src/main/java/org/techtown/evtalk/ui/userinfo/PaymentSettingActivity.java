@@ -34,12 +34,11 @@ public class PaymentSettingActivity extends AppCompatActivity {
 
         recyclerView.setAdapter(adapter);
 
-        // 카드 클릭 시 선택 기능 추가해야함!
+       //카드 클릭 시 작동 부분
         adapter.setOnItemClickListener(new OnCardItemClickListener() {
             @Override
             public void onItemClick(CardAdapter.ViewHolder holder, View view, int position) {
-                //Card item = adapter.getItem(position);
-                //showToast("아이템 선택됨: "+item.getName());
+                // CardAdapter에서 실행됨.
             }
         });
 
@@ -49,7 +48,6 @@ public class PaymentSettingActivity extends AppCompatActivity {
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(getApplicationContext(), Integer.toString(UserInfoActivity.payment_list.size()), Toast.LENGTH_LONG).show();
                 finish();
             }
         });

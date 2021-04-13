@@ -80,6 +80,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if(user != null)
             getUserInfo();
 
+        // 차량 정보 초기화
+        if(car == null) {
+            car = new Car();
+            car.setImage("https://evtalk.s3.ap-northeast-2.amazonaws.com/car_image/soulbooster.png");
+            car.setVehicle("차량을 선택하세요!");
+        }
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

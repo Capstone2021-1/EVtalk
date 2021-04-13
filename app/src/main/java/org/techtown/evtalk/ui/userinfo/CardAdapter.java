@@ -135,6 +135,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
             Log.d("cardadapter", "5");
             card_image.setImageBitmap(getBitmap(item.getImage()));
             card_text.setText(item.getName());
+            Log.d("split", item.getImage());
 
             if(card_kinds.equals("membership")){
                 if(!MainActivity.membership.isEmpty()){

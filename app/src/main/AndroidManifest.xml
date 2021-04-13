@@ -17,7 +17,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EVtalk"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.userinfo.PaymentSettingActivity"></activity>
+        <activity android:name=".ui.userinfo.CarSettingActivity"
+            android:label="차 종류 선택"
+            android:theme="@style/Theme.AppCompat.Dialog"></activity>
+        <activity android:name=".ui.userinfo.PaymentSettingActivity" />
         <activity android:name=".ui.userinfo.MembershipSettingActivity" />
         <activity android:name=".ui.userinfo.UserInfoActivity" />
         <activity android:name=".gethash" />

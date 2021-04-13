@@ -39,11 +39,11 @@ public class MembershipSettingActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
 
-        // 카드 클릭 시 선택 기능 추가해야함!
+        //카드 클릭 시 작동 부분
         adapter.setOnItemClickListener(new OnCardItemClickListener() {
             @Override
             public void onItemClick(CardAdapter.ViewHolder holder, View view, int position) {
-                //Card item = adapter.getItem(position);
+                // CardAdapter에서 실행됨.
             }
         });
 
@@ -53,7 +53,7 @@ public class MembershipSettingActivity extends AppCompatActivity {
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Toast.makeText(getApplicationContext(), Integer.toString(UserInfoActivity.membership_list.size()), Toast.LENGTH_LONG).show();
+
                 finish();
             }
         });

@@ -14,8 +14,12 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,7 +44,10 @@ import org.techtown.evtalk.user.Car;
 import org.techtown.evtalk.user.Card;
 import org.techtown.evtalk.user.RetrofitConnection;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,28 +74,31 @@ public class UserInfoActivity extends AppCompatActivity {
 
     final String TAG = "Profile_image";
     String name = MainActivity.user.getName();
+    String car_name;     // 선택된 차량이름
+    Bitmap bmImg;
+
     // Request Code
     final static int PICK_IMAGE = 1; //갤러리에서 사진선택
+    public static final int REQUEST_CODE_CAR = 1000; //차량 선택
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
 
-        if(flag == 0) {
+        if (flag == 0) {
             getInfo();
             flag = 1;
         }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        textView = (TextView)findViewById(R.id.toolbar_title);
+        textView = (TextView) findViewById(R.id.toolbar_title);
         ActionBar ac = getSupportActionBar();
         ac.setDisplayShowCustomEnabled(true);
         ac.setDisplayShowTitleEnabled(false);
         ac.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼
         textView.setText("마이 페이지"); // 타이틀 수정
-
 
 
         // 프로필 사진 선택
@@ -101,9 +111,8 @@ public class UserInfoActivity extends AppCompatActivity {
         });
 
         // 이름 설정
-
-        TextView name_txt =(TextView) findViewById(R.id.name_txt);
-        if(name!=null){
+        TextView name_txt = (TextView) findViewById(R.id.name_txt);
+        if (name != null) {
             name_txt.setText(MainActivity.user.getName());
         }
 
@@ -112,7 +121,7 @@ public class UserInfoActivity extends AppCompatActivity {
         EditText status_txt = (EditText) findViewById(R.id.status_txt);
 
         // 서버에 설정 해둔 상태 메시지가 있다면 그걸로 설정
-        if(!MainActivity.user.getMessage().equals("")){
+        if (!MainActivity.user.getMessage().equals("")) {
             status_txt.setText(MainActivity.user.getMessage());
         }
         status_edit.setOnClickListener(new View.OnClickListener() {
@@ -133,38 +142,56 @@ public class UserInfoActivity extends AppCompatActivity {
         });
 
         //차량 번호 수정하기 버튼
-        Button car_edit = (Button) findViewById(R.id.btn_carnum_edit);
+        Button carnum_edit = (Button) findViewById(R.id.btn_carnum_edit);
         EditText car_number = (EditText) findViewById(R.id.car_number);
 
         // 서버에 설정 해둔 차량 번호가 있다면 그걸로 설정
-        if(!MainActivity.user.getCar_number().equals("")){
+        if (!MainActivity.user.getCar_number().equals("")) {
             car_number.setText(MainActivity.user.getCar_number());
         }
         car_number.setFilters(new InputFilter[]{new InputFilter.LengthFilter(8) /*,new CustomInputFilter()*/});   // 필터 적용
-        car_edit.setOnClickListener(new View.OnClickListener() {
+        carnum_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!car_number.isFocusable()) {
                     car_number.setFocusableInTouchMode(true);
                     car_number.setFocusable(true);
-                    car_edit.setText("Done");
+                    carnum_edit.setText("Done");
                 } else {
                     car_number.setFocusableInTouchMode(false);
                     car_number.setFocusable(false);
-                    car_edit.setText("Edit");
+                    carnum_edit.setText("Edit");
                     Toast.makeText(UserInfoActivity.this, "차량 번호 수정 완료", Toast.LENGTH_SHORT).show();
                     MainActivity.user.setCar_number(car_number.getText().toString());
                 }
             }
         });
 
-       // 멤버쉽 카드 정보 수정 버튼
+        ImageView car_image = (ImageView) findViewById(R.id.car_image);
+        TextView car_text = (TextView) findViewById(R.id.car_text);
+
+        // 사용자가 설정해둔 차량 이미지로! (없으면 기본 값 쏘울 뭔가 되어 있음)
+        car_image.setImageBitmap(getBitmap(MainActivity.car.getImage()));
+        car_text.setText(MainActivity.car.getVehicle());  // 사용자가 설정해둔 차량 이름으로!
+
+        Button car_edit = (Button) findViewById(R.id.btn_car_edit);
+
+        // 차량 선택 버튼 ( 차량 선택 상세 기능은 onActivityResult에 있음!)
+        car_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toCarSettingActivity();
+            }
+        });
+
+
+        // 멤버쉽 카드 정보 수정 버튼
         Button membership_edit = (Button) findViewById(R.id.btn_membership_edit);
 
         membership_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                toCardSettingActivity();
+                toMembershipSettingActivity();
             }
         });
 
@@ -176,13 +203,11 @@ public class UserInfoActivity extends AppCompatActivity {
 
         adapter = new UserInfoAdapter();
 
-        // 카드 화면에 추가
-        for(Card i: MainActivity.membership){
+        // 멥버쉽 카드 화면에 추가
+        for (Card i : MainActivity.membership) {
             adapter.addItem(i);
         }
         recyclerView.setAdapter(adapter);
-
-
 
 
         // 결제 카드 정보 수정
@@ -203,8 +228,8 @@ public class UserInfoActivity extends AppCompatActivity {
 
         adapter2 = new UserInfoAdapter();
 
-        // 카드 화면에 추가
-        for(Card i: MainActivity.payment){
+        // 결제 카드 화면에 추가
+        for (Card i : MainActivity.payment) {
             adapter2.addItem(i);
         }
         recyclerView2.setAdapter(adapter2);
@@ -222,7 +247,7 @@ public class UserInfoActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                 });
-                Toast.makeText(UserInfoActivity.this,"정상적으로 로그아웃 되었습니다.",Toast.LENGTH_SHORT).show();
+                Toast.makeText(UserInfoActivity.this, "정상적으로 로그아웃 되었습니다.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -241,7 +266,7 @@ public class UserInfoActivity extends AppCompatActivity {
                                     public void onFailure(ErrorResult errorResult) { //회원탈퇴 실패 시
                                         int result = errorResult.getErrorCode();
 
-                                        if(result == ApiErrorCode.CLIENT_ERROR_CODE) {
+                                        if (result == ApiErrorCode.CLIENT_ERROR_CODE) {
                                             Toast.makeText(UserInfoActivity.this, "네트워크 연결이 불안정합니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show();
                                         } else {
                                             Toast.makeText(UserInfoActivity.this, "회원탈퇴에 실패했습니다. 다시 시도해 주세요.", Toast.LENGTH_SHORT).show();
@@ -304,23 +329,28 @@ public class UserInfoActivity extends AppCompatActivity {
 
     }
 
-    public void toCardSettingActivity(){
-        Intent intent = new Intent(this, MembershipSettingActivity.class);
-        startActivity(intent);
-        overridePendingTransition(0,0); // 전환효과 제거
-
+    public void toCarSettingActivity() {
+        Intent intent = new Intent(this, CarSettingActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_CAR);
+        overridePendingTransition(0, 0); // 전환효과 제거
     }
 
-    public void toPaymentSettingActivity(){
+    public void toMembershipSettingActivity() {
+        Intent intent = new Intent(this, MembershipSettingActivity.class);
+        startActivity(intent);
+        overridePendingTransition(0, 0); // 전환효과 제거
+    }
+
+    public void toPaymentSettingActivity() {
         Intent intent = new Intent(this, PaymentSettingActivity.class);
         startActivity(intent);
-        overridePendingTransition(0,0); // 전환효과 제거
+        overridePendingTransition(0, 0); // 전환효과 제거
 
     }
 
     @Override // 뒤로가기 버튼 동작 구현
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
                 return true;
@@ -328,9 +358,9 @@ public class UserInfoActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    //갤러리에서 이미지 불러온 후 실행 동작
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    //갤러리에서 이미지 불러온 후 실행 동작
         if (requestCode == PICK_IMAGE) {
             try {
                 InputStream in = getApplicationContext().getContentResolver().openInputStream(data.getData());
@@ -346,7 +376,58 @@ public class UserInfoActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+
+        // 차량 선택 Intent로 값 전달 받으면 설정하기
+        if (requestCode == REQUEST_CODE_CAR) {
+            if (resultCode == 1001) {
+                TextView car_text = (TextView) findViewById(R.id.car_text);
+                ImageView car_image = (ImageView) findViewById(R.id.car_image);
+                car_name = data.getStringExtra("car");
+                car_text.setText(car_name);     // carSettingActivity에서 보낸 키 값
+                String y = car_name.substring(0,4);    // 선택한 차량년도
+                String n = car_name.substring(5);      // 선택한 차량 이름
+
+                for (Car i : UserInfoActivity.car_list) {
+                    if (Integer.toString(i.getYear()).equals(y) && n.equals(i.getVehicle())) {   // 차량 년도와 이름이 같다면
+                        car_image.setImageBitmap(getBitmap(i.getImage()));      // 마이 페이지 차량 이미지 바꾸기
+
+//                        // MainActivity.car (개인 차량 정보 설정)
+                        MainActivity.car.setImage(i.getImage());
+                        MainActivity.car.setVehicle(i.getVehicle());
+                        MainActivity.car.setYear(i.getYear());
+
+                    }
+                }
+
+            }
+        }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    // URL 비트맵 변환
+    public Bitmap getBitmap(String imgPath) {
+        Thread imgThread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    URL url = new URL(imgPath);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setDoInput(true);
+                    conn.connect();
+                    InputStream is = conn.getInputStream();
+                    bmImg = BitmapFactory.decodeStream(is);
+                } catch (IOException e) {
+                }
+            }
+        };
+        imgThread.start();
+        try {
+            imgThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            return bmImg;
+        }
     }
 
 
@@ -404,10 +485,10 @@ public class UserInfoActivity extends AppCompatActivity {
         retrofit.server.getCar_list().enqueue(new Callback<List<Car>>() {
             @Override
             public void onResponse(Call<List<Car>> call, Response<List<Car>> response) {
-                if(response.isSuccessful()) {
+                if (response.isSuccessful()) {
                     List<Car> result = response.body();
                     int count = 0;
-                    for(Car i : result) {
+                    for (Car i : result) {
                         car_list.add(i);
                     }
                 }
@@ -415,16 +496,16 @@ public class UserInfoActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<Car>> call, Throwable t) {
-                    Log.d("failure", "실패");
+                Log.d("failure", "실패");
             }
         });
         retrofit.server.getMembership_list().enqueue(new Callback<List<Card>>() {
             @Override
             public void onResponse(Call<List<Card>> call, Response<List<Card>> response) {
-                if(response.isSuccessful()) {
+                if (response.isSuccessful()) {
                     int count = 0;
                     List<Card> result = response.body();
-                    for(Card i : result) {
+                    for (Card i : result) {
                         membership_list.add(i);
                     }
                 }
@@ -438,10 +519,10 @@ public class UserInfoActivity extends AppCompatActivity {
         retrofit.server.getPayment_list().enqueue(new Callback<List<Card>>() {
             @Override
             public void onResponse(Call<List<Card>> call, Response<List<Card>> response) {
-                if(response.isSuccessful()) {
+                if (response.isSuccessful()) {
                     int count = 0;
                     List<Card> result = response.body();
-                    for(Card i : result) {
+                    for (Card i : result) {
                         payment_list.add(i);
                     }
                 }
@@ -453,6 +534,7 @@ public class UserInfoActivity extends AppCompatActivity {
             }
         });
     }
+
     // 화면 다른 부분 터치 시 키보드 내리기
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
@@ -485,7 +567,7 @@ public class UserInfoActivity extends AppCompatActivity {
         adapter = new UserInfoAdapter();
 
         // 카드 화면에 추가
-        for(Card i: MainActivity.membership){
+        for (Card i : MainActivity.membership) {
             adapter.addItem(i);
         }
         recyclerView.setAdapter(adapter);
@@ -498,27 +580,10 @@ public class UserInfoActivity extends AppCompatActivity {
         adapter2 = new UserInfoAdapter();
 
         // 카드 화면에 추가
-        for(Card i: MainActivity.payment){
+        for (Card i : MainActivity.payment) {
             adapter2.addItem(i);
         }
         recyclerView2.setAdapter(adapter2);
     }
 }
-
-//  정규식 필터 추가( 작동이 제대로 안되어서 주석 처리해둠)
-//    protected static class CustomInputFilter implements InputFilter {
-//
-//
-//        @Override
-//        public CharSequence filter(CharSequence source, int start,
-//                                   int end, Spanned dest, int dstart, int dend) {
-//            Pattern ps = Pattern.compile("^[0-9]{2,3}$");
-//
-//            if (source.equals("") || ps.matcher(source).matches()) {
-//                return source;
-//            }
-//
-//            return "";
-//        }
-//    }
 
