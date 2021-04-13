@@ -6,13 +6,20 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import org.techtown.evtalk.MainActivity;
 import org.techtown.evtalk.R;
 import org.techtown.evtalk.user.Card;
+import org.techtown.evtalk.user.RetrofitConnection;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class MembershipSettingActivity extends AppCompatActivity {
@@ -64,4 +71,19 @@ public class MembershipSettingActivity extends AppCompatActivity {
         Toast.makeText(this, data, Toast.LENGTH_SHORT).show();
     }
 
+    public void onPause() {
+        super.onPause();
+        RetrofitConnection retrofit = new RetrofitConnection();
+        retrofit.server.updateUserMemInfo(MainActivity.user.getId(), MainActivity.membership).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Log.d("sucess", "정보 수정 완료");
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("failure", "정보 수정 ㄴㄴ");
+            }
+        });
+    }
 }
