@@ -179,7 +179,8 @@
                                     android:background="@null"
                                     android:focusable="false"
                                     android:focusableInTouchMode="false"
-                                    android:text="@string/my_status" />
+                                    android:hint="@string/my_status"
+                                    android:textSize="14sp" />
                             </LinearLayout>
                         </ScrollView>
                     </LinearLayout>
@@ -250,7 +251,7 @@
                                 android:background="@null"
                                 android:focusable="false"
                                 android:focusableInTouchMode="false"
-                                android:text="000가0000" />
+                                android:hint="123가4567" />
 
                         </LinearLayout>
 
