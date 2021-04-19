@@ -1,10 +1,9 @@
 package org.techtown.evtalk.ui.userinfo;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -12,10 +11,11 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import org.techtown.evtalk.R;
 import org.techtown.evtalk.user.Car;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -54,7 +54,6 @@ public class CarSettingActivity extends AppCompatActivity {
                 cars_enterprise.add(i.getEnterprise());
                 Log.d("cars_enterprise", i.getEnterprise());
             }
-
         }
 
         for (Car i : UserInfoActivity.car_list) {
@@ -74,7 +73,7 @@ public class CarSettingActivity extends AppCompatActivity {
         }
 
         for (Car c : UserInfoActivity.car_list) {
-            // 제조사가 쉐보차이면서 중복 안시키면서 추가
+            // 제조사가 쉐보레차이면서 중복 안시키면서 추가
             if (c.getEnterprise().equals(cars_enterprise.get(2)) && !cars2.contains(c.getVehicle())) {
                 cars2.add(c.getVehicle());
                 Log.d("chevrolet", c.getVehicle());
@@ -108,7 +107,6 @@ public class CarSettingActivity extends AppCompatActivity {
         );
         adapter2_0.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-
         // 기아 adapter 만들기
         ArrayAdapter<String> adapter2_1 = new ArrayAdapter<String>(
                 this,
@@ -138,9 +136,9 @@ public class CarSettingActivity extends AppCompatActivity {
         spinner.setAdapter(adapter); //
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() { // 첫번쨰 스피너
+
             @Override   // 파라미터 i는 클릭한 position을 의미함
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
                 // 첫번째 스피너에 따라 두번째 스피너 선택
                 switch (i) {
                     case 0: // 현대차
@@ -176,20 +174,12 @@ public class CarSettingActivity extends AppCompatActivity {
                                 break;
                         }
                     }
-
                     @Override
-                    public void onNothingSelected(AdapterView<?> adapterView) {
-
-                    }
+                    public void onNothingSelected(AdapterView<?> adapterView) {}
                 });
-
-
             }
-
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
+            public void onNothingSelected(AdapterView<?> adapterView) {}
         });
 
 
@@ -232,6 +222,14 @@ public class CarSettingActivity extends AppCompatActivity {
             }
         });
 
+        // 취소 버튼
+        Button edit_cancel = (Button) findViewById(R.id.edit_btn4);
+        edit_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         // 수정하기 버튼
         Button edit_done = (Button) findViewById(R.id.edit_btn3);
@@ -245,9 +243,14 @@ public class CarSettingActivity extends AppCompatActivity {
                 finish();
             }
         });
-
     }
 
-
-
+    // 팝업 밖 선택시 닫힘 방지
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if( event.getAction() == MotionEvent.ACTION_OUTSIDE ) {
+            return false;
+        }
+        return true;
+    }
 }
