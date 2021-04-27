@@ -188,39 +188,39 @@ public class CarSettingActivity extends AppCompatActivity {
         /*----------------------------------------------------------------------------------------*/
         //3번째 스피너
 
-        // 년도 수 전부 저장
-        for (Car i : UserInfoActivity.car_list) {
-            if (!cars_year.contains(Integer.toString(i.getYear()))) {
-                cars_year.add(Integer.toString(i.getYear()));
-                Log.d("cars_year", Integer.toString(i.getYear()));
-            }
-        }
-
-        Collections.sort(cars_year);
-        Collections.reverse(cars_year);
-
-        // 차량 년도 수 spinner 부분
-        Spinner spinner3 = findViewById(R.id.spinner3);
-        ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(
-                this,
-                android.R.layout.simple_spinner_item,
-                cars_year
-        );
-
-        adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner3.setAdapter(adapter3);
-
-        spinner3.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                selected_year = cars_year.get(i);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
+//        // 년도 수 전부 저장
+//        for (Car i : UserInfoActivity.car_list) {
+//            if (!cars_year.contains(Integer.toString(i.getYear()))) {
+//                cars_year.add(Integer.toString(i.getYear()));
+//                Log.d("cars_year", Integer.toString(i.getYear()));
+//            }
+//        }
+//
+//        Collections.sort(cars_year);
+//        Collections.reverse(cars_year);
+//
+//        // 차량 년도 수 spinner 부분
+//        Spinner spinner3 = findViewById(R.id.spinner3);
+//        ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(
+//                this,
+//                android.R.layout.simple_spinner_item,
+//                cars_year
+//        );
+//
+//        adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        spinner3.setAdapter(adapter3);
+//
+//        spinner3.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+//                selected_year = cars_year.get(i);
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> adapterView) {
+//
+//            }
+//        });
 
         // 취소 버튼
         Button edit_cancel = (Button) findViewById(R.id.edit_btn4);
@@ -238,7 +238,7 @@ public class CarSettingActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent();
                 intent.putExtra("car", selected_car);  // 선택된 값 Intent로 전달
-                intent.putExtra("year", selected_year);
+//                intent.putExtra("year", selected_year);
                 setResult(SELECT_DONE, intent);
                 finish();
             }

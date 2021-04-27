@@ -382,15 +382,14 @@ public class UserInfoActivity extends AppCompatActivity {
             if (resultCode == 1001) {
                 TextView car_text = (TextView) findViewById(R.id.car_text);
                 ImageView car_image = (ImageView) findViewById(R.id.car_image);
-                car_name = data.getStringExtra("year");
-                car_name = car_name + " " + data.getStringExtra("car");
+//                car_name = data.getStringExtra("year");
+                car_name = data.getStringExtra("car");
 
                 car_text.setText(car_name);     // carSettingActivity에서 보낸 키 값
-                String y = car_name.substring(0,4);    // 선택한 차량년도 배열 0~3
-                String n = car_name.substring(5);      // 선택한 차량 이름 배열 5~끝
+                String n = car_name;      // 선택한 차량 이름 배열 5~끝
 
                 for (Car i : UserInfoActivity.car_list) {
-                    if (Integer.toString(i.getYear()).equals(y) && n.equals(i.getVehicle())) {   // 차량 년도와 이름이 같다면
+                    if (n.equals(i.getVehicle())) {   // 차량 년도와 이름이 같다면
                         car_image.setImageBitmap(getBitmap(i.getImage()));      // 마이 페이지 차량 이미지 바꾸기
 
 //                        // MainActivity.car (개인 차량 정보 설정)
