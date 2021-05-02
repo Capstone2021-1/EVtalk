@@ -370,19 +370,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onResponse(Call<List<Fee>> call, Response<List<Fee>> response) {
                 for(Fee f : response.body()) {
-                    Log.i("요금확인입니다ㅏㅏㅏ", "" + f.getBusiId() + "  " + f.getFee());
                     for(ChargingStation i : chargingStation) {
-                        if(i.getId().contains(f.getBusiId())) {
+                        if(i.getId().contains(f.getBusiId()))
                             i.setFee(f.getFee());
-                            Log.i("요금화잉이이ㅣㅣ이잉", "" + f.getBusiId() + "   " + f.getFee());
-                        }
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<List<Fee>> call, Throwable t) {
-                Log.i("오류오류오류오류오류", "오류오류오류오륭로ㅠ오률오류오류");
+                Log.i("오류", "" + t);
             }
         });
     }
