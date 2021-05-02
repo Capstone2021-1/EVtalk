@@ -44,11 +44,15 @@ import org.techtown.evtalk.ui.userinfo.UserInfoActivity;
 import org.techtown.evtalk.user.Car;
 import org.techtown.evtalk.user.Card;
 import org.techtown.evtalk.user.ChargingStation;
+import org.techtown.evtalk.user.Fee;
 import org.techtown.evtalk.user.RetrofitConnection;
 import org.techtown.evtalk.user.User;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import retrofit2.Call;
@@ -234,6 +238,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         markersPosition = new Vector<LatLng>();
         for (int i = 0; i < chargingStation.size(); i++) {
             markersPosition.add(new LatLng(chargingStation.get(i).getLat(),chargingStation.get(i).getLng()));
+            Log.i("확인이요~~~", "" + chargingStation.get(i).getFee() + "  " + chargingStation.get(i).getId());
         }
 
         // 카메라 이동 되면 호출 되는 이벤트
@@ -358,6 +363,26 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onFailure(Call<Car> call, Throwable t) {
                 Log.i("failure", "차량 정보 받아오기 실패");
+            }
+        });
+
+        retrofit.server.getChargingFee(user.getId()).enqueue(new Callback<List<Fee>>() {
+            @Override
+            public void onResponse(Call<List<Fee>> call, Response<List<Fee>> response) {
+                for(Fee f : response.body()) {
+                    Log.i("요금확인입니다ㅏㅏㅏ", "" + f.getBusiId() + "  " + f.getFee());
+                    for(ChargingStation i : chargingStation) {
+                        if(i.getId().contains(f.getBusiId())) {
+                            i.setFee(f.getFee());
+                            Log.i("요금화잉이이ㅣㅣ이잉", "" + f.getBusiId() + "   " + f.getFee());
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Fee>> call, Throwable t) {
+                Log.i("오류오류오류오류오류", "오류오류오류오륭로ㅠ오률오류오류");
             }
         });
     }

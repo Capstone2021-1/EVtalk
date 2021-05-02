@@ -59,4 +59,7 @@ public interface Service {
     @GET("/info/payment_list")
     Call<List<Card>> getPayment_list();
 
+    @GET("/getChargingFee")
+    Call<List<Fee>> getChargingFee(@Query("id") long id);
+
 }

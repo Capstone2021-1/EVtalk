@@ -12,9 +12,6 @@ public class Car {
     @SerializedName("vehicle_type")
     private String vehicle;
 
-    @SerializedName("year")
-    private int year;
-
     @SerializedName("energy_capacity")
     private float energy_capacity;
 
@@ -37,10 +34,6 @@ public class Car {
 
     public void setVehicle(String vehicle) {
         this.vehicle = vehicle;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
     }
 
     public void setEnergy_capacity(float energy_capacity) {
@@ -69,10 +62,6 @@ public class Car {
 
     public String getVehicle() {
         return vehicle;
-    }
-
-    public int getYear() {
-        return year;
     }
 
     public float getEnergy_capacity() {

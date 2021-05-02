@@ -64,7 +64,7 @@ public class UserInfoActivity extends AppCompatActivity {
     private Button btn_logout;
     public static List<Card> membership_list = new ArrayList<>();     //회원카드 리스트
     public static List<Card> payment_list = new ArrayList<>();        //결제카드 리스트
-    public static List<Car> car_list = new ArrayList<>();             //차량 리스트(getVehicle() : 차량이름, getYear() : 차량 년도 만 들어있습니다.)
+    public static List<Car> car_list = new ArrayList<>();             //차량 리스트(getVehicle() : 차량이름 만 들어있습니다.)
 
     private static int flag = 0; // 서버에서 로컬로 정보 한번만 받아오는 flag
 
@@ -498,7 +498,6 @@ public class UserInfoActivity extends AppCompatActivity {
             public void onResponse(Call<List<Car>> call, Response<List<Car>> response) {
                 if (response.isSuccessful()) {
                     List<Car> result = response.body();
-                    int count = 0;
                     for (Car i : result) {
                         car_list.add(i);
                     }
@@ -514,7 +513,6 @@ public class UserInfoActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Card>> call, Response<List<Card>> response) {
                 if (response.isSuccessful()) {
-                    int count = 0;
                     List<Card> result = response.body();
                     for (Card i : result) {
                         membership_list.add(i);
@@ -531,7 +529,6 @@ public class UserInfoActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Card>> call, Response<List<Card>> response) {
                 if (response.isSuccessful()) {
-                    int count = 0;
                     List<Card> result = response.body();
                     for (Card i : result) {
                         payment_list.add(i);
