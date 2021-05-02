@@ -1,2 +1,4 @@
+include ':singledateandtimepicker'
 include ':app'
+project(':singledateandtimepicker').projectDir = new File(rootDir, 'singledateandtimepicker/')
 rootProject.name = "EVtalk"

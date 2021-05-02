@@ -17,9 +17,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EVtalk"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.userinfo.CarSettingActivity"
+        <activity android:name=".TimeActivity"
+            android:theme="@style/Theme.AppCompat.Dialog" />
+        <activity
+            android:name=".ui.userinfo.CarSettingActivity"
             android:label="차 종류 선택"
-            android:theme="@style/Theme.AppCompat.Dialog"></activity>
+            android:theme="@style/Theme.AppCompat.Dialog" />
         <activity android:name=".ui.userinfo.PaymentSettingActivity" />
         <activity android:name=".ui.userinfo.MembershipSettingActivity" />
         <activity android:name=".ui.userinfo.UserInfoActivity" />

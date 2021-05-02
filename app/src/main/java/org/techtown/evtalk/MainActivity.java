@@ -1,13 +1,10 @@
 package org.techtown.evtalk;
 
 import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +20,9 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraPosition;
 import com.naver.maps.map.CameraUpdate;
@@ -148,6 +147,34 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //                Toast.LENGTH_SHORT).show();
 
         AutoPermissions.Companion.loadAllPermissions(this, 101);
+
+
+//        FloatingActionButton fab1 = (FloatingActionButton) findViewById(R.id.fab1);
+//        fab1.setOnClickListener(new View.OnClickListener() { // 시간설정 - fab 클릭 시 동작
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent(MainActivity.this, TimeActivity.class);
+//                startActivity(intent);
+//            }
+//        });
+//
+//        FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab2);
+//        fab2.setOnClickListener(new View.OnClickListener() { // 충전소 설정 - fab2 클릭 시 동작
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action2", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
+//
+//        FloatingActionButton fab3 = (FloatingActionButton) findViewById(R.id.fab3);
+//        fab3.setOnClickListener(new View.OnClickListener() { // 주변 맛집 - fab3 클릭 시 동작
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action3", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
     }
 
     @Override // home 에서 뒤로가기 두번 클릭 시 종료됩니다
