@@ -1,10 +1,16 @@
 package org.techtown.evtalk;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,6 +76,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static List<ChargingStation> chargingStation = new ArrayList<>();;   //충전소 기본 정보
     private AppBarConfiguration mAppBarConfiguration;
     private NaverMap naverMap;
+
+    public static String search_result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -215,12 +223,45 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     //Log.d("Current Location", "locationSource deactivated");
     //Log.d("Current Location", "locationSource activated");
 
+
+    // 검색 쿼리 리스너
+    private final SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
+        @Override
+        public boolean onQueryTextSubmit(String s) {
+            search_result = s;
+            Log.d("search", "검색 완료");
+
+            return false;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String s) {
+            Log.d("search", "입력중");
+            return false;
+        }
+    };
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_home, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_home, menu);
+
+        SearchView searchView = (SearchView)menu.findItem(R.id.search).getActionView();
+        searchView.setQueryHint("지역명 / 충전소 검색하기");
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView.setOnQueryTextListener(queryTextListener);
+        if(null!=searchManager){
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        }
+        searchView.setIconifiedByDefault(false);
+
+
         return true;
     }
+
 
     @Override
     public boolean onSupportNavigateUp() {

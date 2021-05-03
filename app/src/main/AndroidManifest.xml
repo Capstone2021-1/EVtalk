@@ -17,7 +17,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EVtalk"
         android:usesCleartextTraffic="true">
-        <activity android:name=".TimeActivity"
+        <activity
+            android:name=".TimeActivity"
             android:theme="@style/Theme.AppCompat.Dialog" />
         <activity
             android:name=".ui.userinfo.CarSettingActivity"
@@ -30,7 +31,17 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/Theme.EVtalk" />
+            android:theme="@style/Theme.EVtalk">
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+
+
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"

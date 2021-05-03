@@ -26,6 +26,7 @@
     <string name="car_name">아이오닉5</string>
     <string name="skills">Skills</string>
     <string name="ratings">남긴 리뷰 수</string>
+    <string name="edittext_search_location">충전소 검색</string>
     <string name="samplereview">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec pretium bibendum sapien, ut euismod massa. Duis convallis sem sed turpis elementum auctor.</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
