@@ -51,6 +51,7 @@ import org.techtown.evtalk.user.Card;
 import org.techtown.evtalk.user.ChargingStation;
 import org.techtown.evtalk.user.Fee;
 import org.techtown.evtalk.user.RetrofitConnection;
+import org.techtown.evtalk.user.SearchResult;
 import org.techtown.evtalk.user.User;
 
 import java.io.IOException;
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static List<ChargingStation> chargingStation = new ArrayList<>();;   //충전소 기본 정보
     private AppBarConfiguration mAppBarConfiguration;
     private NaverMap naverMap;
+    public RetrofitConnection retrofit = new RetrofitConnection();
 
     public static String search_result;
 
@@ -231,6 +233,21 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             search_result = s;
             Log.d("search", "검색 완료");
 
+            List<SearchResult> results = new ArrayList<>(); //검색 결과 저장.
+            retrofit.server.searchChSt(search_result).enqueue(new Callback<List<SearchResult>>() {
+                @Override
+                public void onResponse(Call<List<SearchResult>> call, Response<List<SearchResult>> response) {
+                    List<SearchResult> temp = response.body();
+                    for(SearchResult i : temp)
+                        results.add(i);
+                }
+
+                @Override
+                public void onFailure(Call<List<SearchResult>> call, Throwable t) {
+                    Log.i("error", "" + t.toString());
+                }
+            });
+
             return false;
         }
 
@@ -365,7 +382,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     //메인 엑티비티 실행 시 DB에서 유저 정보 받아오기
     public void getUserInfo() {
-        RetrofitConnection retrofit = new RetrofitConnection();
         retrofit.server.getUserInfo(user.getId()).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {

@@ -62,4 +62,7 @@ public interface Service {
     @GET("/getChargingFee")
     Call<List<Fee>> getChargingFee(@Query("id") long id);
 
+    @GET("/search/charging_station")
+    Call<List<SearchResult>> searchChSt(@Query("query") String query);
+
 }
