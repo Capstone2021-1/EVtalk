@@ -306,7 +306,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         markersPosition = new Vector<LatLng>();
         for (int i = 0; i < chargingStation.size(); i++) {
             markersPosition.add(new LatLng(chargingStation.get(i).getLat(), chargingStation.get(i).getLng()));
-            Log.i("확인이요~~~", "" + chargingStation.get(i).getFee() + "  " + chargingStation.get(i).getId());
         }
 
         // 카메라 이동 되면 호출 되는 이벤트
