@@ -10,6 +10,13 @@
         android:name="org.techtown.evtalk.ui.home.HomeFragment"
         android:label="EVtalk"
         tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/nav_search_result"
+        android:name="org.techtown.evtalk.SearchResultFragment"
+        android:label="검색 결과"
+        tools:layout="@layout/fragment_search_result" />
+
     <activity
         android:id="@+id/nav_userinfo"
         android:name="org.techtown.evtalk.ui.userinfo.UserInfoActivity"

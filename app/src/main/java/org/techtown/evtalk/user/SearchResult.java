@@ -49,4 +49,9 @@ public class SearchResult {
     public void setLatOy(double latOy) {
         this.latOy = latOy;
     }
+
+    public SearchResult(String iOt, String nOa){
+        this.iOt = iOt;
+        this.nOa = nOa;
+    }
 }

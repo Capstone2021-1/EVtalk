@@ -2,12 +2,14 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment">
 
 
     // 지도 프래그먼트 추가
+
     <fragment
         android:id="@+id/map"
         android:name="com.naver.maps.map.MapFragment"
@@ -18,8 +20,8 @@
         android:id="@+id/location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="12dp"
-        android:layout_gravity="top|right" />
+        android:layout_gravity="top|right"
+        android:layout_margin="12dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab1"
@@ -30,8 +32,8 @@
         android:layout_marginLeft="@dimen/fab_margin"
         android:layout_marginBottom="85dp"
         android:src="@drawable/fab_time"
-        app:tint="@android:color/white"
-        app:backgroundTint="@color/maincolor" />
+        app:backgroundTint="@color/maincolor"
+        app:tint="@android:color/white" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab2"
@@ -40,8 +42,8 @@
         android:layout_gravity="bottom|left"
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/fab_station"
-        app:tint="@android:color/white"
-        app:backgroundTint="@color/maincolor" />
+        app:backgroundTint="@color/maincolor"
+        app:tint="@android:color/white" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab3"
@@ -50,7 +52,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/fab_restaurant"
-        app:tint="@android:color/white"
-        app:backgroundTint="@color/maincolor" />
+        app:backgroundTint="@color/maincolor"
+        app:tint="@android:color/white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

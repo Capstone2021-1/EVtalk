@@ -7,9 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,9 +24,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraPosition;
 import com.naver.maps.map.CameraUpdate;
@@ -45,6 +41,7 @@ import com.naver.maps.map.util.FusedLocationSource;
 import com.naver.maps.map.widget.LocationButtonView;
 import com.pedro.library.AutoPermissions;
 
+import org.techtown.evtalk.ui.search.SearchResultActivity;
 import org.techtown.evtalk.ui.userinfo.UserInfoActivity;
 import org.techtown.evtalk.user.Car;
 import org.techtown.evtalk.user.Card;
@@ -54,11 +51,8 @@ import org.techtown.evtalk.user.RetrofitConnection;
 import org.techtown.evtalk.user.SearchResult;
 import org.techtown.evtalk.user.User;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 
 import retrofit2.Call;
@@ -74,12 +68,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static Car car;     //사용자 차량 정보
     public static List<Card> membership = new ArrayList<>();    //사용자 회원카드 정보
     public static List<Card> payment = new ArrayList<>();
-    public static List<ChargingStation> chargingStation = new ArrayList<>();;   //충전소 기본 정보
+    public static List<ChargingStation> chargingStation = new ArrayList<>();
+    ;   //충전소 기본 정보
     private AppBarConfiguration mAppBarConfiguration;
     private NaverMap naverMap;
     public RetrofitConnection retrofit = new RetrofitConnection();
 
-    public static String search_result;
+    public static String search_result ="";
+    private static final int SEARCH_RESULT_CODE = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,16 +86,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         user = new User(intent.getExtras().getLong("id")
                 , intent.getExtras().getString("name")
                 , intent.getExtras().getString("image"));
-        if(user != null)
+        if (user != null)
             getUserInfo();
 
         // 차량 정보 초기화
-        if(car == null) {
+        if (car == null) {
             car = new Car();
             car.setImage("https://evtalk.s3.ap-northeast-2.amazonaws.com/car_image/soulbooster.png");
             car.setVehicle("차량을 선택하세요!");
         }
-
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -116,6 +111,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+//        AppBarConfiguration appBarConfiguration =
+//                new AppBarConfiguration.Builder(navController.getGraph()).build();
+//        toolbar = findViewById(R.id.toolbar);
+//        NavigationUI.setupWithNavController(
+//                toolbar, navController, appBarConfiguration);
+
 
         // navigation drawer 회원이름 변경
         View headerView = navigationView.getHeaderView(0);
@@ -140,21 +142,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // FusedLocationSource 생성하고 Navermap에 지정
         locationSource = new FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE);
-
-//        CameraPosition cameraPosition = new CameraPosition(
-//                new LatLng(37.5666102, 126.9783881), // 대상 지점
-//                16, // 줌 레벨
-//                20, // 기울임 각도
-//                180 // 베어링 각도
-//        );
-
-//        Toast.makeText(this,
-//                "대상 지점 위도: " + cameraPosition.target.latitude + ", " +
-//                        "대상 지점 경도: " + cameraPosition.target.longitude + ", " +
-//                        "줌 레벨: " + cameraPosition.zoom + ", " +
-//                        "기울임 각도: " + cameraPosition.tilt + ", " +
-//                        "베어링 각도: " + cameraPosition.bearing,
-//                Toast.LENGTH_SHORT).show();
 
         AutoPermissions.Companion.loadAllPermissions(this, 101);
 
@@ -203,14 +190,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    public void startUserInfoActivity(View view){
+    public void startUserInfoActivity(View view) {
         Intent intent = new Intent(MainActivity.this, UserInfoActivity.class);
         startActivity(intent);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,  @NonNull int[] grantResults) {
+                                           @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (locationSource.onRequestPermissionsResult(
                 requestCode, permissions, grantResults)) {
             if (!locationSource.isActivated()) { // 권한 거부됨
@@ -227,56 +214,52 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     // 검색 쿼리 리스너
+    public static List<SearchResult> results = new ArrayList<>(); //검색 결과 저장.
+
     private final SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
         @Override
         public boolean onQueryTextSubmit(String s) {
             search_result = s;
+            if(search_result.endsWith(" ")){
+                search_result = search_result.substring(0, search_result.length()-1);
+            }
             Log.d("search", "검색 완료");
 
-            List<SearchResult> results = new ArrayList<>(); //검색 결과 저장.
-            retrofit.server.searchChSt(search_result).enqueue(new Callback<List<SearchResult>>() {
-                @Override
-                public void onResponse(Call<List<SearchResult>> call, Response<List<SearchResult>> response) {
-                    List<SearchResult> temp = response.body();
-                    for(SearchResult i : temp)
-                        results.add(i);
-                }
-
-                @Override
-                public void onFailure(Call<List<SearchResult>> call, Throwable t) {
-                    Log.i("error", "" + t.toString());
-                }
-            });
-
-            return false;
+            Log.d("search", Integer.toString(results.size()));
+            startSearchActivity(search_result);
+            return true;
         }
 
         @Override
         public boolean onQueryTextChange(String s) {
             Log.d("search", "입력중");
-            return false;
+            return true;
         }
     };
 
 
+    // 추가적으로 키보드 내려가게 하는 기능 필요
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_home, menu);
 
-        SearchView searchView = (SearchView)menu.findItem(R.id.search).getActionView();
-        searchView.setQueryHint("지역명 / 충전소 검색하기");
-
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        searchView.setOnQueryTextListener(queryTextListener);
-        if(null!=searchManager){
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        }
-        searchView.setIconifiedByDefault(false);
 
+        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setQueryHint("지역명 / 충전소 검색하기");
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setOnQueryTextListener(queryTextListener);
+        searchView.setIconifiedByDefault(false);
+//        searchView.clearFocus();
 
         return true;
+    }
+
+    public void startSearchActivity(String s) {
+        Intent intent = new Intent(MainActivity.this, SearchResultActivity.class);
+        startActivityForResult(intent, SEARCH_RESULT_CODE);
     }
 
 
@@ -322,7 +305,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // 마커들 위치 정의
         markersPosition = new Vector<LatLng>();
         for (int i = 0; i < chargingStation.size(); i++) {
-            markersPosition.add(new LatLng(chargingStation.get(i).getLat(),chargingStation.get(i).getLng()));
+            markersPosition.add(new LatLng(chargingStation.get(i).getLat(), chargingStation.get(i).getLng()));
             Log.i("확인이요~~~", "" + chargingStation.get(i).getFee() + "  " + chargingStation.get(i).getId());
         }
 
@@ -333,7 +316,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 freeActiveMarkers();
                 // 정의된 마커위치들중 가시거리 내에있는것들만 마커 생성
                 LatLng currentPosition = getCurrentPosition(naverMap);
-                for (LatLng markerPosition: markersPosition) {
+                for (LatLng markerPosition : markersPosition) {
                     if (!withinSightMarker(currentPosition, markerPosition))
                         continue;
                     Marker marker = new Marker();
@@ -362,6 +345,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public final static double REFERANCE_LNG = 1 / 88.74;
     public final static double REFERANCE_LAT_X3 = 3 / 109.958489129649955;
     public final static double REFERANCE_LNG_X3 = 3 / 88.74;
+
     public boolean withinSightMarker(LatLng currentPosition, LatLng markerPosition) {
         boolean withinSightMarkerLat = Math.abs(currentPosition.latitude - markerPosition.latitude) <= REFERANCE_LAT_X3;
         boolean withinSightMarkerLng = Math.abs(currentPosition.longitude - markerPosition.longitude) <= REFERANCE_LNG_X3;
@@ -374,7 +358,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             activeMarkers = new Vector<Marker>();
             return;
         }
-        for (Marker activeMarker: activeMarkers) {
+        for (Marker activeMarker : activeMarkers) {
             activeMarker.setMap(null);
         }
         activeMarkers = new Vector<Marker>();
@@ -405,9 +389,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         retrofit.server.getMembershipInfo(user.getId()).enqueue(new Callback<List<Card>>() {
             @Override
             public void onResponse(Call<List<Card>> call, Response<List<Card>> response) {
-                if(response.isSuccessful()) {
+                if (response.isSuccessful()) {
                     List<Card> result = response.body();
-                    for(Card i : result) {
+                    for (Card i : result) {
                         membership.add(i);
                     }
                 }
@@ -422,9 +406,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         retrofit.server.getPaymentInfo(user.getId()).enqueue(new Callback<List<Card>>() {
             @Override
             public void onResponse(Call<List<Card>> call, Response<List<Card>> response) {
-                if(response.isSuccessful()) {
+                if (response.isSuccessful()) {
                     List<Card> result = response.body();
-                    for(Card i : result) {
+                    for (Card i : result) {
                         payment.add(i);
                     }
                 }
@@ -439,7 +423,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         retrofit.server.getCarInfo(user.getId()).enqueue(new Callback<Car>() {
             @Override
             public void onResponse(Call<Car> call, Response<Car> response) {
-                if(response.body() != null) {
+                if (response.body() != null) {
                     car = response.body();
                 }
             }
@@ -453,9 +437,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         retrofit.server.getChargingFee(user.getId()).enqueue(new Callback<List<Fee>>() {
             @Override
             public void onResponse(Call<List<Fee>> call, Response<List<Fee>> response) {
-                for(Fee f : response.body()) {
-                    for(ChargingStation i : chargingStation) {
-                        if(i.getId().contains(f.getBusiId()))
+                for (Fee f : response.body()) {
+                    for (ChargingStation i : chargingStation) {
+                        if (i.getId().contains(f.getBusiId()))
                             i.setFee(f.getFee());
                     }
                 }
