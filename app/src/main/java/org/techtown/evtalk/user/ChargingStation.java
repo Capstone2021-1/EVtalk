@@ -6,6 +6,9 @@ public class ChargingStation {
     @SerializedName("id")
     private String id;
 
+    @SerializedName("busiNm")
+    private String busiNm;
+
     @SerializedName("name")
     private String name;
 
@@ -20,6 +23,10 @@ public class ChargingStation {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public void setBusiNm(String busiNm) {
+        this.busiNm = busiNm;
     }
 
     public void setName(String name) {
@@ -40,6 +47,10 @@ public class ChargingStation {
 
     public String getId() {
         return id;
+    }
+
+    public String getBusiNm() {
+        return busiNm;
     }
 
     public String getName() {
