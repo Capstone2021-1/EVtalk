@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         fab2.setOnClickListener(new View.OnClickListener() { // 충전소 설정 - fab2 클릭 시 동작
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action2", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "충전소 설정 페이지는 아직...", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -192,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         fab3.setOnClickListener(new View.OnClickListener() { // 주변 맛집 - fab3 클릭 시 동작
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action3", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "주변 맛집은 나중에...", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -213,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 startActivity(intent);
             }
         });
-        lastzeze("test");
+        lastzeze("test"); // 앱 구동시 파싱 한번 테스트
     }
 
     @Override
