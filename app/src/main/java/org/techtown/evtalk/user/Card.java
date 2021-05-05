@@ -10,7 +10,7 @@ import java.util.Objects;
 
 public class Card {
     @SerializedName("id")
-    private int id;
+    private String id;
 
     @SerializedName("card_name")
     private String name;
@@ -18,7 +18,7 @@ public class Card {
     @SerializedName("image")
     private String image;
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -30,7 +30,7 @@ public class Card {
         this.image = image;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -47,7 +47,7 @@ public class Card {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Card card = (Card) o;
-        return id == card.id &&
+        return id.equals(card.id) &&
                 name.equals(card.name) &&
                 image.equals(card.image);
     }

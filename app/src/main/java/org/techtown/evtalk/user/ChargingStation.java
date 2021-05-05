@@ -9,23 +9,14 @@ public class ChargingStation {
     @SerializedName("name")
     private String name;
 
-    @SerializedName("address")
-    private String address;
-
     @SerializedName("lat")
     private double lat;
 
     @SerializedName("lng")
     private double lng;
 
-    @SerializedName("useTime")
-    private String useTime;
-
-    @SerializedName("park")
-    private String park;
-
-    @SerializedName("note")
-    private String note;
+    @SerializedName("fee")
+    private float fee;
 
     public void setId(String id) {
         this.id = id;
@@ -35,11 +26,7 @@ public class ChargingStation {
         this.name = name;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public void setLat(double lat) {
+    public void setLat(float lat) {
         this.lat = lat;
     }
 
@@ -47,16 +34,8 @@ public class ChargingStation {
         this.lng = lng;
     }
 
-    public void setUseTime(String useTime) {
-        this.useTime = useTime;
-    }
-
-    public void setPark(String park) {
-        this.park = park;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
+    public void setFee(float fee) {
+        this.fee = fee;
     }
 
     public String getId() {
@@ -67,10 +46,6 @@ public class ChargingStation {
         return name;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
     public double getLat() {
         return lat;
     }
@@ -79,16 +54,8 @@ public class ChargingStation {
         return lng;
     }
 
-    public String getUseTime() {
-        return useTime;
-    }
-
-    public String getPark() {
-        return park;
-    }
-
-    public String getNote() {
-        return note;
+    public float getFee() {
+        return fee;
     }
 
 }

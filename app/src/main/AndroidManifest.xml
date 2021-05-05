@@ -20,6 +20,11 @@
         <activity android:name=".ui.station.StationPageActivity"></activity>
         <activity
             android:name=".ui.userinfo.CarSettingActivity"
+        <activity
+            android:name=".TimeActivity"
+            android:theme="@style/Theme.AppCompat.Dialog" />
+        <activity
+            android:name=".ui.userinfo.CarSettingActivity"
             android:label="차 종류 선택"
             android:theme="@style/Theme.AppCompat.Dialog" />
         <activity android:name=".ui.userinfo.PaymentSettingActivity" />
@@ -29,7 +34,25 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/Theme.EVtalk" />
+            android:theme="@style/Theme.EVtalk">
+        </activity>
+
+        <activity
+            android:name=".ui.search.SearchResultActivity"
+            android:label="검색 결과 표시"
+            android:parentActivityName="org.techtown.evtalk.MainActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.techtown.evtalk.MainActivity" />
+            <!-- meta tag and intent filter go into results activity -->
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+        </activity>
+
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"
@@ -37,6 +60,8 @@
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="ft8sagykpk" />
+
+        <meta-data android:name="android.app.searchable" android:value=".SearchResultActivity" />
 
         <activity
             android:name=".LoginActivity"
