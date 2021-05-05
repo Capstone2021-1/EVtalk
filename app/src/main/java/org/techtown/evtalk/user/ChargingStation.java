@@ -13,10 +13,10 @@ public class ChargingStation {
     private String address;
 
     @SerializedName("lat")
-    private float lat;
+    private double lat;
 
     @SerializedName("lng")
-    private float lng;
+    private double lng;
 
     @SerializedName("useTime")
     private String useTime;
@@ -39,11 +39,11 @@ public class ChargingStation {
         this.address = address;
     }
 
-    public void setLat(float lat) {
+    public void setLat(double lat) {
         this.lat = lat;
     }
 
-    public void setLng(float lng) {
+    public void setLng(double lng) {
         this.lng = lng;
     }
 
@@ -71,11 +71,11 @@ public class ChargingStation {
         return address;
     }
 
-    public float getLat() {
+    public double getLat() {
         return lat;
     }
 
-    public float getLng() {
+    public double getLng() {
         return lng;
     }
 

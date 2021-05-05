@@ -1,13 +1,12 @@
 package org.techtown.evtalk;
 
 import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +22,10 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraPosition;
 import com.naver.maps.map.CameraUpdate;
@@ -35,18 +37,24 @@ import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.UiSettings;
 import com.naver.maps.map.overlay.LocationOverlay;
 import com.naver.maps.map.overlay.Marker;
+import com.naver.maps.map.overlay.Overlay;
 import com.naver.maps.map.overlay.OverlayImage;
 import com.naver.maps.map.util.FusedLocationSource;
 import com.naver.maps.map.widget.LocationButtonView;
 import com.pedro.library.AutoPermissions;
 
+import org.techtown.evtalk.ui.station.Station;
+import org.techtown.evtalk.ui.station.StationPageActivity;
 import org.techtown.evtalk.ui.userinfo.UserInfoActivity;
 import org.techtown.evtalk.user.Car;
 import org.techtown.evtalk.user.Card;
 import org.techtown.evtalk.user.ChargingStation;
 import org.techtown.evtalk.user.RetrofitConnection;
 import org.techtown.evtalk.user.User;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -55,7 +63,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, Overlay.OnClickListener {
     private long backKeyPressedTime = 0;
     private Toast toast;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
@@ -64,9 +73,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static Car car;     //사용자 차량 정보
     public static List<Card> membership = new ArrayList<>();    //사용자 회원카드 정보
     public static List<Card> payment = new ArrayList<>();
-    public static List<ChargingStation> chargingStation = new ArrayList<>();;   //충전소 기본 정보
+    public static List<ChargingStation> chargingStation = new ArrayList<>();   //충전소 기본 정보
+    public static Station station = new Station(); // API 호출 충전소 정보
     private AppBarConfiguration mAppBarConfiguration;
     private NaverMap naverMap;
+    private FrameLayout BSsheet;
+    private BottomSheetBehavior bs;
+//    lastTask task;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,9 +157,103 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //                Toast.LENGTH_SHORT).show();
 
         AutoPermissions.Companion.loadAllPermissions(this, 101);
+
+        BSsheet = (FrameLayout) findViewById(R.id.bs_sheet);
+        BottomSheetBehavior bs = BottomSheetBehavior.from(BSsheet); // 바텀 시트 동작을 위한 Behavior
+        hidebs();
+
+        FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab2);
+        fab2.setOnClickListener(new View.OnClickListener() { // 충전소 설정 - fab2 클릭 시 동작
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action2", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
+        FloatingActionButton fab3 = (FloatingActionButton) findViewById(R.id.fab3);
+        fab3.setOnClickListener(new View.OnClickListener() { // 주변 맛집 - fab3 클릭 시 동작
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action3", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+        FloatingActionButton fab1 = (FloatingActionButton) findViewById(R.id.fab1);
+        fab1.setOnClickListener(new View.OnClickListener() { // 시간설정 - fab 클릭 시 동작
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action1", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+        // 바텀 시트 취소 버튼 동작
+        Button btn_cancel = (Button) findViewById(R.id.btn_cancel);
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hidebs();
+            }
+        });
+        // 바텀 시트 클릭 시 충전소 페이지 호출
+        BSsheet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), StationPageActivity.class);
+                startActivity(intent);
+            }
+        });
+        lastzeze("test");
     }
 
-    @Override // home 에서 뒤로가기 두번 클릭 시 종료됩니다
+
+    // 바텀 시트 출현
+    public synchronized void showbs(double lat, double lng, String dbaddr){
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    lastzeze(dbaddr);
+                }
+            }).start();
+
+//        apicall(lat, lng, dbaddr);
+//        task = new lastTask();
+//        task.execute();
+        BSsheet = (FrameLayout) findViewById(R.id.bs_sheet);
+        BottomSheetBehavior bs = BottomSheetBehavior.from(BSsheet);
+
+        bs.setState(BottomSheetBehavior.STATE_EXPANDED); // 바텀 시트 출현
+
+        TextView bs_stationname = findViewById(R.id.bs_stationname);
+        bs_stationname.setText(dbaddr); // 충전소 이름 변경
+
+        TextView bs_comname = findViewById(R.id.bs_comname);
+        bs_comname.setText(station.getBusiNm()); // 회사이름 변경
+
+
+        FloatingActionButton fab1 = (FloatingActionButton) findViewById(R.id.fab1);
+        FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab2);
+        FloatingActionButton fab3 = (FloatingActionButton) findViewById(R.id.fab3);
+        fab1.hide(); // 플로팅 버튼 숨기기
+        fab2.hide();
+        fab3.hide();
+    }
+    // 바텀 시트 숨기기
+    public void hidebs(){
+        BSsheet = (FrameLayout) findViewById(R.id.bs_sheet);
+        BottomSheetBehavior bs = BottomSheetBehavior.from(BSsheet);
+        bs.setState(BottomSheetBehavior.STATE_HIDDEN);
+
+        FloatingActionButton fab1 = (FloatingActionButton) findViewById(R.id.fab1);
+        FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab2);
+        FloatingActionButton fab3 = (FloatingActionButton) findViewById(R.id.fab3);
+        fab1.show();
+        fab2.show();
+        fab3.show();
+    }
+
+    // home 에서 뒤로가기 두번 클릭 시 종료
+    @Override
     public void onBackPressed() {
         // 마지막으로 뒤로가기 버튼을 눌렀던 시간에 2초를 더해 현재시간과 비교 후 2초가 지났으면 Toast Show
         if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
@@ -162,6 +269,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    // 마이페이지 이동
     public void startUserInfoActivity(View view){
         Intent intent = new Intent(MainActivity.this, UserInfoActivity.class);
         startActivity(intent);
@@ -199,7 +307,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    public void onMapReady(@NonNull NaverMap naverMap) {
+    public synchronized void onMapReady(@NonNull NaverMap naverMap) {
         Log.d("onMapRead", "onMapReady Method Begin");
 
         // FusedLocationSource 생성하고 Navermap에 지정
@@ -239,7 +347,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // 카메라 이동 되면 호출 되는 이벤트
         naverMap.addOnCameraChangeListener(new NaverMap.OnCameraChangeListener() {
             @Override
-            public void onCameraChange(int reason, boolean animated) {
+            public synchronized void onCameraChange(int reason, boolean animated) {
                 freeActiveMarkers();
                 // 정의된 마커위치들중 가시거리 내에있는것들만 마커 생성
                 LatLng currentPosition = getCurrentPosition(naverMap);
@@ -248,14 +356,254 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         continue;
                     Marker marker = new Marker();
                     marker.setIconPerspectiveEnabled(true); // 원근감 표시
-                    marker.setIcon(OverlayImage.fromResource(R.drawable.ic_baseline_location_on_24));
+                    marker.setIcon(OverlayImage.fromResource(R.drawable.ic_marker));
                     marker.setPosition(markerPosition); // 마커 위치
                     marker.setMap(naverMap);
+                    marker.setOnClickListener(MainActivity.this::onClick);
                     activeMarkers.add(marker);
                 }
             }
         });
     }
+
+    // 마커 클릭 이벤트
+    String dbaddr = "NULL";
+    Marker lastClicked = null;
+    @Override
+    public synchronized boolean onClick(@NonNull Overlay overlay) {
+        if(overlay instanceof Marker){
+            for(int i=0;i<chargingStation.size();i++){
+                if(((Marker) overlay).getPosition().latitude == chargingStation.get(i).getLat() && ((Marker) overlay).getPosition().longitude == chargingStation.get(i).getLng())
+                    dbaddr = chargingStation.get(i).getName();
+            }
+            station.setStaNm(dbaddr);
+            station.setLat(((Marker) overlay).getPosition().latitude);
+            station.setLng(((Marker) overlay).getPosition().longitude);
+
+            // 마커 클릭 시 카메라 이동 - 이동 후 클릭된 마커 이미지 변경 안되는 오류
+            /*LatLng markercenter = new LatLng(station.getLat(), station.getLng());
+            CameraUpdate cameraUpdate = CameraUpdate.scrollTo(markercenter);
+            naverMap.moveCamera(cameraUpdate);*/
+
+            if (lastClicked!=null)
+                lastClicked.setIcon((OverlayImage.fromResource(R.drawable.ic_marker)));
+            lastClicked = (Marker) overlay;
+            if (lastClicked!=null)
+                ((Marker) overlay).setIcon((OverlayImage.fromResource(R.drawable.ic_marker_clicked)));
+
+            showbs(station.getLat(), station.getLng(), dbaddr);
+            return true;
+        }
+        return false;
+    }
+
+    public synchronized void lastzeze(String dbaddr) {
+        String key_Encoding = "%2BKctK6sCnrlkUxKAGbtxsw4ZEV4x4oeLyViNSH%2FjfjNumzKpfre5WkPNLKKltku5I%2FP54TR6iUTsvYeFybHo2A%3D%3D";
+        String key_Decoding = "+KctK6sCnrlkUxKAGbtxsw4ZEV4x4oeLyViNSH/jfjNumzKpfre5WkPNLKKltku5I/P54TR6iUTsvYeFybHo2A==";
+        String queryUrl = "http://apis.data.go.kr/B552584/EvCharger/getChargerInfo?serviceKey="+key_Encoding+"&pageNo=1&numOfRows=9999&zcode=11";
+        XmlPullParserFactory factory;
+        XmlPullParser parser;
+        URL xmlUrl;
+//        String returnResult = "";
+
+        try {
+            boolean flag1 = false; // 21개
+
+            xmlUrl = new URL(queryUrl);
+            xmlUrl.openConnection().getInputStream();
+            factory = XmlPullParserFactory.newInstance();
+            parser = factory.newPullParser();
+            parser.setInput(xmlUrl.openStream(), "utf-8");
+            int eventType = parser.getEventType();
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                switch (eventType) {
+                    case XmlPullParser.START_DOCUMENT:
+                        break;
+                    case XmlPullParser.END_DOCUMENT:
+                        break;
+                    case XmlPullParser.START_TAG:
+                        if (parser.getName().equals("addr")) {
+                            flag1 = true;
+                        }
+                        break;
+                    case XmlPullParser.END_TAG:
+                        break;
+                    case XmlPullParser.TEXT:
+                        if (flag1 == true && parser.getText().equals("서울특별시 성북구 장위2동 65-154")) {
+                            station.setAddr(parser.getText());
+                            flag1 = false;
+                        }
+                        break;
+                }
+                eventType = parser.next();
+            }
+        } catch (Exception e) {
+            station.setBusiNm("이게 나오면 안되는데...");
+        }
+
+//        return returnResult;
+    }
+
+
+    /*// Api 파싱 - 위도, 경도로 구분
+    public void apicall(double lat, double lng, String dbaddr){
+
+
+        // api 호출 url
+//        String queryUrl = "http://apis.data.go.kr/B552584/EvCharger/getChargerInfo?serviceKey="+key_Encoding+"&pageNo=1&numOfRows=9999&zcode=11";
+
+        try {
+            URL url= new URL("http://apis.data.go.kr/B552584/EvCharger/getChargerInfo?serviceKey=%2BKctK6sCnrlkUxKAGbtxsw4ZEV4x4oeLyViNSH%2FjfjNumzKpfre5WkPNLKKltku5I%2FP54TR6iUTsvYeFybHo2A%3D%3D&pageNo=1&numOfRows=9999&zcode=11"); //문자열로 된 요청 url을 URL 객체로 생성.
+
+            XmlPullParserFactory factory= XmlPullParserFactory.newInstance();
+            XmlPullParser xpp= factory.newPullParser();
+//            xpp.setInput( new InputStreamReader(is, "UTF-8") );  //inputstream 으로부터 xml 입력받기
+            xpp.setInput(url.openStream(), null);
+
+            String tag;
+
+            xpp.next();
+
+            int temp;
+            int eventType= xpp.getEventType();
+
+            while( eventType != XmlPullParser.END_DOCUMENT ){
+                temp = 0;
+                switch( eventType ){
+                    case XmlPullParser.START_DOCUMENT:
+                        station.setBusiNm("하마요");
+                        break;
+
+                    case XmlPullParser.START_TAG:
+                        tag= xpp.getName();    //테그 이름 얻어오기
+
+                        if(tag.equals("item")) ;// 첫번째 검색결과
+                        if(tag.equals("statNm")){
+                            xpp.next();
+                        }
+                        else if(tag.equals("statId")){
+                            xpp.next();
+                        }
+                        else if(tag.equals("chgerId")){
+                            xpp.next();
+                        }
+                        else if(tag.equals("chgerType")){
+                            xpp.next();
+                        }
+                        else if(tag.equals("addr")){
+                            xpp.next();
+                        }
+                        else if(tag.equals("lat")){
+                            xpp.next();
+                        }
+                        else if(tag.equals("lng")){
+                            xpp.next();
+                        }
+                        else if(tag.equals("useTime")){
+                            xpp.next();
+                        }
+                        else if(tag.equals("busiId")){
+                            xpp.next();
+                        }
+                        else if(tag.equals("busiNm")){
+                            xpp.next();
+                        }
+                        else if(tag.equals("busiCall")){
+                            xpp.next();
+                        }
+                        else if(tag.equals("stat")){
+                            xpp.next();
+                        }
+                        else if(tag.equals("statUpdDt")){
+                            xpp.next();
+                        }
+                        else if(tag.equals("powerType")){
+                            xpp.next();
+                        }
+                        else if(tag.equals("zcode")){
+                            xpp.next();
+                        }
+                        else if(tag.equals("parkingFree")){
+                            xpp.next();
+                        }
+                        else if(tag.equals("note")){
+                            xpp.next();
+                        }
+                        else if(tag.equals("limitYn")){
+                            xpp.next();
+                        }
+                        else if(tag.equals("limitDetail")){
+                            xpp.next();
+                        }
+                        else if(tag.equals("delYn")){
+                            xpp.next();
+                        }
+                        else if(tag.equals("delDetail")){
+                            xpp.next();
+                        }
+                        *//*if(tag.equals("lat")) {
+                            xpp.next();
+                            if (Double.parseDouble(xpp.getText()) == lat) {
+                                if(tag.equals("lng")){
+                                    xpp.next();
+                                    if(Double.parseDouble(xpp.getText()) == lng){
+                                        if(tag.equals("busiNm")){
+                                            xpp.next();
+                                            station.setBusiNm(xpp.getText());
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else if(tag.equals("statNm") && station.getStaNm().equals("NULL")){
+                            xpp.next();
+                            station.setStaNm(xpp.getText());
+                        }
+                        else if(tag.equals("statId") && station.getStaId().equals("NULL")){
+                            xpp.next();
+                            station.setStaId(xpp.getText());
+                        }
+                        else if(tag.equals("chgerId") && station){
+                            xpp.next();
+                            station.setChgerId(xpp.getText());
+                        }
+                        else if(tag.equals("chgerType") && temp == 2){
+                            xpp.next();
+                            station.setChgerType(xpp.getText());
+                        }
+                        else if(tag.equals("statNm") && temp == 2){
+                            xpp.next();
+                            station.setStaNm(xpp.getText());
+                        }
+                        else if(tag.equals("lat")){
+                            xpp.next();
+                            if(Math.floor(Double.parseDouble(xpp.getText())*10000) == lat)
+                                temp++;
+                        }
+                        else if(tag.equals("lng") && temp == 1){
+                            xpp.next();
+                            if(Math.floor(Double.parseDouble(xpp.getText())*10000) == lng)
+                                temp++;
+                        }
+                        else if(tag.equals("statNm") && temp == 2){
+                            xpp.next();
+                            station.setStaNm(xpp.getText());
+                        }*//*
+                        break;
+                    case XmlPullParser.TEXT:
+                        break;
+                    case XmlPullParser.END_TAG:
+                        tag= xpp.getName();    //테그 이름 얻어오기
+                        if(tag.equals("item")); // 첫번째 검색결과종료..
+                        break;
+                }
+                eventType= xpp.next();
+            }
+        } catch (Exception e) {
+            station.setBusiNm("이게 나오면 안되는데...");
+            e.printStackTrace();
+        }
+    }*/
 
     // 마커 정보 저장시킬 변수들 선언
     private Vector<LatLng> markersPosition;

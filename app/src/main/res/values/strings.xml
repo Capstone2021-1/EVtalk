@@ -8,8 +8,6 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
-
-
     <string name="job_success">Job Success</string>
     <string name="ui_ux_designer">UI/UX Designer</string>
     <string name="my_status">ex) 19~20시 회의로 인해 연락 못 받습니다.</string>
