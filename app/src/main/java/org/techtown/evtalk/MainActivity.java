@@ -1,14 +1,21 @@
 package org.techtown.evtalk;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -20,7 +27,10 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraPosition;
 import com.naver.maps.map.CameraUpdate;
@@ -32,18 +42,27 @@ import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.UiSettings;
 import com.naver.maps.map.overlay.LocationOverlay;
 import com.naver.maps.map.overlay.Marker;
+import com.naver.maps.map.overlay.Overlay;
 import com.naver.maps.map.overlay.OverlayImage;
 import com.naver.maps.map.util.FusedLocationSource;
 import com.naver.maps.map.widget.LocationButtonView;
 import com.pedro.library.AutoPermissions;
 
+import org.techtown.evtalk.ui.search.SearchResultActivity;
+import org.techtown.evtalk.ui.station.Station;
+import org.techtown.evtalk.ui.station.StationPageActivity;
 import org.techtown.evtalk.ui.userinfo.UserInfoActivity;
 import org.techtown.evtalk.user.Car;
 import org.techtown.evtalk.user.Card;
 import org.techtown.evtalk.user.ChargingStation;
+import org.techtown.evtalk.user.Fee;
 import org.techtown.evtalk.user.RetrofitConnection;
+import org.techtown.evtalk.user.SearchResult;
 import org.techtown.evtalk.user.User;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -64,7 +83,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static List<Card> payment = new ArrayList<>();
     public static List<ChargingStation> chargingStation = new ArrayList<>();   //충전소 기본 정보
     public static Station station = new Station(); // API 호출 충전소 정보
-    public static List<ChargingStation> chargingStation = new ArrayList<>();
     ;   //충전소 기본 정보
     private AppBarConfiguration mAppBarConfiguration;
     private NaverMap naverMap;
@@ -73,6 +91,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //    lastTask task;
     public RetrofitConnection retrofit = new RetrofitConnection();
 
+    public static String start_time;
+    public static String end_time;
+    public static String total_time;
+    public static final int TIMECODE = 1000;
     public static String search_result ="";
     private static final int SEARCH_RESULT_CODE = 2000;
 
@@ -149,6 +171,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         BottomSheetBehavior bs = BottomSheetBehavior.from(BSsheet); // 바텀 시트 동작을 위한 Behavior
         hidebs();
 
+        FloatingActionButton fab1 = (FloatingActionButton) findViewById(R.id.fab1);
+        fab1.setOnClickListener(new View.OnClickListener() { // 시간설정 - fab 클릭 시 동작
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, TimeActivity.class);
+                startActivityForResult(intent, TIMECODE);
+            }
+        });
         FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab2);
         fab2.setOnClickListener(new View.OnClickListener() { // 충전소 설정 - fab2 클릭 시 동작
             @Override
@@ -166,14 +196,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         .setAction("Action", null).show();
             }
         });
-        FloatingActionButton fab1 = (FloatingActionButton) findViewById(R.id.fab1);
-        fab1.setOnClickListener(new View.OnClickListener() { // 시간설정 - fab 클릭 시 동작
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action1", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
         // 바텀 시트 취소 버튼 동작
         Button btn_cancel = (Button) findViewById(R.id.btn_cancel);
         btn_cancel.setOnClickListener(new View.OnClickListener() {
@@ -193,6 +216,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         lastzeze("test");
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(requestCode == TIMECODE) {
+            if (resultCode == 1001) {
+                start_time = data.getStringExtra("start_time");
+                end_time = data.getStringExtra("end_time");
+                total_time = data.getStringExtra("total_time");
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     // 바텀 시트 출현
     public synchronized void showbs(double lat, double lng, String dbaddr){

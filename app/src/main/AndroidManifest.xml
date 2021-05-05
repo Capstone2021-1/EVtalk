@@ -18,8 +18,7 @@
         android:theme="@style/Theme.EVtalk"
         android:usesCleartextTraffic="true">
         <activity android:name=".ui.station.StationPageActivity"></activity>
-        <activity
-            android:name=".ui.userinfo.CarSettingActivity"
+
         <activity
             android:name=".TimeActivity"
             android:theme="@style/Theme.AppCompat.Dialog" />
