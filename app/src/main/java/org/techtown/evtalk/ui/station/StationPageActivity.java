@@ -30,13 +30,16 @@ public class StationPageActivity extends AppCompatActivity {
     private final int Fragment_3 = 3;
     private TextView textView;
     private Button button;
-    public List<Station> station = new ArrayList<>(); // API 호출 충전소 정보
+    public static List<Station> station = new ArrayList<>(); // API 호출 충전소 정보
     Station bus = null;
+    public static int parsingcount;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_station_page);
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -118,7 +121,7 @@ public class StationPageActivity extends AppCompatActivity {
 
     //    public static int right = 0;
     public class doparsing extends AsyncTask<String, Void, String> {
-        public int right = 0;
+        int right = 0;
         @Override
         protected synchronized String doInBackground(String... strings) {
             Log.i("파싱시작합니다.", "파싱파싱");
@@ -217,6 +220,7 @@ public class StationPageActivity extends AppCompatActivity {
                 Log.i("파싱실패ㅠ", "파싱실패요~");
             }
 
+            StationFragment1.parsingcount = right;
             return null;
         }
 
@@ -226,6 +230,17 @@ public class StationPageActivity extends AppCompatActivity {
             textView = findViewById(R.id.stationaddr);
             textView.setText(station.get(right).getAddr()); // 충전소 주소 텍스트 변경
 
+            Log.d("갯수임","="+Integer.parseInt(station.get(StationFragment1.parsingcount).getChgerId()) );
+
+            StationFragment1.adapter = new StationAdapter();
+            for(int i = 0; i < Integer.parseInt(station.get(StationFragment1.parsingcount).getChgerId()); i++) // 어댑터 추가
+                StationFragment1.adapter.addItem(station.get(right + i + 1 - Integer.parseInt(station.get(StationFragment1.parsingcount).getChgerId())));
+
+            button = findViewById(R.id.fragch_1);
+            button.performClick();
+
+//            TextView textView = findViewById(R.id.textView8);
+//            textView.setText(station.get(right).getBusiNm());
         }
 
     }

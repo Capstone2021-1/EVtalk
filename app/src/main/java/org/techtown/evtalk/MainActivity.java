@@ -40,6 +40,7 @@ import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.NaverMapOptions;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.UiSettings;
+import com.naver.maps.map.overlay.InfoWindow;
 import com.naver.maps.map.overlay.LocationOverlay;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.Overlay;
@@ -70,6 +71,7 @@ import retrofit2.Response;
 
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, Overlay.OnClickListener {
+    private InfoWindow infoWindow;
     private long backKeyPressedTime = 0;
     private Toast toast;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1000;
@@ -85,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private NaverMap naverMap;
     private FrameLayout BSsheet;
     private BottomSheetBehavior bs;
-    //    lastTask task;
+    public int feecheck = 0;
     public RetrofitConnection retrofit = new RetrofitConnection();
 
     public static String start_time;
@@ -416,8 +418,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 // 정의된 마커위치들중 가시거리 내에있는것들만 마커 생성
                 LatLng currentPosition = getCurrentPosition(naverMap);
                 for (LatLng markerPosition : markersPosition) {
+                    int tesmp = 0;
                     if (!withinSightMarker(currentPosition, markerPosition))
                         continue;
+
                     Marker marker = new Marker();
                     marker.setIconPerspectiveEnabled(true); // 원근감 표시
                     marker.setIcon(OverlayImage.fromResource(R.drawable.ic_marker));
@@ -425,7 +429,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     marker.setMap(naverMap);
                     marker.setOnClickListener(MainActivity.this::onClick);
                     activeMarkers.add(marker);
+
+
                 }
+            }
+        });
+        infoWindow = new InfoWindow();
+        infoWindow.setAdapter(new InfoWindow.DefaultTextAdapter(this) {
+            @NonNull
+            @Override
+            public CharSequence getText(@NonNull InfoWindow infoWindow) {
+                return Float.toString(chargingStation.get(feecheck).getFee());
             }
         });
     }
@@ -434,19 +448,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static String mkname = "NULL";
     public static String mkbusi = "NULL";
     Marker lastClicked = null;
+
     @Override
     public synchronized boolean onClick(@NonNull Overlay overlay) {
         if(overlay instanceof Marker){
-            for(int i=0;i<chargingStation.size();i++){
-                if(((Marker) overlay).getPosition().latitude == chargingStation.get(i).getLat() && ((Marker) overlay).getPosition().longitude == chargingStation.get(i).getLng()) {
+
+            for(int i=0;i<chargingStation.size();i++) {
+                if (((Marker) overlay).getPosition().latitude == chargingStation.get(i).getLat() && ((Marker) overlay).getPosition().longitude == chargingStation.get(i).getLng()) {
                     mkname = chargingStation.get(i).getName();
                     mkbusi = chargingStation.get(i).getBusiNm();
+                    feecheck = i;
                     break;
                 }
             }
-//            station.setLat(((Marker) overlay).getPosition().latitude);
-//            station.setLng(((Marker) overlay).getPosition().longitude);
-
+//            infoWindow = new InfoWindow();
+            Marker marker = (Marker)overlay;
+//            marker.setTag("chargingStation.get(feecheck).getFee()");
+            infoWindow.open(marker);
             // 마커 클릭 시 카메라 이동 - 이동 후 클릭된 마커 이미지 변경 안되는 오류
             /*LatLng markercenter = new LatLng(station.getLat(), station.getLng());
             CameraUpdate cameraUpdate = CameraUpdate.scrollTo(markercenter);
@@ -463,91 +481,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         return false;
     }
-
-    public static int right = 0;
-    /*public synchronized void doparsing() {
-        String key_Encoding = "%2BKctK6sCnrlkUxKAGbtxsw4ZEV4x4oeLyViNSH%2FjfjNumzKpfre5WkPNLKKltku5I%2FP54TR6iUTsvYeFybHo2A%3D%3D";
-        String key_Decoding = "+KctK6sCnrlkUxKAGbtxsw4ZEV4x4oeLyViNSH/jfjNumzKpfre5WkPNLKKltku5I/P54TR6iUTsvYeFybHo2A==";
-        String queryUrl = "http://apis.data.go.kr/B552584/EvCharger/getChargerInfo?serviceKey="+key_Encoding+"&pageNo=1&numOfRows=9999&zcode=11";
-        XmlPullParserFactory factory;
-        XmlPullParser parser;
-        URL xmlUrl;
-        int k = 0;
-
-        try {
-            boolean flag[] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false}; // 21개
-
-            xmlUrl = new URL(queryUrl);
-            xmlUrl.openConnection().getInputStream();
-            factory = XmlPullParserFactory.newInstance();
-            parser = factory.newPullParser();
-            parser.setInput(xmlUrl.openStream(), "utf-8");
-            int eventType = parser.getEventType();
-            while (eventType != XmlPullParser.END_DOCUMENT) {
-                switch (eventType) {
-                    case XmlPullParser.START_DOCUMENT:
-                        break;
-                    case XmlPullParser.END_DOCUMENT:
-                        break;
-                    case XmlPullParser.START_TAG:
-                        if (parser.getName().equals("statNm")) { flag[0] = true; }
-                        else if (parser.getName().equals("statId")) { flag[1] = true; }
-                        else if (parser.getName().equals("chgerId")) { flag[2] = true; }
-                        else if (parser.getName().equals("chgerType")) { flag[3] = true; }
-                        else if (parser.getName().equals("addr")) { flag[4] = true; }
-                        else if (parser.getName().equals("lat")) { flag[5] = true; }
-                        else if (parser.getName().equals("lng")) { flag[6] = true; }
-                        else if (parser.getName().equals("useTime")) { flag[7] = true; }
-                        else if (parser.getName().equals("busiId")) { flag[8] = true; }
-                        else if (parser.getName().equals("busiNm")) { flag[9] = true; }
-                        else if (parser.getName().equals("busiCall")) { flag[10] = true; }
-                        else if (parser.getName().equals("stat")) { flag[11] = true; }
-                        else if (parser.getName().equals("statUpdDt")) { flag[12] = true; }
-                        else if (parser.getName().equals("powerType")) { flag[13] = true; }
-                        else if (parser.getName().equals("zcode")) { flag[14] = true; }
-                        else if (parser.getName().equals("parkingFree")) { flag[15] = true; }
-                        else if (parser.getName().equals("note")) { flag[16] = true; }
-                        else if (parser.getName().equals("limitYn")) { flag[17] = true; }
-                        else if (parser.getName().equals("limitDetail")) { flag[18] = true; }
-                        else if (parser.getName().equals("delYn")) { flag[19] = true; }
-                        else if (parser.getName().equals("delDetail")) { flag[20] = true; }
-                        break;
-                    case XmlPullParser.END_TAG:
-                        break;
-                    case XmlPullParser.TEXT:
-                        if (flag[0]) {
-                            station.get(k).setStaNm(parser.getText());
-                            if(station.get(k).getStaNm() == mkname)
-                                right = k;
-                        }
-                        else if(flag[1]){ station.get(k).setStaId(parser.getText()); flag[1] = false; }
-                        else if(flag[2]){ station.get(k).setChgerId(parser.getText()); flag[2] = false; }
-                        else if(flag[3]){ station.get(k).setChgerType(parser.getText()); flag[3] = false; }
-                        else if(flag[4]){ station.get(k).setAddr(parser.getText()); flag[4] = false; }
-                        else if(flag[5]){ station.get(k).setLat(Double.parseDouble(parser.getText())); flag[5] = false; }
-                        else if(flag[6]){ station.get(k).setLng(Double.parseDouble(parser.getText())); flag[6] = false; }
-                        else if(flag[7]){ station.get(k).setUseTime(parser.getText()); flag[7] = false; }
-                        else if(flag[8]){ station.get(k).setBusiId(parser.getText()); flag[8] = false; }
-                        else if(flag[9]){ station.get(k).setBusiNm(parser.getText()); flag[9] = false; }
-                        else if(flag[10]){ station.get(k).setBusiCall(parser.getText()); flag[10] = false; }
-                        else if(flag[11]){ station.get(k).setStat(parser.getText()); flag[11] = false; }
-                        else if(flag[12]){ station.get(k).setStatUpdDt(parser.getText()); flag[12] = false; }
-                        else if(flag[13]){ station.get(k).setPowerType(parser.getText()); flag[13] = false; }
-                        else if(flag[14]){ station.get(k).setZcode(parser.getText()); flag[14] = false; }
-                        else if(flag[15]){ station.get(k).setParkingFree(parser.getText()); flag[15] = false; }
-                        else if(flag[16]){ station.get(k).setNote(parser.getText()); flag[16] = false; }
-                        else if(flag[17]){ station.get(k).setLimitYn(parser.getText()); flag[17] = false; }
-                        else if(flag[18]){ station.get(k).setLimitDetail(parser.getText()); flag[18] = false; }
-                        else if(flag[19]){ station.get(k).setDelYn(parser.getText()); flag[19] = false; }
-                        else if(flag[20]){ station.get(k++).setDelDetail(parser.getText()); flag[20] = false; }
-                        break;
-                }
-                eventType = parser.next();
-            }
-        } catch (Exception e) {
-//            station.setBusiNm("이게 나오면 안되는데...");
-        }
-    }*/
 
     // 마커 정보 저장시킬 변수들 선언
     private Vector<LatLng> markersPosition;
@@ -568,6 +501,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public boolean withinSightMarker(LatLng currentPosition, LatLng markerPosition) {
         boolean withinSightMarkerLat = Math.abs(currentPosition.latitude - markerPosition.latitude) <= REFERANCE_LAT_X3;
         boolean withinSightMarkerLng = Math.abs(currentPosition.longitude - markerPosition.longitude) <= REFERANCE_LNG_X3;
+        return withinSightMarkerLat && withinSightMarkerLng;
+    }
+
+    public boolean tagwithinSight(LatLng currentPosition, LatLng markerPosition) {
+        boolean withinSightMarkerLat = Math.abs(currentPosition.latitude - markerPosition.latitude) <= REFERANCE_LAT;
+        boolean withinSightMarkerLng = Math.abs(currentPosition.longitude - markerPosition.longitude) <= REFERANCE_LNG;
         return withinSightMarkerLat && withinSightMarkerLng;
     }
 
