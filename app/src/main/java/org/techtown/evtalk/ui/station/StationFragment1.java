@@ -14,6 +14,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.techtown.evtalk.MainActivity;
 import org.techtown.evtalk.R;
+import org.techtown.evtalk.ui.station.review.Review;
+import org.techtown.evtalk.ui.station.review.StationFragment3;
+import org.techtown.evtalk.user.RetrofitConnection;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class StationFragment1 extends Fragment {
     public static StationAdapter adapter;
@@ -23,6 +32,7 @@ public class StationFragment1 extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_station_1, container, false);
+//        getReviews();   //충전소의 리뷰들 가져오기
 
         RecyclerView recyclerView = v.findViewById(R.id.recycle_charging);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false);
@@ -39,4 +49,22 @@ public class StationFragment1 extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
     }
+//
+//    //DB에서 해당 충전소의 리뷰가져오기
+//    public void getReviews() {
+//        RetrofitConnection retrofit = new RetrofitConnection();
+//        retrofit.server.getReviews(StationPageActivity.station.get(parsingcount).getStaId()).enqueue(new Callback<List<Review>>() {
+//            @Override
+//            public void onResponse(Call<List<Review>> call, Response<List<Review>> response) {
+//                List<Review> temp = response.body();
+//                for(Review i : temp)
+//                    StationFragment3.reviews.add(i);
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<Review>> call, Throwable t) {
+//                //실패
+//            }
+//        });
+//    }
 }

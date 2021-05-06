@@ -21,11 +21,11 @@
             android:layout_marginBottom="8dp">
 
             <EditText
-                android:id="@+id/textView4"
+                android:id="@+id/review_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:text="TextView" />
+                android:hint="리뷰 내용 입력" />
 
         </androidx.cardview.widget.CardView>
     </ScrollView>
