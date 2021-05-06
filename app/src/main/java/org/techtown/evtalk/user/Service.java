@@ -1,5 +1,7 @@
 package org.techtown.evtalk.user;
 
+import org.techtown.evtalk.ui.station.review.Review;
+
 import java.util.List;
 
 import retrofit2.Call;
@@ -63,5 +65,11 @@ public interface Service {
 
     @GET("/search/charging-station")
     Call<List<SearchResult>> searchChSt(@Query("query") String query);
+
+    @POST("/user/review")
+    Call<Void> updateReview(@Body Review review);
+
+    @GET("/search/review")
+    Call<List<Review>> getReviews(@Query("stat_id") String stat_id);
 
 }

@@ -17,8 +17,10 @@ import androidx.fragment.app.FragmentTransaction;
 
 import org.techtown.evtalk.MainActivity;
 import org.techtown.evtalk.R;
+import org.techtown.evtalk.ui.station.review.Review;
 import org.techtown.evtalk.ui.station.review.ReviewFragment;
 import org.techtown.evtalk.ui.station.review.StationFragment3;
+import org.techtown.evtalk.user.RetrofitConnection;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
@@ -26,6 +28,10 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class StationPageActivity extends AppCompatActivity {
     private final int Fragment_1 = 1;
@@ -239,6 +245,22 @@ public class StationPageActivity extends AppCompatActivity {
             Log.d("파싱 잘 됐나.....확인"," = "+right +"\n" + station.get(right).getStaId() +"\n" + station.get(right).getStaNm()+"\n" + station.get(right).getChgerId()+"\n" + station.get(right).getChgerType()+"\n" + station.get(right).getAddr()+"\n" + station.get(right).getLat()+"\n" + station.get(right).getLng()+"\n" + station.get(right).getUseTime()+"\n" + station.get(right).getBusiId()+"\n" + station.get(right).getBusiNm()+"\n" + station.get(right).getBusiCall()+"\n" + station.get(right).getStat()+"\n" + station.get(right).getStatUpdDt()+"\n" + station.get(right).getPowerType()+"\n" + station.get(right).getZcode()+"\n" + station.get(right).getParkingFree()+"\n" + station.get(right).getNote()+"\n" + station.get(right).getLimitYn()+"\n" + station.get(right).getLimitDetail()+"\n" + station.get(right).getDelYn()+"\n" + station.get(right).getDelDetail() );
             textView = findViewById(R.id.stationaddr);
             textView.setText(station.get(right).getAddr()); // 충전소 주소 텍스트 변경
+
+            //DB에서 선택된 충전소 리뷰 가져오기
+            RetrofitConnection retrofit = new RetrofitConnection();
+            retrofit.server.getReviews(StationPageActivity.station.get(right).getStaId()).enqueue(new Callback<List<Review>>() {
+                @Override
+                public void onResponse(Call<List<Review>> call, Response<List<Review>> response) {
+                    List<Review> temp = response.body();
+                    for(Review i : temp)
+                        StationFragment3.reviews.add(i);
+                }
+
+                @Override
+                public void onFailure(Call<List<Review>> call, Throwable t) {
+                    //실패
+                }
+            });
 
             Log.d("갯수임","="+Integer.parseInt(station.get(StationFragment1.parsingcount).getChgerId()) );
 

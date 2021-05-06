@@ -1,6 +1,7 @@
 package org.techtown.evtalk.ui.station.review;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +19,13 @@ import org.techtown.evtalk.ui.station.StationFragment1;
 import org.techtown.evtalk.ui.station.StationFragment2;
 import org.techtown.evtalk.ui.station.StationPageActivity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class StationFragment3 extends Fragment {
 
     StationPageActivity activity;
+    public static List<Review> reviews = new ArrayList<>();
 
     public static Button review_button;
     @Nullable
@@ -32,7 +37,6 @@ public class StationFragment3 extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
 
         review_button = (Button) view.findViewById(R.id.write_review_button);
         activity = (StationPageActivity)getActivity();
