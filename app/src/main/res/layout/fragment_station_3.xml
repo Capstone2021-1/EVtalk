@@ -21,12 +21,14 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/review_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="@font/proximanovaregular"
             android:paddingLeft="10dp"
             android:text="0"
+            android:textColor="@color/maincolor"
             android:textSize="17sp"
             android:textStyle="bold" />
 
@@ -47,6 +49,7 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>
