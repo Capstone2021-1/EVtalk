@@ -3,6 +3,7 @@ package org.techtown.evtalk;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -61,6 +62,7 @@ import org.techtown.evtalk.user.RetrofitConnection;
 import org.techtown.evtalk.user.SearchResult;
 import org.techtown.evtalk.user.User;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -113,8 +115,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         user = new User(intent.getExtras().getLong("id")
                 , intent.getExtras().getString("name")
                 , intent.getExtras().getString("image"));
-        if (user != null)
-            getUserInfo();
+        if (user != null) {
+            UserInfo temp = new UserInfo();
+            temp.execute();
+        }
 
         // 차량 정보 초기화
         if (car == null) {
@@ -526,12 +530,102 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         activeMarkers = new Vector<Marker>();
     }
 
-    //메인 엑티비티 실행 시 DB에서 유저 정보 받아오기
-    public void getUserInfo() {
-        retrofit.server.getUserInfo(user.getId()).enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                User resource = response.body();
+//    //메인 엑티비티 실행 시 DB에서 유저 정보 받아오기
+//    public void getUserInfo() {
+//        retrofit.server.getUserInfo(user.getId()).enqueue(new Callback<User>() {
+//            @Override
+//            public void onResponse(Call<User> call, Response<User> response) {
+//                User resource = response.body();
+//                if (resource.getCar_number() != null)
+//                    user.setCar_number(resource.getCar_number());
+//                else
+//                    user.setCar_number("");
+//                if (resource.getMessage() != null)
+//                    user.setMessage(resource.getMessage());
+//                else
+//                    user.setMessage("");
+//            }
+//
+//            @Override
+//            public void onFailure(Call<User> call, Throwable t) {
+//                Log.i("failure", "사용자 정보 받아오기 실패");
+//            }
+//        });
+//
+//        retrofit.server.getMembershipInfo(user.getId()).enqueue(new Callback<List<Card>>() {
+//            @Override
+//            public void onResponse(Call<List<Card>> call, Response<List<Card>> response) {
+//                if (response.isSuccessful()) {
+//                    List<Card> result = response.body();
+//                    for (Card i : result) {
+//                        membership.add(i);
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<Card>> call, Throwable t) {
+//                Log.i("failure", "회원카드 받아오기 실패");
+//            }
+//        });
+//
+//        retrofit.server.getPaymentInfo(user.getId()).enqueue(new Callback<List<Card>>() {
+//            @Override
+//            public void onResponse(Call<List<Card>> call, Response<List<Card>> response) {
+//                if (response.isSuccessful()) {
+//                    List<Card> result = response.body();
+//                    for (Card i : result) {
+//                        payment.add(i);
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<Card>> call, Throwable t) {
+//                Log.i("failure", "결제카드 받아오기 실패");
+//            }
+//        });
+//
+//        retrofit.server.getCarInfo(user.getId()).enqueue(new Callback<Car>() {
+//            @Override
+//            public void onResponse(Call<Car> call, Response<Car> response) {
+//                if (response.body() != null) {
+//                    car = response.body();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Car> call, Throwable t) {
+//                Log.i("failure", "차량 정보 받아오기 실패");
+//            }
+//        });
+//
+//        retrofit.server.getChargingFee(user.getId()).enqueue(new Callback<List<Fee>>() {
+//            @Override
+//            public void onResponse(Call<List<Fee>> call, Response<List<Fee>> response) {
+//                for (Fee f : response.body()) {
+//                    for (ChargingStation i : chargingStation) {
+//                        if (i.getId().contains(f.getBusiId()))
+//                            i.setFee(f.getFee());
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<Fee>> call, Throwable t) {
+//                Log.i("오류", "" + t);
+//            }
+//        });
+//    }
+
+    public class UserInfo extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected synchronized String doInBackground(String... strings) {
+            try {
+
+                Response<User> userResponse = retrofit.server.getUserInfo(user.getId()).execute();
+                User resource = userResponse.body();
                 if (resource.getCar_number() != null)
                     user.setCar_number(resource.getCar_number());
                 else
@@ -540,77 +634,35 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     user.setMessage(resource.getMessage());
                 else
                     user.setMessage("");
-            }
 
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Log.i("failure", "사용자 정보 받아오기 실패");
-            }
-        });
+                Response<Car> carResponse = retrofit.server.getCarInfo(user.getId()).execute();
+                car = carResponse.body();
 
-        retrofit.server.getMembershipInfo(user.getId()).enqueue(new Callback<List<Card>>() {
-            @Override
-            public void onResponse(Call<List<Card>> call, Response<List<Card>> response) {
-                if (response.isSuccessful()) {
-                    List<Card> result = response.body();
-                    for (Card i : result) {
-                        membership.add(i);
-                    }
+                Response<List<Card>> membershipResponse = retrofit.server.getMembershipInfo(user.getId()).execute();
+                List<Card> result = membershipResponse.body();
+                for (Card i : result) {
+                    membership.add(i);
                 }
-            }
 
-            @Override
-            public void onFailure(Call<List<Card>> call, Throwable t) {
-                Log.i("failure", "회원카드 받아오기 실패");
-            }
-        });
-
-        retrofit.server.getPaymentInfo(user.getId()).enqueue(new Callback<List<Card>>() {
-            @Override
-            public void onResponse(Call<List<Card>> call, Response<List<Card>> response) {
-                if (response.isSuccessful()) {
-                    List<Card> result = response.body();
-                    for (Card i : result) {
-                        payment.add(i);
-                    }
+                Response<List<Card>> paymentResponse = retrofit.server.getPaymentInfo(user.getId()).execute();
+                result = paymentResponse.body();
+                for (Card i : result) {
+                    payment.add(i);
                 }
-            }
 
-            @Override
-            public void onFailure(Call<List<Card>> call, Throwable t) {
-                Log.i("failure", "결제카드 받아오기 실패");
-            }
-        });
-
-        retrofit.server.getCarInfo(user.getId()).enqueue(new Callback<Car>() {
-            @Override
-            public void onResponse(Call<Car> call, Response<Car> response) {
-                if (response.body() != null) {
-                    car = response.body();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Car> call, Throwable t) {
-                Log.i("failure", "차량 정보 받아오기 실패");
-            }
-        });
-
-        retrofit.server.getChargingFee(user.getId()).enqueue(new Callback<List<Fee>>() {
-            @Override
-            public void onResponse(Call<List<Fee>> call, Response<List<Fee>> response) {
-                for (Fee f : response.body()) {
+                Response<List<Fee>> feeResponse = retrofit.server.getChargingFee(user.getId()).execute();
+                Log.i("충전소 잘들어왓나 확인", "" + chargingStation.size());
+                for (Fee f : feeResponse.body()) {
                     for (ChargingStation i : chargingStation) {
                         if (i.getId().contains(f.getBusiId()))
                             i.setFee(f.getFee());
                     }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<List<Fee>> call, Throwable t) {
-                Log.i("오류", "" + t);
+            } catch (IOException e) {
+                Log.i("에러입니다.", "" + e.toString());
             }
-        });
+            return null;
+        }
     }
 }

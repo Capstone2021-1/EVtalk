@@ -1,6 +1,7 @@
 package org.techtown.evtalk;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,11 +22,14 @@ import com.kakao.usermgmt.response.model.UserAccount;
 import com.kakao.util.OptionalBoolean;
 import com.kakao.util.exception.KakaoException;
 
+import org.techtown.evtalk.user.Car;
+import org.techtown.evtalk.user.Card;
 import org.techtown.evtalk.user.ChargingStation;
 import org.techtown.evtalk.user.Fee;
 import org.techtown.evtalk.user.RetrofitConnection;
 import org.techtown.evtalk.user.User;
 
+import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
@@ -41,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
     private long p_id;
     private String p_name;
     private String p_image;
+    private RetrofitConnection retrofit = new RetrofitConnection();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +53,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         //레트로핏으로 서버 '/' 접속
-        RetrofitConnection retrofit = new RetrofitConnection();
         retrofit.server.connect().enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
@@ -61,21 +65,22 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d("failure", "" + t.toString());
             }
         });
-
-        //DB에서 충전소 기본 정보 받아오기
-        retrofit.server.getChargingStation().enqueue(new Callback<List<ChargingStation>>() {
-            @Override
-            public void onResponse(Call<List<ChargingStation>> call, Response<List<ChargingStation>> response) {
-                List<ChargingStation> temp = response.body();
-                for(ChargingStation i : temp)
-                    MainActivity.chargingStation.add(i);
-            }
-
-            @Override
-            public void onFailure(Call<List<ChargingStation>> call, Throwable t) {
-                Log.d("failure", "충전소 정보 받아오기 실패");
-            }
-        });
+        GetInfo getInfo = new GetInfo();
+        getInfo.execute();
+//        //DB에서 충전소 기본 정보 받아오기
+//        retrofit.server.getChargingStation().enqueue(new Callback<List<ChargingStation>>() {
+//            @Override
+//            public void onResponse(Call<List<ChargingStation>> call, Response<List<ChargingStation>> response) {
+//                List<ChargingStation> temp = response.body();
+//                for(ChargingStation i : temp)
+//                    MainActivity.chargingStation.add(i);
+//            }
+//
+//            @Override
+//            public void onFailure(Call<List<ChargingStation>> call, Throwable t) {
+//                Log.d("failure", "충전소 정보 받아오기 실패");
+//            }
+//        });
 
         btn_custom_login = (Button) findViewById(R.id.btn_custom_login);
         Button testbtn = (Button) findViewById(R.id.testbtn);
@@ -221,6 +226,20 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    public class GetInfo extends AsyncTask<String, Void, String> {
 
+        @Override
+        protected synchronized String doInBackground(String... strings) {
+            try {
+                Response<List<ChargingStation>> ch_stResponse = retrofit.server.getChargingStation().execute();
+                List<ChargingStation> temp = ch_stResponse.body();
+                for(ChargingStation i : temp)
+                    MainActivity.chargingStation.add(i);
+            } catch (IOException e) {
+                Log.i("충전소 정보 받아오기 실패.", "" + e.toString());
+            }
+            return null;
+        }
+    }
 
 }
