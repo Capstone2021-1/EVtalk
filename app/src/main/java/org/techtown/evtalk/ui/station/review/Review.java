@@ -8,6 +8,9 @@ public class Review {
     @SerializedName("user_id")
     private long user_id;    //사용자 id
 
+    @SerializedName("name")
+    private String name;    //사용자 이름
+
     @SerializedName("stat_id")
     private String stat_id; //충전소 id
 
@@ -31,6 +34,14 @@ public class Review {
 
     public Date getDate() {
         return date;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setUser_id(long user_id) {

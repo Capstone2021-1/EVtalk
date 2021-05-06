@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 
+
 import org.techtown.evtalk.MainActivity;
 import org.techtown.evtalk.R;
 import org.techtown.evtalk.ui.station.StationFragment1;
@@ -31,7 +32,7 @@ public class ReviewFragment extends Fragment {
 
     StationPageActivity activity;
 
-
+    Review review;
     long mNow;
     Date mDate;
     SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -66,8 +67,7 @@ public class ReviewFragment extends Fragment {
             public void onClick(View view) {
                 text_result = String.valueOf(editText.getText());     //입력한 리뷰 내용 가져오는 방법
                 String time = getTime();
-                Log.d("review", time);
-                Review review = new Review();   //리뷰 객체 생성
+                review = new Review();   //리뷰 객체 생성
                 review.setUser_id(MainActivity.user.getId());   //사용자 id
                 review.setStat_id(StationPageActivity.station.get(StationFragment1.parsingcount).getStaId());   //충전소 id
                 review.setReview(text_result);  //입력한 리뷰

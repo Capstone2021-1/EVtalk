@@ -4,13 +4,18 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.style.UpdateAppearance;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +32,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -53,7 +60,9 @@ import com.pedro.library.AutoPermissions;
 import org.techtown.evtalk.ui.search.SearchResultActivity;
 import org.techtown.evtalk.ui.station.Station;
 import org.techtown.evtalk.ui.station.StationPageActivity;
+import org.techtown.evtalk.ui.userinfo.CardAdapter;
 import org.techtown.evtalk.ui.userinfo.UserInfoActivity;
+import org.techtown.evtalk.ui.userinfo.UserInfoAdapter;
 import org.techtown.evtalk.user.Car;
 import org.techtown.evtalk.user.Card;
 import org.techtown.evtalk.user.ChargingStation;
@@ -63,6 +72,9 @@ import org.techtown.evtalk.user.SearchResult;
 import org.techtown.evtalk.user.User;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -83,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static List<Card> membership = new ArrayList<>();    //사용자 회원카드 정보
     public static List<Card> payment = new ArrayList<>();
     public static List<ChargingStation> chargingStation = new ArrayList<>();   //충전소 기본 정보
+    public static List<ChargingStation> charg = new ArrayList<>();
     public static List<Station> station = new ArrayList<>(); // API 호출 충전소 정보
     ;   //충전소 기본 정보
     private AppBarConfiguration mAppBarConfiguration;
@@ -90,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private FrameLayout BSsheet;
     private BottomSheetBehavior bs;
     public int feecheck = 0;
+    public List<String> feeget = new ArrayList<>();
     public RetrofitConnection retrofit = new RetrofitConnection();
 
     public static String start_time;
@@ -105,6 +119,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         return naverMap;
     }
     public static CameraUpdate getCameraUpdate(){ return cameraUpdate;}
+
+    Bitmap bmImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,6 +167,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //                toolbar, navController, appBarConfiguration);
 
 
+        //-----------------------------drawer 설정 부분-----------------------------------------------------//
         // navigation drawer 회원이름 변경
         View headerView = navigationView.getHeaderView(0);
         TextView test = (TextView) headerView.findViewById(R.id.textView);
@@ -159,6 +176,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         else
             test.setText("" + user.getName());
 
+        //-----------------------------drawer 설정 부분-----------------------------------------------------//
         // 지도 객체 만들기
         FragmentManager fm = getSupportFragmentManager();
         MapFragment mapFragment = (MapFragment) fm.findFragmentById(R.id.map);
@@ -193,8 +211,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         fab2.setOnClickListener(new View.OnClickListener() { // 충전소 설정 - fab2 클릭 시 동작
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "충전소 설정 페이지는 아직...", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "새로고침..", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                finish();
+                startActivity(intent);
             }
         });
 
@@ -232,9 +254,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         startActivity(intent);
                     }
                 }).start();
-
             }
         });
+
+
     }
 
     @Override
@@ -415,15 +438,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         naverMap.moveCamera(cameraUpdate);
 
         // 마커들 위치 정의
+//        feeget = new Vector<String>();
         markersPosition = new Vector<LatLng>();
         for (int i = 0; i < chargingStation.size(); i++) {
             markersPosition.add(new LatLng(chargingStation.get(i).getLat(),chargingStation.get(i).getLng()));
+            feeget.add(Float.toString(chargingStation.get(i).getFee()));
         }
+
+//        int i,z=0;
 
         // 카메라 이동 되면 호출 되는 이벤트
         naverMap.addOnCameraChangeListener(new NaverMap.OnCameraChangeListener() {
             @Override
             public synchronized void onCameraChange(int reason, boolean animated) {
+                feecheck = 0;
                 freeActiveMarkers();
                 // 정의된 마커위치들중 가시거리 내에있는것들만 마커 생성
                 LatLng currentPosition = getCurrentPosition(naverMap);
@@ -437,17 +465,24 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     marker.setMap(naverMap);
                     marker.setOnClickListener(MainActivity.this::onClick);
                     activeMarkers.add(marker);
+                    if(tagwithinSight(currentPosition, markerPosition)) {
+                        infoWindow = new InfoWindow();
+                        infoWindow.setAdapter(new InfoWindow.DefaultTextAdapter(getApplicationContext()) {
+                            @NonNull
+                            @Override
+                            public CharSequence getText(@NonNull InfoWindow infoWindow) {
+                                Log.d("요금은...." ,Float.toString(chargingStation.get(feecheck).getFee()));
+                                return feeget.get(feecheck);
+//                                return Float.toString(chargingStation.get(feecheck).getFee());
+                            }
+                        });
+                        infoWindow.open(marker);
+                    }
+                    feecheck++;
                 }
             }
         });
-        infoWindow = new InfoWindow();
-        infoWindow.setAdapter(new InfoWindow.DefaultTextAdapter(this) {
-            @NonNull
-            @Override
-            public CharSequence getText(@NonNull InfoWindow infoWindow) {
-                return Float.toString(chargingStation.get(feecheck).getFee());
-            }
-        });
+
     }
 
     // 마커 클릭 이벤트
@@ -461,14 +496,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (((Marker) overlay).getPosition().latitude == chargingStation.get(i).getLat() && ((Marker) overlay).getPosition().longitude == chargingStation.get(i).getLng()) {
                     mkname = chargingStation.get(i).getName();
                     mkbusi = chargingStation.get(i).getBusiNm();
-                    feecheck = i;
+//                    feecheck = i;
                     break;
                 }
             }
 //            infoWindow = new InfoWindow();
-            Marker marker = (Marker)overlay;
+//            Marker marker = (Marker)overlay;
 //            marker.setTag("chargingStation.get(feecheck).getFee()");
-            infoWindow.open(marker);
+//            infoWindow.open(marker);
             // 마커 클릭 시 카메라 이동 - 이동 후 클릭된 마커 이미지 변경 안되는 오류
             /*LatLng markercenter = new LatLng(station.getLat(), station.getLng());
             CameraUpdate cameraUpdate = CameraUpdate.scrollTo(markercenter);
@@ -513,9 +548,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     public boolean tagwithinSight(LatLng currentPosition, LatLng markerPosition) {
-        boolean withinSightMarkerLat = Math.abs(currentPosition.latitude - markerPosition.latitude) <= REFERANCE_LAT;
-        boolean withinSightMarkerLng = Math.abs(currentPosition.longitude - markerPosition.longitude) <= REFERANCE_LNG;
-        return withinSightMarkerLat && withinSightMarkerLng;
+        boolean tagwithinSightMarkerLat = Math.abs(currentPosition.latitude - markerPosition.latitude) <= REFERANCE_LAT;
+        boolean tagwithinSightMarkerLng = Math.abs(currentPosition.longitude - markerPosition.longitude) <= REFERANCE_LNG;
+        return tagwithinSightMarkerLat && tagwithinSightMarkerLng;
     }
 
     // 지도상에 표시되고있는 마커들 지도에서 삭제
@@ -528,6 +563,31 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             activeMarker.setMap(null);
         }
         activeMarkers = new Vector<Marker>();
+    }
+
+    public Bitmap getBitmap(String imgPath) {
+        Thread imgThread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    URL url = new URL(imgPath);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setDoInput(true);
+                    conn.connect();
+                    InputStream is = conn.getInputStream();
+                    bmImg = BitmapFactory.decodeStream(is);
+                } catch (IOException e) {
+                }
+            }
+        };
+        imgThread.start();
+        try {
+            imgThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            return bmImg;
+        }
     }
 
 //    //메인 엑티비티 실행 시 DB에서 유저 정보 받아오기
@@ -665,4 +725,59 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return null;
         }
     }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        //-----------------------------drawer 설정 부분-----------------------------------------------------//
+        // navigation drawer 회원이름 변경
+        View headerView = navigationView.getHeaderView(0);
+        TextView test = (TextView) headerView.findViewById(R.id.textView);
+        if (user.getName() == null)
+            test.setText("로그인 해주세요");
+        else
+            test.setText("" + user.getName());
+
+        ImageView car_image = (ImageView) headerView.findViewById(R.id.nav_car_image);
+        TextView car_text = (TextView) headerView.findViewById(R.id.nav_carname);
+
+        // 사용자가 설정해둔 차량 이미지로! (없으면 기본 값 쏘울 뭔가 되어 있음)
+
+        Log.d("Drawer", car.getVehicle());
+        car_image.setImageBitmap(getBitmap(car.getImage()));
+        car_text.setText(car.getVehicle());  // 사용자가 설정해둔 차량 이름으로!
+
+        RecyclerView recyclerView = headerView.findViewById(R.id.nav_recycler_m);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+
+        UserInfoAdapter adapter = new UserInfoAdapter();
+
+        // 멥버쉽 카드 화면에 추가
+        for (Card i : membership) {
+            adapter.addItem(i);
+            Log.d("Drawer", "membership 추가");
+        }
+        recyclerView.setAdapter(adapter);
+
+        // 결제 카드 정보 수정 액티비티 화면 구성
+        RecyclerView recyclerView2 = headerView.findViewById(R.id.nav_recycler_p);
+
+        LinearLayoutManager layoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        recyclerView2.setLayoutManager(layoutManager2);
+
+        UserInfoAdapter adapter2 = new UserInfoAdapter();
+
+        // 결제 카드 화면에 추가
+        for (Card i : payment) {
+            adapter2.addItem(i);
+        }
+        recyclerView2.setAdapter(adapter2);
+
+        Log.d("navi", "selected");
+        return super.onOptionsItemSelected(item);
+    }
+
 }

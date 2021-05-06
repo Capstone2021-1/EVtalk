@@ -248,6 +248,7 @@ public class StationPageActivity extends AppCompatActivity {
 
             //DB에서 선택된 충전소 리뷰 가져오기
             RetrofitConnection retrofit = new RetrofitConnection();
+            StationFragment3.reviews = new ArrayList<>();
             retrofit.server.getReviews(StationPageActivity.station.get(right).getStaId()).enqueue(new Callback<List<Review>>() {
                 @Override
                 public void onResponse(Call<List<Review>> call, Response<List<Review>> response) {

@@ -402,11 +402,8 @@ public class UserInfoActivity extends AppCompatActivity {
                                 Log.d("failure", "정보 수정 ㄴㄴ");
                             }
                         });
-
                     }
-                    
                 }
-
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
