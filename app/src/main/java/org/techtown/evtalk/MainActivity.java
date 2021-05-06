@@ -217,9 +217,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Snackbar.make(view, "새로고침..", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
 
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                finish();
-                startActivity(intent);
+                overridePendingTransition(0, 0);
+                recreate();
+                overridePendingTransition(0, 0);
             }
         });
 
@@ -706,13 +706,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Response<List<Card>> membershipResponse = retrofit.server.getMembershipInfo(user.getId()).execute();
                 List<Card> result = membershipResponse.body();
                 for (Card i : result) {
-                    membership.add(i);
+                    if(!membership.contains(i))
+                        membership.add(i);
                 }
 
                 Response<List<Card>> paymentResponse = retrofit.server.getPaymentInfo(user.getId()).execute();
                 result = paymentResponse.body();
                 for (Card i : result) {
-                    payment.add(i);
+                    if(!payment.contains(i))
+                        payment.add(i);
                 }
 
                 Response<List<Fee>> feeResponse = retrofit.server.getChargingFee(user.getId()).execute();
