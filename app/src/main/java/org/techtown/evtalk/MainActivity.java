@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static Station station = new Station(); // API 호출 충전소 정보
     ;   //충전소 기본 정보
     private AppBarConfiguration mAppBarConfiguration;
-    private NaverMap naverMap;
+    private static NaverMap naverMap;
     private FrameLayout BSsheet;
     private BottomSheetBehavior bs;
 //    lastTask task;
@@ -97,6 +97,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static final int TIMECODE = 1000;
     public static String search_result ="";
     private static final int SEARCH_RESULT_CODE = 2000;
+
+    private static CameraUpdate cameraUpdate;
+
+    public static NaverMap getNaverMap(){
+        return naverMap;
+    }
+    public static CameraUpdate getCameraUpdate(){ return cameraUpdate;}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 //        AppBarConfiguration appBarConfiguration =
 //                new AppBarConfiguration.Builder(navController.getGraph()).build();
-//        toolbar = findViewById(R.id.toolbar);
+//        toolbar = findViewById(R.id.toolbar);ㄹ
 //        NavigationUI.setupWithNavController(
 //                toolbar, navController, appBarConfiguration);
 
@@ -400,7 +407,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // 카메라 초기 위치 설정
         LatLng initialPosition = new LatLng(37.506855, 127.066242);
-        CameraUpdate cameraUpdate = CameraUpdate.scrollTo(initialPosition);
+        cameraUpdate = CameraUpdate.scrollTo(initialPosition);
         naverMap.moveCamera(cameraUpdate);
 
         // 마커들 위치 정의
@@ -445,16 +452,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             station.setLat(((Marker) overlay).getPosition().latitude);
             station.setLng(((Marker) overlay).getPosition().longitude);
 
-            // 마커 클릭 시 카메라 이동 - 이동 후 클릭된 마커 이미지 변경 안되는 오류
-            /*LatLng markercenter = new LatLng(station.getLat(), station.getLng());
-            CameraUpdate cameraUpdate = CameraUpdate.scrollTo(markercenter);
-            naverMap.moveCamera(cameraUpdate);*/
 
-            if (lastClicked!=null)
+            if (lastClicked!=null) {
                 lastClicked.setIcon((OverlayImage.fromResource(R.drawable.ic_marker)));
+                Log.d("marker", "purple");
+            }
             lastClicked = (Marker) overlay;
-            if (lastClicked!=null)
+            if (lastClicked!=null) {
                 ((Marker) overlay).setIcon((OverlayImage.fromResource(R.drawable.ic_marker_clicked)));
+                Log.d("marker", "pink");
+            }
+
+            // 마커 클릭 시 카메라 이동 - 이동 후 클릭된 마커 이미지 변경 안되는 오류
+//            LatLng markercenter = new LatLng(station.getLat(), station.getLng());
+//            cameraUpdate = CameraUpdate.scrollTo(markercenter);
+//            naverMap.moveCamera(cameraUpdate);
+
 
             showbs(station.getLat(), station.getLng(), dbaddr);
             return true;

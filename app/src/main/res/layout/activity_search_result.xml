@@ -7,6 +7,12 @@
     android:orientation="vertical"
     tools:context=".ui.search.SearchResultActivity">
 
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_back"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView_search_result"
         android:layout_width="match_parent"

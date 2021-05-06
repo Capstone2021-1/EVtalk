@@ -16,7 +16,7 @@ public class SearchResult {
     private double latOy;   //lat(충전소) or mapy(충전소x)
 
     @SerializedName("isChSt")
-    private int isChSt;     //충전소이면 1, 충전소가 아니면 0
+    public int isChSt;     //충전소이면 1, 충전소가 아니면 0
 
     public String getiOt() {
         return iOt;
@@ -50,8 +50,9 @@ public class SearchResult {
         this.latOy = latOy;
     }
 
-    public SearchResult(String iOt, String nOa){
-        this.iOt = iOt;
-        this.nOa = nOa;
-    }
+    // for testing
+//    public SearchResult(String iOt, String nOa){
+//        this.iOt = iOt;
+//        this.nOa = nOa;
+//    }
 }
