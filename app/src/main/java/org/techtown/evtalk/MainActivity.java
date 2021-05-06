@@ -160,6 +160,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 //        AppBarConfiguration appBarConfiguration =
 //                new AppBarConfiguration.Builder(navController.getGraph()).build();
 //        toolbar = findViewById(R.id.toolbar);
@@ -779,5 +781,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Log.d("navi", "selected");
         return super.onOptionsItemSelected(item);
     }
+
+
 
 }
