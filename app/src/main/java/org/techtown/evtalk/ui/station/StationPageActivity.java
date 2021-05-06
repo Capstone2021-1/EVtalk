@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -16,6 +17,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import org.techtown.evtalk.MainActivity;
 import org.techtown.evtalk.R;
+import org.techtown.evtalk.ui.station.review.ReviewFragment;
+import org.techtown.evtalk.ui.station.review.StationFragment3;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
@@ -28,6 +31,7 @@ public class StationPageActivity extends AppCompatActivity {
     private final int Fragment_1 = 1;
     private final int Fragment_2 = 2;
     private final int Fragment_3 = 3;
+    private final int Fragment_review =4;
     private TextView textView;
     private Button button;
     public static List<Station> station = new ArrayList<>(); // API 호출 충전소 정보
@@ -97,7 +101,7 @@ public class StationPageActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void FragmentView(int fragment){
+    public void FragmentView(int fragment){
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         switch (fragment){
@@ -114,6 +118,12 @@ public class StationPageActivity extends AppCompatActivity {
             case 3: // 세 번째 프래그먼트
                 StationFragment3 fragment3 = new StationFragment3();
                 transaction.replace(R.id.stationfragment_container, fragment3);
+                transaction.commit();
+                break;
+
+            case 4: // 리뷰 프래그먼트
+                ReviewFragment fragment4 = new ReviewFragment();
+                transaction.replace(R.id.stationfragment_container, fragment4);
                 transaction.commit();
                 break;
         }

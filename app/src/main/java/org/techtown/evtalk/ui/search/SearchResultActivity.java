@@ -1,11 +1,17 @@
 package org.techtown.evtalk.ui.search;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import org.techtown.evtalk.MainActivity;
 import org.techtown.evtalk.R;
@@ -22,6 +28,7 @@ import retrofit2.Response;
 public class SearchResultActivity extends AppCompatActivity {
 
     SearchAdapter adapter;
+    TextView textView;
 
     public RetrofitConnection retrofit = new RetrofitConnection();
 
@@ -31,6 +38,17 @@ public class SearchResultActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_result);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        textView = (TextView) findViewById(R.id.toolbar_title);
+        ActionBar ac = getSupportActionBar();
+        ac.setDisplayShowCustomEnabled(true);
+        ac.setDisplayShowTitleEnabled(false);
+        ac.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼
+        textView.setText("\""+MainActivity.search_result+"\" 검색 결과"); // 타이틀 수정
+
+
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView_search_result);
 
@@ -62,27 +80,15 @@ public class SearchResultActivity extends AppCompatActivity {
         });
 
 
-//        try {
-//            Thread.sleep(10000);
-//        }catch (InterruptedException e){
-//            System.out.println(e.getMessage());
-//        }
-
-//        for(SearchResult i : results2){
-//            adapter.addItem(i);
-//            Log.d("search", "adding...");
-//        }
 //
-//        recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(new OnSearchResultClickListener() {
+            @Override
+            public void onItemClick(SearchAdapter.ViewHolder holder, View view, int position) {
+                finish();
+            }
+        });
 
 
-//
-//        adapter.setOnItemClickListener(new OnSearchResultClickListener() {
-//            @Override
-//            public void onItemClick(SearchAdapter.ViewHolder holder, View view, int position) {
-//
-//            }
-//        });
 //
 //
 //        // 버튼 기능 추가해야함!
@@ -96,6 +102,16 @@ public class SearchResultActivity extends AppCompatActivity {
 //        });
 
 
+    }
+
+    @Override // 뒤로가기 버튼 동작 구현
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

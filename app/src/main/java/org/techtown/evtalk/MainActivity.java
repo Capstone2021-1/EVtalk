@@ -40,7 +40,6 @@ import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.NaverMapOptions;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.UiSettings;
-import com.naver.maps.map.overlay.InfoWindow;
 import com.naver.maps.map.overlay.LocationOverlay;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.overlay.Overlay;
@@ -84,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static List<Station> station = new ArrayList<>(); // API 호출 충전소 정보
     ;   //충전소 기본 정보
     private AppBarConfiguration mAppBarConfiguration;
-    private NaverMap naverMap;
+    private static NaverMap naverMap;
     private FrameLayout BSsheet;
     private BottomSheetBehavior bs;
     public int feecheck = 0;
@@ -96,6 +95,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static final int TIMECODE = 1000;
     public static String search_result ="";
     private static final int SEARCH_RESULT_CODE = 2000;
+
+    private static CameraUpdate cameraUpdate;
+
+    public static NaverMap getNaverMap(){
+        return naverMap;
+    }
+    public static CameraUpdate getCameraUpdate(){ return cameraUpdate;}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -401,7 +407,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // 카메라 초기 위치 설정
         LatLng initialPosition = new LatLng(37.506855, 127.066242);
-        CameraUpdate cameraUpdate = CameraUpdate.scrollTo(initialPosition);
+        cameraUpdate = CameraUpdate.scrollTo(initialPosition);
         naverMap.moveCamera(cameraUpdate);
 
         // 마커들 위치 정의
@@ -418,10 +424,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 // 정의된 마커위치들중 가시거리 내에있는것들만 마커 생성
                 LatLng currentPosition = getCurrentPosition(naverMap);
                 for (LatLng markerPosition : markersPosition) {
-                    int tesmp = 0;
                     if (!withinSightMarker(currentPosition, markerPosition))
                         continue;
-
                     Marker marker = new Marker();
                     marker.setIconPerspectiveEnabled(true); // 원근감 표시
                     marker.setIcon(OverlayImage.fromResource(R.drawable.ic_marker));
@@ -429,8 +433,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     marker.setMap(naverMap);
                     marker.setOnClickListener(MainActivity.this::onClick);
                     activeMarkers.add(marker);
-
-
                 }
             }
         });
@@ -448,11 +450,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static String mkname = "NULL";
     public static String mkbusi = "NULL";
     Marker lastClicked = null;
-
     @Override
     public synchronized boolean onClick(@NonNull Overlay overlay) {
         if(overlay instanceof Marker){
-
             for(int i=0;i<chargingStation.size();i++) {
                 if (((Marker) overlay).getPosition().latitude == chargingStation.get(i).getLat() && ((Marker) overlay).getPosition().longitude == chargingStation.get(i).getLng()) {
                     mkname = chargingStation.get(i).getName();
@@ -470,11 +470,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             CameraUpdate cameraUpdate = CameraUpdate.scrollTo(markercenter);
             naverMap.moveCamera(cameraUpdate);*/
 
-            if (lastClicked!=null)
+            if (lastClicked!=null) {
                 lastClicked.setIcon((OverlayImage.fromResource(R.drawable.ic_marker)));
+                Log.d("marker", "purple");
+            }
             lastClicked = (Marker) overlay;
-            if (lastClicked!=null)
+            if (lastClicked!=null) {
                 ((Marker) overlay).setIcon((OverlayImage.fromResource(R.drawable.ic_marker_clicked)));
+                Log.d("marker", "pink");
+            }
 
             showbs(((Marker) overlay).getPosition().latitude, ((Marker) overlay).getPosition().latitude);
             return true;

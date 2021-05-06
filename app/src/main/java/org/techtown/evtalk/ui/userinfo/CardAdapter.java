@@ -83,6 +83,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ViewHolder> im
         card_layout = view.findViewById(R.id.card_layout);
         if (listener != null) {
             listener.onItemClick(holder, view, position);
+            Log.d("cardadapter", "3");
 
             if(card_kinds.equals("membership")) {
                 if (MainActivity.membership.contains(items.get(position))) {
