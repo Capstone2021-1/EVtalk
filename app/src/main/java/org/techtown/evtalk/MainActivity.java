@@ -61,6 +61,7 @@ import org.techtown.evtalk.ui.search.SearchResultActivity;
 import org.techtown.evtalk.ui.station.Station;
 import org.techtown.evtalk.ui.station.StationPageActivity;
 import org.techtown.evtalk.ui.userinfo.CardAdapter;
+import org.techtown.evtalk.ui.userinfo.DrawerCardAdapter;
 import org.techtown.evtalk.ui.userinfo.UserInfoActivity;
 import org.techtown.evtalk.ui.userinfo.UserInfoAdapter;
 import org.techtown.evtalk.user.Car;
@@ -458,8 +459,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 // 정의된 마커위치들중 가시거리 내에있는것들만 마커 생성
                 LatLng currentPosition = getCurrentPosition(naverMap);
                 for (LatLng markerPosition : markersPosition) {
-                    if (!withinSightMarker(currentPosition, markerPosition))
+                    if (!withinSightMarker(currentPosition, markerPosition)) {
+                        feecheck++;
                         continue;
+                    }
                     Marker marker = new Marker();
                     marker.setIconPerspectiveEnabled(true); // 원근감 표시
                     marker.setIcon(OverlayImage.fromResource(R.drawable.ic_marker));
@@ -755,7 +758,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
-        UserInfoAdapter adapter = new UserInfoAdapter();
+        DrawerCardAdapter adapter = new DrawerCardAdapter();
 
         // 멥버쉽 카드 화면에 추가
         for (Card i : membership) {
@@ -770,7 +773,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         LinearLayoutManager layoutManager2 = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView2.setLayoutManager(layoutManager2);
 
-        UserInfoAdapter adapter2 = new UserInfoAdapter();
+        DrawerCardAdapter adapter2 = new DrawerCardAdapter();
 
         // 결제 카드 화면에 추가
         for (Card i : payment) {
