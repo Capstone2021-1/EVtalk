@@ -353,6 +353,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     //Log.d("Current Location", "locationSource deactivated");
     //Log.d("Current Location", "locationSource activated");
 
+    SearchView searchView;
 
     // 검색 쿼리 리스너
     public static List<SearchResult> results = new ArrayList<>(); //검색 결과 저장.
@@ -365,6 +366,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 search_result = search_result.substring(0, search_result.length()-1);
             }
             Log.d("search", "검색 완료");
+
+            searchView.clearFocus();
 
             Log.d("search", Integer.toString(results.size()));
             startSearchActivity(search_result);
@@ -388,12 +391,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 
-        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setQueryHint("지역명 / 충전소 검색하기");
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setOnQueryTextListener(queryTextListener);
         searchView.setIconifiedByDefault(false);
 //        searchView.clearFocus();
+
+
 
 
         return true;
