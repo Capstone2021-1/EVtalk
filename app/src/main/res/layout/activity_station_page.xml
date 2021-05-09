@@ -22,6 +22,7 @@
             android:layout_height="30dp"
             android:gravity="center|left"
             android:text="충전소 이름"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <TextView
@@ -30,7 +31,7 @@
             android:layout_height="30dp"
             android:gravity="center|left"
             android:text="충전소 주소"
-            android:textSize="10sp" />
+            android:textSize="15sp" />
 
         <Button
             android:id="@+id/button3"
@@ -52,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="1dp"
                 android:layout_weight="1"
-                android:text="충전기정보" />
+                android:text="충전기 정보" />
 
             <Button
                 android:id="@+id/fragch_2"
@@ -60,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="1dp"
                 android:layout_weight="1"
-                android:text="주차장정보" />
+                android:text="충전소 정보" />
 
             <Button
                 android:id="@+id/fragch_3"
