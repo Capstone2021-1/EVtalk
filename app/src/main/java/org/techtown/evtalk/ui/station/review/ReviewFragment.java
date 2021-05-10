@@ -92,6 +92,8 @@ public class ReviewFragment extends Fragment {
 
 
     }
+
+    // 현재 시간 구하기
     private String getTime(){
         mNow = System.currentTimeMillis();
         mDate = new Date(mNow);
