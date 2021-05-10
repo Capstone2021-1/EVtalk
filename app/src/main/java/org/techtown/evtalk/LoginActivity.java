@@ -66,21 +66,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         GetInfo getInfo = new GetInfo();
-        getInfo.execute();
-//        //DB에서 충전소 기본 정보 받아오기
-//        retrofit.server.getChargingStation().enqueue(new Callback<List<ChargingStation>>() {
-//            @Override
-//            public void onResponse(Call<List<ChargingStation>> call, Response<List<ChargingStation>> response) {
-//                List<ChargingStation> temp = response.body();
-//                for(ChargingStation i : temp)
-//                    MainActivity.chargingStation.add(i);
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<ChargingStation>> call, Throwable t) {
-//                Log.d("failure", "충전소 정보 받아오기 실패");
-//            }
-//        });
+        getInfo.execute();  //충전소 정보 받아오기
 
         btn_custom_login = (Button) findViewById(R.id.btn_custom_login);
         Button testbtn = (Button) findViewById(R.id.testbtn);

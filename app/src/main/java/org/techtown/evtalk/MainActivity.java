@@ -740,7 +740,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
 
                 Response<List<Fee>> feeResponse = retrofit.server.getChargingFee(user.getId()).execute();
-                Log.i("충전소 잘들어왓나 확인", "" + chargingStation.size());
                 for (Fee f : feeResponse.body()) {
                     for (ChargingStation i : chargingStation) {
                         if (i.getId().contains(f.getBusiId()))

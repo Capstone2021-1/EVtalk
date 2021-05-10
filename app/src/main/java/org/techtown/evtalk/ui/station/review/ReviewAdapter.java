@@ -66,7 +66,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
         public void setItem(Review item) {
             review_name.setText(item.getName());
             review_contents.setText(item.getReview());
-            //review_date.setText(getTime(item.getDate()));
+            review_date.setText(getTime(item.getDate()));
         }
 
         private String getTime(Date d){
