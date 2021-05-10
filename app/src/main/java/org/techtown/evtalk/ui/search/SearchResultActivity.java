@@ -112,15 +112,6 @@ public class SearchResultActivity extends AppCompatActivity {
                 latitude = location.getLatitude();
                 altitude = location.getAltitude();
             }
-
-//            public void onStatusChanged(String provider, int status, Bundle extras) {
-//            }
-//
-//            public void onProviderEnabled(String provider) {
-//            }
-//
-//            public void onProviderDisabled(String provider) {
-//            }
         };
 
         if ( Build.VERSION.SDK_INT >= 23 &&
