@@ -350,6 +350,10 @@ public class UserInfoActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
+//                finish();
+//                overridePendingTransition(0, 0);
+//                startActivity(getIntent());
+//                overridePendingTransition(0, 0);
                 return true;
         }
         return super.onOptionsItemSelected(item);

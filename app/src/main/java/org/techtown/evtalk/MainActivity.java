@@ -3,12 +3,11 @@ package org.techtown.evtalk;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Rect;
-import android.os.AsyncTask;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.style.UpdateAppearance;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -63,10 +62,8 @@ import com.pedro.library.AutoPermissions;
 import org.techtown.evtalk.ui.search.SearchResultActivity;
 import org.techtown.evtalk.ui.station.Station;
 import org.techtown.evtalk.ui.station.StationPageActivity;
-import org.techtown.evtalk.ui.userinfo.CardAdapter;
 import org.techtown.evtalk.ui.userinfo.DrawerCardAdapter;
 import org.techtown.evtalk.ui.userinfo.UserInfoActivity;
-import org.techtown.evtalk.ui.userinfo.UserInfoAdapter;
 import org.techtown.evtalk.user.Car;
 import org.techtown.evtalk.user.Card;
 import org.techtown.evtalk.user.ChargingStation;
@@ -83,8 +80,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 
@@ -472,7 +467,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         markersPosition = new Vector<LatLng>();
         for (int i = 0; i < chargingStation.size(); i++) {
             markersPosition.add(new LatLng(chargingStation.get(i).getLat(),chargingStation.get(i).getLng()));
-            feeget.add(Float.toString(chargingStation.get(i).getFee()));
+//            feeget.add(Float.toString(chargingStation.get(i).getFee()));
         }
 
 //        int i,z=0;
@@ -504,8 +499,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             @Override
                             public CharSequence getText(@NonNull InfoWindow infoWindow) {
                                 Log.d("요금은...." ,Float.toString(chargingStation.get(feecheck).getFee()));
-                                return feeget.get(feecheck);
-//                                return Float.toString(chargingStation.get(feecheck).getFee());
+//                                return feeget.get(feecheck);
+                                return Float.toString(chargingStation.get(feecheck).getFee());
                             }
                         });
                         infoWindow.open(marker);
