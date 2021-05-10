@@ -1,5 +1,6 @@
 package org.techtown.evtalk.ui.station;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -89,6 +90,15 @@ public class StationPageActivity extends AppCompatActivity {
         doparsing asdf = new doparsing();
         asdf.execute(); // 파싱..
 
+
+        button =  findViewById(R.id.set_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(StationPageActivity.this, DestinationActivity.class);
+                startActivity(intent);
+            }
+        });
 
     }
 

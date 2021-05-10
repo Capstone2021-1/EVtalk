@@ -33,10 +33,12 @@
             android:textSize="10sp" />
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/set_button"
             android:layout_width="wrap_content"
-            android:layout_height="35dp"
+            android:layout_height="38dp"
             android:layout_gravity="center|right"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
             android:background="@drawable/circular_grey_bordersolid"
             android:text="도착지 설정"
             app:backgroundTint="#DAD3D3" />

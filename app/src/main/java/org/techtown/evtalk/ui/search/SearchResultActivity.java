@@ -4,9 +4,17 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -29,10 +37,15 @@ public class SearchResultActivity extends AppCompatActivity {
 
     SearchAdapter adapter;
     TextView textView;
+    public static List<SearchResult> results2 = new ArrayList<>(); //검색 결과 저장.
 
     public RetrofitConnection retrofit = new RetrofitConnection();
 
-    public static List<SearchResult> results2 = new ArrayList<>(); //검색 결과 저장.
+    public static String provider;
+    public static double longitude;
+    public static double latitude;
+    public static double altitude;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,18 +101,51 @@ public class SearchResultActivity extends AppCompatActivity {
             }
         });
 
+        // 현재 위칙 가져오기
+        final LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-//
-//
-//        // 버튼 기능 추가해야함!
-//        Button edit = findViewById(R.id.edit_btn);
-//        edit.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                finish();
+        final LocationListener gpsLocationListener = new LocationListener() {
+            public void onLocationChanged(Location location) {
+
+                provider = location.getProvider();
+                longitude = location.getLongitude();
+                latitude = location.getLatitude();
+                altitude = location.getAltitude();
+            }
+
+//            public void onStatusChanged(String provider, int status, Bundle extras) {
 //            }
-//        });
+//
+//            public void onProviderEnabled(String provider) {
+//            }
+//
+//            public void onProviderDisabled(String provider) {
+//            }
+        };
+
+        if ( Build.VERSION.SDK_INT >= 23 &&
+                ContextCompat.checkSelfPermission( getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
+            ActivityCompat.requestPermissions( this, new String[] {  android.Manifest.permission.ACCESS_FINE_LOCATION  },
+                    0 );
+        }
+        else{
+            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            provider = location.getProvider();
+            longitude = location.getLongitude();
+            latitude = location.getLatitude();
+            altitude = location.getAltitude();
+
+
+            // 1미터, 1초마다 현재 위치 업데이트
+            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                    1000,
+                    1,
+                    gpsLocationListener);
+            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+                    1000,
+                    1,
+                    gpsLocationListener);
+        }
 
 
     }
@@ -113,5 +159,7 @@ public class SearchResultActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 
 }

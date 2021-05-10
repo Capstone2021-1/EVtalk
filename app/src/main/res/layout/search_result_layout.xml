@@ -55,6 +55,15 @@
                         android:textSize="16sp" />
                 </LinearLayout>
 
+                <TextView
+                    android:id="@+id/distance_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:paddingRight="5dp"
+                    android:text="0.00km"
+                    android:textColor="@color/maincolor" />
+
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
