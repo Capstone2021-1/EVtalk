@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -20,6 +21,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
 
 import org.techtown.evtalk.MainActivity;
 import org.techtown.evtalk.R;
@@ -33,7 +35,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SearchResultActivity extends AppCompatActivity {
+public class SearchResultActivity extends AppCompatActivity implements LocationListener {
 
     SearchAdapter adapter;
     TextView textView;
@@ -45,6 +47,12 @@ public class SearchResultActivity extends AppCompatActivity {
     public static double longitude;
     public static double latitude;
     public static double altitude;
+
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1;
+
+
+    public static final int SEARCHRESULTCODE = 2001;
 
 
     @Override
@@ -83,7 +91,6 @@ public class SearchResultActivity extends AppCompatActivity {
                     Log.d("search", "success");
                 }
                 recyclerView.setAdapter(adapter);
-
             }
 
             @Override
@@ -97,47 +104,26 @@ public class SearchResultActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new OnSearchResultClickListener() {
             @Override
             public void onItemClick(SearchAdapter.ViewHolder holder, View view, int position) {
+
+                double lat = adapter.items.get(position).getLatOy();
+                double lng = adapter.items.get(position).getLngOx();
+
+                Log.d("searchResultActivity", Double.toString(lat));
+                Log.d("searchResultActivity", Double.toString(lng));
+
+                // 클릭 한 값의 lat, lng를 MainActivity로 전달해주기
+                Intent intent = new Intent();
+                intent.putExtra("searchLat", Double.toString(lat));
+                intent.putExtra("searchLng", Double.toString(lng));
+                setResult(SEARCHRESULTCODE, intent);
                 finish();
             }
         });
 
-        // 현재 위칙 가져오기
-        final LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        final LocationListener gpsLocationListener = new LocationListener() {
-            public void onLocationChanged(Location location) {
-
-                provider = location.getProvider();
-                longitude = location.getLongitude();
-                latitude = location.getLatitude();
-                altitude = location.getAltitude();
-            }
-        };
-
-        if ( Build.VERSION.SDK_INT >= 23 &&
-                ContextCompat.checkSelfPermission( getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
-            ActivityCompat.requestPermissions( this, new String[] {  android.Manifest.permission.ACCESS_FINE_LOCATION  },
-                    0 );
-        }
-        else{
-            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            provider = location.getProvider();
-            longitude = location.getLongitude();
-            latitude = location.getLatitude();
-            altitude = location.getAltitude();
-
-
-            // 1미터, 1초마다 현재 위치 업데이트
-            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                    1000,
-                    1,
-                    gpsLocationListener);
-            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-                    1000,
-                    1,
-                    gpsLocationListener);
-        }
-
+        // 현재 위치 좌표값 가져오기
+        GpsTracker gpsTracker = new GpsTracker(getApplicationContext());
+        longitude = gpsTracker.getLongitude();
+        latitude = gpsTracker.getLatitude();
 
     }
 
@@ -152,5 +138,8 @@ public class SearchResultActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
 
+    }
 }

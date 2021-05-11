@@ -19,10 +19,9 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
 
     ArrayList<Review> items = new ArrayList<Review>();
 
-    long mNow;
-    Date mDate;
-    SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    SimpleDateFormat mFormat = new SimpleDateFormat("yyyy년 M월 d일");
 
+    // pattern: "yyyy-MM-dd hh:mm:ss"
 
     @NonNull
     @Override
@@ -53,7 +52,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
         TextView review_name;
         TextView review_date;
         TextView review_contents;
-        SimpleDateFormat mFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat mFormat = new SimpleDateFormat("yyyy년 M월 d일");
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -66,11 +65,17 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
         public void setItem(Review item) {
             review_name.setText(item.getName());
             review_contents.setText(item.getReview());
-            //review_date.setText(getTime(item.getDate()));
+            review_date.setText(getTime(item.getDate()));
         }
 
-        private String getTime(Date d){
-            return mFormat.format(d);
+        public String getTime(Date date){
+            return mFormat.format(date);
+        }
+
+        public String getTime(){
+            long mNow = System.currentTimeMillis();
+            Date mDate = new Date(mNow);
+            return mFormat.format(mDate);
         }
 
     }

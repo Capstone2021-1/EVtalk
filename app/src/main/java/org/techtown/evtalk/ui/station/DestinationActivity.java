@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.techtown.evtalk.R;
+import org.techtown.evtalk.user.RetrofitConnection;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -18,6 +19,8 @@ public class DestinationActivity extends AppCompatActivity {
     private Date mDate;
     private SimpleDateFormat mFormat = new SimpleDateFormat("hh:mm:ss");
     private String currentTime;
+    private RetrofitConnection retrofit = new RetrofitConnection();
+    public static String rText = "";
 
 
     @Override
@@ -27,15 +30,8 @@ public class DestinationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_destination);
 
         TextView dest = findViewById(R.id.destText);
+        dest.setText(rText);
 
-        /*
-        동일한 목적지로 설정한 정보가 있다면 다르게 처리( 00시 00분에 몇 키로 떨어진 곳에서 현재 충전소를 목적지로 설정함)
-
-         */
-
-        if(true){
-            dest.setText("00시 00분에 몇 키로 떨어진 곳에서 현재 충전소를 목적지로");
-        }
         TextView cancel = findViewById(R.id.cancelText);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,6 +44,19 @@ public class DestinationActivity extends AppCompatActivity {
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //충전소 도착지 설정 시 서버로 정보 전송...
+                //distance에 거리 수정 필요...
+                Date dNow = new Date(System.currentTimeMillis());
+                retrofit.server.setDestination(StationPageActivity.station.get(StationFragment1.parsingcount).getStaId(), MainActivity.user.getId(), 2.5, dNow).enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Log.i("도착지 설정 실패", "" + t.toString());
+                    }
+                });
 
 //                if (NaviClient.instance.isKakaoNaviInstalled(context)) {
 //                    Log.i(TAG, "카카오내비 앱으로 길안내 가능")
@@ -64,8 +73,6 @@ public class DestinationActivity extends AppCompatActivity {
 
 
     }
-
-
     // 현재 시간 구하기
     public String getTime(){
         mNow = System.currentTimeMillis();

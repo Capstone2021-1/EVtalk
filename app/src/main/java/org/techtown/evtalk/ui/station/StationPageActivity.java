@@ -44,6 +44,8 @@ public class StationPageActivity extends AppCompatActivity {
     private Button button;
     public static List<Station> station = new ArrayList<>(); // API 호출 충전소 정보
     Station bus = null;
+    public static int parsingcount;
+    private RetrofitConnection retrofit = new RetrofitConnection();
 //    public static int chargingcount = 0;
 
 
@@ -89,7 +91,6 @@ public class StationPageActivity extends AppCompatActivity {
                 FragmentView(Fragment_3);
             }
         });
-
         FragmentView(Fragment_1); // 초기 프래그먼트
 
 
@@ -99,8 +100,10 @@ public class StationPageActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(StationPageActivity.this, DestinationActivity.class);
-                startActivity(intent);
+                GetDestination gd = new GetDestination();   //같은 목적지를 향하고 있는 사용자가 있는 지 확인
+                gd.execute();
+//                Intent intent = new Intent(StationPageActivity.this, DestinationActivity.class);
+//                startActivity(intent);
             }
         });
 
@@ -164,7 +167,6 @@ public class StationPageActivity extends AppCompatActivity {
             XmlPullParser parser;
             URL xmlUrl;
             int k = 0;
-            String check = "NULL";
 
             try {
                 boolean flag[] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false}; // 21개
@@ -185,33 +187,28 @@ public class StationPageActivity extends AppCompatActivity {
                         case XmlPullParser.END_DOCUMENT:
                             break;
                         case XmlPullParser.START_TAG:
-                            check = parser.getName();
-
-                            if(check.equals("item")){ bus = new Station();}
-                            else if (check.equals("statNm")) { flag[0] = true; }
-                            else if (check.equals("statId")) { flag[1] = true; }
-                            else if (check.equals("chgerId")) { flag[2] = true; }
-                            else if (check.equals("chgerType")) { flag[3] = true; }
-                            else if (check.equals("addr")) { flag[4] = true; }
-                            else if (check.equals("lat")) { flag[5] = true; }
-                            else if (check.equals("lng")) { flag[6] = true; }
-                            else if (check.equals("useTime")) { flag[7] = true; }
-                            else if (check.equals("busiId")) { flag[8] = true; }
-                            else if (check.equals("busiNm")) { flag[9] = true; }
-                            else if (check.equals("busiCall")) { flag[10] = true; }
-                            else if (check.equals("stat")) { flag[11] = true; }
-                            else if (check.equals("statUpdDt")) { flag[12] = true;}
-//                            else if (check.equals("powerType")){ flag[13] = true; }
-                            else if(check.equals("powerType") && !check.isEmpty()){
-                                    flag[13] = true;
-                            }
-                            else if (check.equals("zcode")) { flag[14] = true; }
-                            else if (check.equals("parkingFree")) { flag[15] = true; }
-                            else if (check.equals("note")) { flag[16] = true; }
-                            else if (check.equals("limitYn")) { flag[17] = true; }
-                            else if (check.equals("limitDetail")) { flag[18] = true; }
-                            else if (check.equals("delYn")) { flag[19] = true; }
-                            else if (check.equals("delDetail")) { flag[20] = true; }
+                            if(parser.getName().equals("item")){ bus = new Station();}
+                            else if (parser.getName().equals("statNm")) { flag[0] = true; }
+                            else if (parser.getName().equals("statId")) { flag[1] = true; }
+                            else if (parser.getName().equals("chgerId")) { flag[2] = true; }
+                            else if (parser.getName().equals("chgerType")) { flag[3] = true; }
+                            else if (parser.getName().equals("addr")) { flag[4] = true; }
+                            else if (parser.getName().equals("lat")) { flag[5] = true; }
+                            else if (parser.getName().equals("lng")) { flag[6] = true; }
+                            else if (parser.getName().equals("useTime")) { flag[7] = true; }
+                            else if (parser.getName().equals("busiId")) { flag[8] = true; }
+                            else if (parser.getName().equals("busiNm")) { flag[9] = true; }
+                            else if (parser.getName().equals("busiCall")) { flag[10] = true; }
+                            else if (parser.getName().equals("stat")) { flag[11] = true; }
+                            else if (parser.getName().equals("statUpdDt")) { flag[12] = true; }
+                            else if (parser.getName().equals("powerType")) { flag[13] = true; }
+                            else if (parser.getName().equals("zcode")) { flag[14] = true; }
+                            else if (parser.getName().equals("parkingFree")) { flag[15] = true; }
+                            else if (parser.getName().equals("note")) { flag[16] = true; }
+                            else if (parser.getName().equals("limitYn")) { flag[17] = true; }
+                            else if (parser.getName().equals("limitDetail")) { flag[18] = true; }
+                            else if (parser.getName().equals("delYn")) { flag[19] = true; }
+                            else if (parser.getName().equals("delDetail")) { flag[20] = true; }
                             break;
                         case XmlPullParser.END_TAG:
                             if(parser.getName().equals("item")&&bus!=null){
@@ -266,7 +263,6 @@ public class StationPageActivity extends AppCompatActivity {
             textView.setText(station.get(right).getAddr()); // 충전소 주소 텍스트 변경
 
             //DB에서 선택된 충전소 리뷰 가져오기
-            RetrofitConnection retrofit = new RetrofitConnection();
             StationFragment3.reviews = new ArrayList<>();
             retrofit.server.getReviews(StationPageActivity.station.get(right).getStaId()).enqueue(new Callback<List<Review>>() {
                 @Override
@@ -278,7 +274,7 @@ public class StationPageActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<List<Review>> call, Throwable t) {
-                    //실패
+                    Log.i("리뷰 확인 실패", "" + t.toString());
                 }
             });
 
@@ -296,6 +292,34 @@ public class StationPageActivity extends AppCompatActivity {
 
 //            TextView textView = findViewById(R.id.textView8);
 //            textView.setText(station.get(right).getBusiNm());
+        }
+
+    }
+
+    //같은 목적지를 향하는 사용자가 있는지 확인
+    public class GetDestination extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected synchronized Void doInBackground(Void... voids) {
+            retrofit.server.getDestinationUser(station.get(StationFragment1.parsingcount).getStaId()).enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+                    DestinationActivity.rText = response.body();
+                    onPostExecute();
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+
+                }
+            });
+            return null;
+        }
+
+        protected synchronized void onPostExecute() {
+            super.onPostExecute(null);
+            Intent intent = new Intent(StationPageActivity.this, DestinationActivity.class);
+            startActivity(intent);
         }
 
     }

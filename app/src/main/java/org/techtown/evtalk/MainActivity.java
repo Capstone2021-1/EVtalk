@@ -97,9 +97,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static List<ChargingStation> charg = new ArrayList<>();
     public static List<Station> station = new ArrayList<>(); // API 호출 충전소 정보
     ;   //충전소 기본 정보
+    public static List<Fee> estimated_fee = new ArrayList<>();  //예상 요금 정보
     private AppBarConfiguration mAppBarConfiguration;
     private static NaverMap naverMap;
-    private FrameLayout BSsheet;
+    private static FrameLayout BSsheet;
     private BottomSheetBehavior bs;
     public int feecheck = 0;
     public List<String> feeget = new ArrayList<>();
@@ -109,10 +110,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static String end_time;
     public static String total_time;
     public static final int TIMECODE = 1000;
+
     public static String search_result ="";
+    public static double searchLat;
+    public static double searchLng;
     private static final int SEARCH_RESULT_CODE = 2000;
 
     private static CameraUpdate cameraUpdate;
+
 
     public static NaverMap getNaverMap(){
         return naverMap;
@@ -268,6 +273,32 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 start_time = data.getStringExtra("start_time");
                 end_time = data.getStringExtra("end_time");
                 total_time = data.getStringExtra("total_time");
+                Log.d("time", start_time);
+                Log.d("time", end_time);
+                Log.d("time", total_time);
+            }
+        }else if(requestCode == SEARCH_RESULT_CODE){   // SearchResultActivity에서 검색 결과를 누르면 MainActivity에서 정보 전달 받음
+            if(resultCode == 2001) {
+
+                Log.d("searchMainActivity", data.getStringExtra("searchLat"));
+                Log.d("searchMainActivity", data.getStringExtra("searchLng"));
+
+                searchLat = Double.parseDouble(data.getStringExtra("searchLat"));
+                searchLng = Double.parseDouble(data.getStringExtra("searchLng"));
+
+                // 마커 객체 하나 생성
+                LatLng latLng = new LatLng(searchLat, searchLng);
+                Marker marker = new Marker();
+                marker.setPosition(latLng);
+
+                // 좌표 값 일치하는 곳 찾아서 바텀시트 띄우기
+                for(LatLng mp : markersPosition){
+                    if(mp.latitude == searchLat && mp.longitude == searchLng) {
+                        Log.d("searchMainActivity", "true");
+                        onClick(marker);
+                        break;
+                    }
+                }
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -360,7 +391,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             if(search_result.endsWith(" ")){
                 search_result = search_result.substring(0, search_result.length()-1);
             }
-            Log.d("search", "검색 완료");
+            hidebs();   // 검색하면 전에 열려 있던 바텀시트 닫기
+            //Log.d("search", "검색 완료");
 
             searchView.clearFocus();
 
@@ -371,13 +403,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         @Override
         public boolean onQueryTextChange(String s) {
-            Log.d("search", "입력중");
+            //Log.d("search", "입력중");
             return true;
         }
     };
 
 
-    // 추가적으로 키보드 내려가게 하는 기능 필요
+    // 메인화면 우상단 검색 버튼
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -391,10 +423,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setOnQueryTextListener(queryTextListener);
         searchView.setIconifiedByDefault(false);
-//        searchView.clearFocus();
-
-
-
 
         return true;
     }
@@ -617,94 +645,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-//    //메인 엑티비티 실행 시 DB에서 유저 정보 받아오기
-//    public void getUserInfo() {
-//        retrofit.server.getUserInfo(user.getId()).enqueue(new Callback<User>() {
-//            @Override
-//            public void onResponse(Call<User> call, Response<User> response) {
-//                User resource = response.body();
-//                if (resource.getCar_number() != null)
-//                    user.setCar_number(resource.getCar_number());
-//                else
-//                    user.setCar_number("");
-//                if (resource.getMessage() != null)
-//                    user.setMessage(resource.getMessage());
-//                else
-//                    user.setMessage("");
-//            }
-//
-//            @Override
-//            public void onFailure(Call<User> call, Throwable t) {
-//                Log.i("failure", "사용자 정보 받아오기 실패");
-//            }
-//        });
-//
-//        retrofit.server.getMembershipInfo(user.getId()).enqueue(new Callback<List<Card>>() {
-//            @Override
-//            public void onResponse(Call<List<Card>> call, Response<List<Card>> response) {
-//                if (response.isSuccessful()) {
-//                    List<Card> result = response.body();
-//                    for (Card i : result) {
-//                        membership.add(i);
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<Card>> call, Throwable t) {
-//                Log.i("failure", "회원카드 받아오기 실패");
-//            }
-//        });
-//
-//        retrofit.server.getPaymentInfo(user.getId()).enqueue(new Callback<List<Card>>() {
-//            @Override
-//            public void onResponse(Call<List<Card>> call, Response<List<Card>> response) {
-//                if (response.isSuccessful()) {
-//                    List<Card> result = response.body();
-//                    for (Card i : result) {
-//                        payment.add(i);
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<Card>> call, Throwable t) {
-//                Log.i("failure", "결제카드 받아오기 실패");
-//            }
-//        });
-//
-//        retrofit.server.getCarInfo(user.getId()).enqueue(new Callback<Car>() {
-//            @Override
-//            public void onResponse(Call<Car> call, Response<Car> response) {
-//                if (response.body() != null) {
-//                    car = response.body();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Car> call, Throwable t) {
-//                Log.i("failure", "차량 정보 받아오기 실패");
-//            }
-//        });
-//
-//        retrofit.server.getChargingFee(user.getId()).enqueue(new Callback<List<Fee>>() {
-//            @Override
-//            public void onResponse(Call<List<Fee>> call, Response<List<Fee>> response) {
-//                for (Fee f : response.body()) {
-//                    for (ChargingStation i : chargingStation) {
-//                        if (i.getId().contains(f.getBusiId()))
-//                            i.setFee(f.getFee());
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<Fee>> call, Throwable t) {
-//                Log.i("오류", "" + t);
-//            }
-//        });
-//    }
-
     public class UserInfo extends AsyncTask<String, Void, String> {
 
         @Override
@@ -740,7 +680,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
 
                 Response<List<Fee>> feeResponse = retrofit.server.getChargingFee(user.getId()).execute();
-                Log.i("충전소 잘들어왓나 확인", "" + chargingStation.size());
                 for (Fee f : feeResponse.body()) {
                     for (ChargingStation i : chargingStation) {
                         if (i.getId().contains(f.getBusiId()))

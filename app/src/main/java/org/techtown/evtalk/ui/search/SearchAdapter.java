@@ -1,6 +1,8 @@
 package org.techtown.evtalk.ui.search;
 
+import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
@@ -13,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,6 +38,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
     OnSearchResultClickListener listener;
 
+    public static double lat;
+    public static double lng;
 
 
     @NonNull
@@ -76,6 +81,11 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
             linearLayout.setBackgroundColor(Color.LTGRAY);
 
+            lat = items.get(position).getLatOy();
+            Log.d("searchAdapter", Double.toString(lat));
+            lng = items.get(position).getLngOx();
+            Log.d("searchAdapter", Double.toString(lng));
+
             LatLng markercenter;
             if(items.get(position).isChSt==1) {
                 markercenter = new LatLng(items.get(position).getLatOy(), items.get(position).getLngOx());
@@ -87,7 +97,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             CameraUpdate tempCamera;
             tempCamera = CameraUpdate.scrollTo(markercenter);
             MainActivity.getNaverMap().moveCamera(tempCamera);
-
 
 
         }
@@ -120,7 +129,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 public void onClick(View view) {
 
                     int position = getAdapterPosition();
-
                     if (listener != null) {
                         listener.onItemClick(ViewHolder.this, view, position);
                     }
