@@ -48,7 +48,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:text="1월 1일"
+                        android:text="2021년 5월 9일"
                         android:textColor="@color/maincolor"
                         android:textSize="16sp" />
 

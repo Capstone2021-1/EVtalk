@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -45,6 +46,8 @@ public class SearchResultActivity extends AppCompatActivity {
     public static double longitude;
     public static double latitude;
     public static double altitude;
+
+    public static final int SEARCHRESULTCODE = 2001;
 
 
     @Override
@@ -83,7 +86,6 @@ public class SearchResultActivity extends AppCompatActivity {
                     Log.d("search", "success");
                 }
                 recyclerView.setAdapter(adapter);
-
             }
 
             @Override
@@ -97,6 +99,18 @@ public class SearchResultActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new OnSearchResultClickListener() {
             @Override
             public void onItemClick(SearchAdapter.ViewHolder holder, View view, int position) {
+
+                double lat = adapter.items.get(position).getLatOy();
+                double lng = adapter.items.get(position).getLngOx();
+
+                Log.d("searchResultActivity", Double.toString(lat));
+                Log.d("searchResultActivity", Double.toString(lng));
+
+                // 클릭 한 값의 lat, lng를 MainActivity로 전달해주기
+                Intent intent = new Intent();
+                intent.putExtra("searchLat", Double.toString(lat));
+                intent.putExtra("searchLng", Double.toString(lng));
+                setResult(SEARCHRESULTCODE, intent);
                 finish();
             }
         });
@@ -137,8 +151,6 @@ public class SearchResultActivity extends AppCompatActivity {
                     1,
                     gpsLocationListener);
         }
-
-
     }
 
     @Override // 뒤로가기 버튼 동작 구현

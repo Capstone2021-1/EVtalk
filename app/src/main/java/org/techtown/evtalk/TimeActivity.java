@@ -80,6 +80,7 @@ public class TimeActivity extends AppCompatActivity {
         buttonOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // MainActivity로 전달
                 Intent intent = new Intent();
                 intent.putExtra("start_time", start_time);  // 선택된 값 Intent로 전달
                 intent.putExtra("end_time", end_time);  // 선택된 값 Intent로 전달

@@ -37,6 +37,7 @@ public class DestinationActivity extends AppCompatActivity {
         if(true){
             dest.setText("00시 00분에 몇 키로 떨어진 곳에서 현재 충전소를 목적지로");
         }
+
         TextView cancel = findViewById(R.id.cancelText);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,8 +59,6 @@ public class DestinationActivity extends AppCompatActivity {
 
 
     }
-
-
     // 현재 시간 구하기
     public String getTime(){
         mNow = System.currentTimeMillis();

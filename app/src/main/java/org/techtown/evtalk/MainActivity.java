@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     ;   //충전소 기본 정보
     private AppBarConfiguration mAppBarConfiguration;
     private static NaverMap naverMap;
-    private FrameLayout BSsheet;
+    private static FrameLayout BSsheet;
     private BottomSheetBehavior bs;
     public int feecheck = 0;
     public List<String> feeget = new ArrayList<>();
@@ -109,10 +109,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static String end_time;
     public static String total_time;
     public static final int TIMECODE = 1000;
+
     public static String search_result ="";
+    public static double searchLat;
+    public static double searchLng;
     private static final int SEARCH_RESULT_CODE = 2000;
 
     private static CameraUpdate cameraUpdate;
+
 
     public static NaverMap getNaverMap(){
         return naverMap;
@@ -268,6 +272,35 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 start_time = data.getStringExtra("start_time");
                 end_time = data.getStringExtra("end_time");
                 total_time = data.getStringExtra("total_time");
+                Log.d("time", start_time);
+                Log.d("time", end_time);
+                Log.d("time", total_time);
+            }
+        }else if(requestCode == SEARCH_RESULT_CODE){
+            if(resultCode == 2001) {
+
+                Log.d("searchMainActivity", data.getStringExtra("searchLat"));
+                Log.d("searchMainActivity", data.getStringExtra("searchLng"));
+
+                searchLat = Double.parseDouble(data.getStringExtra("searchLat"));
+                searchLng = Double.parseDouble(data.getStringExtra("searchLng"));
+
+                // 마커 객체 하나 생성
+                LatLng latLng = new LatLng(searchLat, searchLng);
+                Marker marker = new Marker();
+                marker.setPosition(latLng);
+
+                // 좌표 값 일치하는 곳 찾아서 바텀시트 띄우기
+                for(LatLng mp : markersPosition){
+                    if(mp.latitude == searchLat && mp.longitude == searchLng) {
+                        Log.d("searchMainActivity", "true");
+                        onClick(marker);
+                        break;
+                    }
+                }
+
+
+//                showbs(searchLat, searchLng);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -360,7 +393,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             if(search_result.endsWith(" ")){
                 search_result = search_result.substring(0, search_result.length()-1);
             }
-            Log.d("search", "검색 완료");
+            hidebs();
+            //Log.d("search", "검색 완료");
 
             searchView.clearFocus();
 
@@ -371,13 +405,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         @Override
         public boolean onQueryTextChange(String s) {
-            Log.d("search", "입력중");
+            //Log.d("search", "입력중");
             return true;
         }
     };
 
 
-    // 추가적으로 키보드 내려가게 하는 기능 필요
+    // 메인화면 우상단 검색 버튼
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -391,10 +425,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setOnQueryTextListener(queryTextListener);
         searchView.setIconifiedByDefault(false);
-//        searchView.clearFocus();
-
-
-
 
         return true;
     }
