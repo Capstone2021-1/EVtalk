@@ -17,6 +17,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import org.techtown.evtalk.MainActivity;
 import org.techtown.evtalk.R;
+import org.techtown.evtalk.ui.station.parking.ParkingAdapter;
+import org.techtown.evtalk.ui.station.parking.StationFragment2;
 import org.techtown.evtalk.ui.station.review.Review;
 import org.techtown.evtalk.ui.station.review.ReviewFragment;
 import org.techtown.evtalk.ui.station.review.StationFragment3;
@@ -44,12 +46,16 @@ public class StationPageActivity extends AppCompatActivity {
     Station bus = null;
     public static int parsingcount;
     private RetrofitConnection retrofit = new RetrofitConnection();
+//    public static int chargingcount = 0;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_station_page);
+
+        doparsing asdf = new doparsing();
+        asdf.execute(); // 파싱..
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -87,8 +93,7 @@ public class StationPageActivity extends AppCompatActivity {
         });
         FragmentView(Fragment_1); // 초기 프래그먼트
 
-        doparsing asdf = new doparsing();
-        asdf.execute(); // 파싱..
+
 
 
         button =  findViewById(R.id.set_button);
@@ -213,8 +218,7 @@ public class StationPageActivity extends AppCompatActivity {
                             }
                             break;
                         case XmlPullParser.TEXT:
-                            if(parser.isWhitespace()) {}
-                            else if (temp == 0) {
+                            if (temp == 0) {
                                 bus.setStaNm(parser.getText());
                                 if(bus.getStaNm().equals(MainActivity.mkname))
                                     right = k;
@@ -255,7 +259,7 @@ public class StationPageActivity extends AppCompatActivity {
 
         protected synchronized void onPostExecute(String s){
             super.onPostExecute(s);
-            Log.d("파싱 잘 됐나.....확인"," = "+right +"\n" + station.get(right).getStaId() +"\n" + station.get(right).getStaNm()+"\n" + station.get(right).getChgerId()+"\n" + station.get(right).getChgerType()+"\n" + station.get(right).getAddr()+"\n" + station.get(right).getLat()+"\n" + station.get(right).getLng()+"\n" + station.get(right).getUseTime()+"\n" + station.get(right).getBusiId()+"\n" + station.get(right).getBusiNm()+"\n" + station.get(right).getBusiCall()+"\n" + station.get(right).getStat()+"\n" + station.get(right).getStatUpdDt()+"\n" + station.get(right).getPowerType()+"\n" + station.get(right).getZcode()+"\n" + station.get(right).getParkingFree()+"\n" + station.get(right).getNote()+"\n" + station.get(right).getLimitYn()+"\n" + station.get(right).getLimitDetail()+"\n" + station.get(right).getDelYn()+"\n" + station.get(right).getDelDetail() );
+            Log.d("파싱 잘 됐나.....확인"," = "+right +"\n" + station.get(right).getStaNm() +"\n" + station.get(right).getStaId()+"\n" + station.get(right).getChgerId()+"\n" + station.get(right).getChgerType()+"\n" + station.get(right).getAddr()+"\n" + station.get(right).getLat()+"\n" + station.get(right).getLng()+"\n" + station.get(right).getUseTime()+"\n" + station.get(right).getBusiId()+"\n" + station.get(right).getBusiNm()+"\n" + station.get(right).getBusiCall()+"\n" + station.get(right).getStat()+"\n" + station.get(right).getStatUpdDt()+"\n" + station.get(right).getPowerType()+"\n" + station.get(right).getZcode()+"\n" + station.get(right).getParkingFree()+"\n" + station.get(right).getNote()+"\n" + station.get(right).getLimitYn()+"\n" + station.get(right).getLimitDetail()+"\n" + station.get(right).getDelYn()+"\n" + station.get(right).getDelDetail() );
             textView = findViewById(R.id.stationaddr);
             textView.setText(station.get(right).getAddr()); // 충전소 주소 텍스트 변경
 
@@ -278,8 +282,11 @@ public class StationPageActivity extends AppCompatActivity {
             Log.d("갯수임","="+Integer.parseInt(station.get(StationFragment1.parsingcount).getChgerId()) );
 
             StationFragment1.adapter = new StationAdapter();
-            for(int i = 0; i < Integer.parseInt(station.get(StationFragment1.parsingcount).getChgerId()); i++) // 어댑터 추가
-                StationFragment1.adapter.addItem(station.get(right + i + 1 - Integer.parseInt(station.get(StationFragment1.parsingcount).getChgerId())));
+            StationFragment2.adapter2 = new ParkingAdapter();
+            for(int i = 0; i < Integer.parseInt(station.get(StationFragment1.parsingcount).getChgerId()); i++) { // 어댑터 추가
+                StationFragment1.adapter.addItem(station.get(right + i + 1 - Integer.parseInt(station.get(StationFragment1.parsingcount).getChgerId()))); // 충전기 정보 어뎁터
+                StationFragment2.adapter2.addItem(station.get(right + i + 1 - Integer.parseInt(station.get(StationFragment1.parsingcount).getChgerId()))); // 충전기 속도 어뎁터
+            }
 
             button = findViewById(R.id.fragch_1);
             button.performClick();

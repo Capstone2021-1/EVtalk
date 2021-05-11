@@ -38,7 +38,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         return Integer.parseInt(StationPageActivity.station.get(StationFragment1.parsingcount).getChgerId()) ;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageview1;
         TextView textView1;
         ImageView imageView2;
