@@ -19,6 +19,7 @@ import org.techtown.evtalk.user.RetrofitConnection;
 import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -89,15 +90,19 @@ public class TimeActivity extends AppCompatActivity {
         buttonOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EstimatedFee ef = new EstimatedFee();
-                ef.execute();
-                // MainActivity로 전달
-//                Intent intent = new Intent();
-//                intent.putExtra("start_time", start_time);  // 선택된 값 Intent로 전달
-//                intent.putExtra("end_time", end_time);  // 선택된 값 Intent로 전달
-//                intent.putExtra("total_time", total_time);  // 선택된 값 Intent로 전달
-//
-//                setResult(TIMERESULTCODE, intent);
+                if(sDate == null || eDate == null) {
+                    // MainActivity로 전달
+                    Intent intent = new Intent();
+                    intent.putExtra("start_time", start_time);  // 선택된 값 Intent로 전달
+                    intent.putExtra("end_time", end_time);  // 선택된 값 Intent로 전달
+                    intent.putExtra("total_time", total_time);  // 선택된 값 Intent로 전달
+
+                    setResult(TIMERESULTCODE, intent);
+                }
+                else {
+                    EstimatedFee ef = new EstimatedFee();
+                    ef.execute();
+                }
                 finish();
             }
         });
@@ -181,6 +186,7 @@ public class TimeActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<List<Fee>> call, Response<List<Fee>> response) {
                     List<Fee> temp = response.body();
+                    MainActivity.estimated_fee = new ArrayList<>();
                     for(Fee i : temp)
                         MainActivity.estimated_fee.add(i);
                 }
