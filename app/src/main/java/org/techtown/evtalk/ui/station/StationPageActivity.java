@@ -17,6 +17,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import org.techtown.evtalk.MainActivity;
 import org.techtown.evtalk.R;
+import org.techtown.evtalk.ui.station.parking.ParkingAdapter;
+import org.techtown.evtalk.ui.station.parking.StationFragment2;
 import org.techtown.evtalk.ui.station.review.Review;
 import org.techtown.evtalk.ui.station.review.ReviewFragment;
 import org.techtown.evtalk.ui.station.review.StationFragment3;
@@ -44,12 +46,16 @@ public class StationPageActivity extends AppCompatActivity {
     Station bus = null;
     public static int parsingcount;
     private RetrofitConnection retrofit = new RetrofitConnection();
+//    public static int chargingcount = 0;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_station_page);
+
+        doparsing asdf = new doparsing();
+        asdf.execute(); // 파싱..
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -87,8 +93,7 @@ public class StationPageActivity extends AppCompatActivity {
         });
         FragmentView(Fragment_1); // 초기 프래그먼트
 
-        doparsing asdf = new doparsing();
-        asdf.execute(); // 파싱..
+
 
 
         button =  findViewById(R.id.set_button);
@@ -165,8 +170,6 @@ public class StationPageActivity extends AppCompatActivity {
             int k = 0;
 
             try {
-                boolean flag[] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false}; // 21개
-
                 xmlUrl = new URL(queryUrl);
                 xmlUrl.openConnection().getInputStream();
                 factory = XmlPullParserFactory.newInstance();
@@ -176,6 +179,7 @@ public class StationPageActivity extends AppCompatActivity {
                 int eventType = parser.getEventType();
                 Log.d("파싱 시작합니다...", "후");
                 int zxcv = 0;
+                int temp = -1;
                 while (eventType != XmlPullParser.END_DOCUMENT) {
                     switch (eventType) {
                         case XmlPullParser.START_DOCUMENT:
@@ -185,27 +189,27 @@ public class StationPageActivity extends AppCompatActivity {
                             break;
                         case XmlPullParser.START_TAG:
                             if(parser.getName().equals("item")){ bus = new Station();}
-                            else if (parser.getName().equals("statNm")) { flag[0] = true; }
-                            else if (parser.getName().equals("statId")) { flag[1] = true; }
-                            else if (parser.getName().equals("chgerId")) { flag[2] = true; }
-                            else if (parser.getName().equals("chgerType")) { flag[3] = true; }
-                            else if (parser.getName().equals("addr")) { flag[4] = true; }
-                            else if (parser.getName().equals("lat")) { flag[5] = true; }
-                            else if (parser.getName().equals("lng")) { flag[6] = true; }
-                            else if (parser.getName().equals("useTime")) { flag[7] = true; }
-                            else if (parser.getName().equals("busiId")) { flag[8] = true; }
-                            else if (parser.getName().equals("busiNm")) { flag[9] = true; }
-                            else if (parser.getName().equals("busiCall")) { flag[10] = true; }
-                            else if (parser.getName().equals("stat")) { flag[11] = true; }
-                            else if (parser.getName().equals("statUpdDt")) { flag[12] = true; }
-                            else if (parser.getName().equals("powerType")) { flag[13] = true; }
-                            else if (parser.getName().equals("zcode")) { flag[14] = true; }
-                            else if (parser.getName().equals("parkingFree")) { flag[15] = true; }
-                            else if (parser.getName().equals("note")) { flag[16] = true; }
-                            else if (parser.getName().equals("limitYn")) { flag[17] = true; }
-                            else if (parser.getName().equals("limitDetail")) { flag[18] = true; }
-                            else if (parser.getName().equals("delYn")) { flag[19] = true; }
-                            else if (parser.getName().equals("delDetail")) { flag[20] = true; }
+                            else if (parser.getName().equals("statNm")) { temp = 0; }
+                            else if (parser.getName().equals("statId")) { temp = 1; }
+                            else if (parser.getName().equals("chgerId")) { temp = 2; }
+                            else if (parser.getName().equals("chgerType")) { temp = 3; }
+                            else if (parser.getName().equals("addr")) { temp = 4; }
+                            else if (parser.getName().equals("lat")) { temp = 5; }
+                            else if (parser.getName().equals("lng")) { temp = 6; }
+                            else if (parser.getName().equals("useTime")) { temp = 7; }
+                            else if (parser.getName().equals("busiId")) { temp = 8; }
+                            else if (parser.getName().equals("busiNm")) { temp = 9; }
+                            else if (parser.getName().equals("busiCall")) { temp = 10; }
+                            else if (parser.getName().equals("stat")) { temp = 11; }
+                            else if (parser.getName().equals("statUpdDt")) { temp = 12; }
+                            else if (parser.getName().equals("powerType")) { temp = 13; }
+                            else if (parser.getName().equals("zcode")) { temp = 14; }
+                            else if (parser.getName().equals("parkingFree")) { temp = 15; }
+                            else if (parser.getName().equals("note")) { temp = 16; }
+                            else if (parser.getName().equals("limitYn")) { temp = 17; }
+                            else if (parser.getName().equals("limitDetail")) { temp = 18; }
+                            else if (parser.getName().equals("delYn")) { temp = 19; }
+                            else if (parser.getName().equals("delDetail")) { temp = 20; }
                             break;
                         case XmlPullParser.END_TAG:
                             if(parser.getName().equals("item")&&bus!=null){
@@ -214,32 +218,32 @@ public class StationPageActivity extends AppCompatActivity {
                             }
                             break;
                         case XmlPullParser.TEXT:
-                            if (flag[0]) {
+                            if (temp == 0) {
                                 bus.setStaNm(parser.getText());
                                 if(bus.getStaNm().equals(MainActivity.mkname))
                                     right = k;
-                                flag[0] = false;
+                                temp = -1;
                             }
-                            else if(flag[1]){ bus.setStaId(parser.getText()); flag[1] = false; }
-                            else if(flag[2]){ bus.setChgerId(parser.getText()); flag[2] = false; }
-                            else if(flag[3]){ bus.setChgerType(parser.getText()); flag[3] = false; }
-                            else if(flag[4]){ bus.setAddr(parser.getText()); flag[4] = false; }
-                            else if(flag[5]){ bus.setLat(Double.parseDouble(parser.getText())); flag[5] = false; }
-                            else if(flag[6]){ bus.setLng(Double.parseDouble(parser.getText())); flag[6] = false; }
-                            else if(flag[7]){ bus.setUseTime(parser.getText()); flag[7] = false; }
-                            else if(flag[8]){ bus.setBusiId(parser.getText()); flag[8] = false; }
-                            else if(flag[9]){ bus.setBusiNm(parser.getText()); flag[9] = false; }
-                            else if(flag[10]){ bus.setBusiCall(parser.getText()); flag[10] = false; }
-                            else if(flag[11]){ bus.setStat(parser.getText()); flag[11] = false; }
-                            else if(flag[12]){ bus.setStatUpdDt(parser.getText()); flag[12] = false; }
-                            else if(flag[13]){ bus.setPowerType(parser.getText()); flag[13] = false; }
-                            else if(flag[14]){ bus.setZcode(parser.getText()); flag[14] = false; }
-                            else if(flag[15]){ bus.setParkingFree(parser.getText()); flag[15] = false; }
-                            else if(flag[16]){ bus.setNote(parser.getText()); flag[16] = false; }
-                            else if(flag[17]){ bus.setLimitYn(parser.getText()); flag[17] = false; }
-                            else if(flag[18]){ bus.setLimitDetail(parser.getText()); flag[18] = false; }
-                            else if(flag[19]){ bus.setDelYn(parser.getText()); flag[19] = false; }
-                            else if(flag[20]){ bus.setDelDetail(parser.getText()); flag[20] = false; }
+                            else if(temp == 1){ bus.setStaId(parser.getText()); temp = -1; }
+                            else if(temp == 2){ bus.setChgerId(parser.getText()); temp = -1; }
+                            else if(temp == 3){ bus.setChgerType(parser.getText()); temp = -1; }
+                            else if(temp == 4){ bus.setAddr(parser.getText()); temp = -1; }
+                            else if(temp == 5){ bus.setLat(Double.parseDouble(parser.getText())); temp = -1; }
+                            else if(temp == 6){ bus.setLng(Double.parseDouble(parser.getText())); temp = -1; }
+                            else if(temp == 7){ bus.setUseTime(parser.getText()); temp = -1; }
+                            else if(temp == 8){ bus.setBusiId(parser.getText()); temp = -1; }
+                            else if(temp == 9){ bus.setBusiNm(parser.getText()); temp = -1; }
+                            else if(temp == 10){ bus.setBusiCall(parser.getText()); temp = -1; }
+                            else if(temp == 11){ bus.setStat(parser.getText()); temp = -1; }
+                            else if(temp == 12){ bus.setStatUpdDt(parser.getText()); temp = -1; }
+                            else if(temp == 13){ bus.setPowerType(parser.getText()); temp = -1; }
+                            else if(temp == 14){ bus.setZcode(parser.getText()); temp = -1; }
+                            else if(temp == 15){ bus.setParkingFree(parser.getText()); temp = -1; }
+                            else if(temp == 16){ bus.setNote(parser.getText()); temp = -1; }
+                            else if(temp == 17){ bus.setLimitYn(parser.getText()); temp = -1; }
+                            else if(temp == 18){ bus.setLimitDetail(parser.getText()); temp = -1; }
+                            else if(temp == 19){ bus.setDelYn(parser.getText()); temp = -1; }
+                            else if(temp == 20){ bus.setDelDetail(parser.getText()); temp = -1; }
                             break;
                         default: break;
                     }
@@ -255,7 +259,7 @@ public class StationPageActivity extends AppCompatActivity {
 
         protected synchronized void onPostExecute(String s){
             super.onPostExecute(s);
-            Log.d("파싱 잘 됐나.....확인"," = "+right +"\n" + station.get(right).getStaId() +"\n" + station.get(right).getStaNm()+"\n" + station.get(right).getChgerId()+"\n" + station.get(right).getChgerType()+"\n" + station.get(right).getAddr()+"\n" + station.get(right).getLat()+"\n" + station.get(right).getLng()+"\n" + station.get(right).getUseTime()+"\n" + station.get(right).getBusiId()+"\n" + station.get(right).getBusiNm()+"\n" + station.get(right).getBusiCall()+"\n" + station.get(right).getStat()+"\n" + station.get(right).getStatUpdDt()+"\n" + station.get(right).getPowerType()+"\n" + station.get(right).getZcode()+"\n" + station.get(right).getParkingFree()+"\n" + station.get(right).getNote()+"\n" + station.get(right).getLimitYn()+"\n" + station.get(right).getLimitDetail()+"\n" + station.get(right).getDelYn()+"\n" + station.get(right).getDelDetail() );
+            Log.d("파싱 잘 됐나.....확인"," = "+right +"\n" + station.get(right).getStaNm() +"\n" + station.get(right).getStaId()+"\n" + station.get(right).getChgerId()+"\n" + station.get(right).getChgerType()+"\n" + station.get(right).getAddr()+"\n" + station.get(right).getLat()+"\n" + station.get(right).getLng()+"\n" + station.get(right).getUseTime()+"\n" + station.get(right).getBusiId()+"\n" + station.get(right).getBusiNm()+"\n" + station.get(right).getBusiCall()+"\n" + station.get(right).getStat()+"\n" + station.get(right).getStatUpdDt()+"\n" + station.get(right).getPowerType()+"\n" + station.get(right).getZcode()+"\n" + station.get(right).getParkingFree()+"\n" + station.get(right).getNote()+"\n" + station.get(right).getLimitYn()+"\n" + station.get(right).getLimitDetail()+"\n" + station.get(right).getDelYn()+"\n" + station.get(right).getDelDetail() );
             textView = findViewById(R.id.stationaddr);
             textView.setText(station.get(right).getAddr()); // 충전소 주소 텍스트 변경
 
@@ -278,8 +282,11 @@ public class StationPageActivity extends AppCompatActivity {
             Log.d("갯수임","="+Integer.parseInt(station.get(StationFragment1.parsingcount).getChgerId()) );
 
             StationFragment1.adapter = new StationAdapter();
-            for(int i = 0; i < Integer.parseInt(station.get(StationFragment1.parsingcount).getChgerId()); i++) // 어댑터 추가
-                StationFragment1.adapter.addItem(station.get(right + i + 1 - Integer.parseInt(station.get(StationFragment1.parsingcount).getChgerId())));
+            StationFragment2.adapter2 = new ParkingAdapter();
+            for(int i = 0; i < Integer.parseInt(station.get(StationFragment1.parsingcount).getChgerId()); i++) { // 어댑터 추가
+                StationFragment1.adapter.addItem(station.get(right + i + 1 - Integer.parseInt(station.get(StationFragment1.parsingcount).getChgerId()))); // 충전기 정보 어뎁터
+                StationFragment2.adapter2.addItem(station.get(right + i + 1 - Integer.parseInt(station.get(StationFragment1.parsingcount).getChgerId()))); // 충전기 속도 어뎁터
+            }
 
             button = findViewById(R.id.fragch_1);
             button.performClick();

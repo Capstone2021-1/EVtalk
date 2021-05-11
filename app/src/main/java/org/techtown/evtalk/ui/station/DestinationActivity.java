@@ -1,13 +1,12 @@
 package org.techtown.evtalk.ui.station;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.techtown.evtalk.MainActivity;
 import org.techtown.evtalk.R;
@@ -15,7 +14,6 @@ import org.techtown.evtalk.ui.search.GpsTracker;
 import org.techtown.evtalk.ui.search.SearchAdapter;
 import org.techtown.evtalk.ui.search.SearchResultActivity;
 import org.techtown.evtalk.user.RetrofitConnection;
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -89,6 +87,13 @@ public class DestinationActivity extends AppCompatActivity {
                         Log.i("도착지 설정 실패", "" + t.toString());
                     }
                 });
+
+//                if (NaviClient.instance.isKakaoNaviInstalled(context)) {
+//                    Log.i(TAG, "카카오내비 앱으로 길안내 가능")
+//                } else {
+//                    Log.i(TAG, "카카오내비 미설치: 웹 길안내 사용 권장")
+//                }
+
                 currentTime = getTime();
                 Log.d("dest", getTime());
                 finish();
