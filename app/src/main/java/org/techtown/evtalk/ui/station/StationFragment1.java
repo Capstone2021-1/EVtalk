@@ -14,15 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.techtown.evtalk.MainActivity;
 import org.techtown.evtalk.R;
-import org.techtown.evtalk.ui.station.review.Review;
-import org.techtown.evtalk.ui.station.review.StationFragment3;
-import org.techtown.evtalk.user.RetrofitConnection;
-
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class StationFragment1 extends Fragment {
     public static StationAdapter adapter;
