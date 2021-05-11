@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+
 import org.techtown.evtalk.MainActivity;
 import org.techtown.evtalk.R;
 import org.techtown.evtalk.user.RetrofitConnection;
@@ -34,7 +35,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SearchResultActivity extends AppCompatActivity {
+public class SearchResultActivity extends AppCompatActivity implements LocationListener {
 
     SearchAdapter adapter;
     TextView textView;
@@ -46,6 +47,10 @@ public class SearchResultActivity extends AppCompatActivity {
     public static double longitude;
     public static double latitude;
     public static double altitude;
+
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1;
+
 
     public static final int SEARCHRESULTCODE = 2001;
 
@@ -115,42 +120,11 @@ public class SearchResultActivity extends AppCompatActivity {
             }
         });
 
-        // 현재 위칙 가져오기
-        final LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        // 현재 위치 좌표값 가져오기
+        GpsTracker gpsTracker = new GpsTracker(getApplicationContext());
+        longitude = gpsTracker.getLongitude();
+        latitude = gpsTracker.getLatitude();
 
-        final LocationListener gpsLocationListener = new LocationListener() {
-            public void onLocationChanged(Location location) {
-
-                provider = location.getProvider();
-                longitude = location.getLongitude();
-                latitude = location.getLatitude();
-                altitude = location.getAltitude();
-            }
-        };
-
-        if ( Build.VERSION.SDK_INT >= 23 &&
-                ContextCompat.checkSelfPermission( getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED ) {
-            ActivityCompat.requestPermissions( this, new String[] {  android.Manifest.permission.ACCESS_FINE_LOCATION  },
-                    0 );
-        }
-        else{
-            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            provider = location.getProvider();
-            longitude = location.getLongitude();
-            latitude = location.getLatitude();
-            altitude = location.getAltitude();
-
-
-            // 1미터, 1초마다 현재 위치 업데이트
-            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                    1000,
-                    1,
-                    gpsLocationListener);
-            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-                    1000,
-                    1,
-                    gpsLocationListener);
-        }
     }
 
     @Override // 뒤로가기 버튼 동작 구현
@@ -164,5 +138,8 @@ public class SearchResultActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
 
+    }
 }
