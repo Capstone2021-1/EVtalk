@@ -276,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Log.d("time", end_time);
                 Log.d("time", total_time);
             }
-        }else if(requestCode == SEARCH_RESULT_CODE){
+        }else if(requestCode == SEARCH_RESULT_CODE){   // SearchResultActivity에서 검색 결과를 누르면 MainActivity에서 정보 전달 받음
             if(resultCode == 2001) {
 
                 Log.d("searchMainActivity", data.getStringExtra("searchLat"));
@@ -298,9 +298,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         break;
                     }
                 }
-
-
-//                showbs(searchLat, searchLng);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -393,7 +390,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             if(search_result.endsWith(" ")){
                 search_result = search_result.substring(0, search_result.length()-1);
             }
-            hidebs();
+            hidebs();   // 검색하면 전에 열려 있던 바텀시트 닫기
             //Log.d("search", "검색 완료");
 
             searchView.clearFocus();
