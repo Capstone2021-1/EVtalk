@@ -76,6 +76,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -306,6 +307,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // 바텀 시트 출현
     public synchronized void showbs(double lat, double lng){
+        SimpleDateFormat formatType = new SimpleDateFormat("MM월 dd일 HH:mm");
+        String showfee = "총 ";
         BSsheet = (FrameLayout) findViewById(R.id.bs_sheet);
         BottomSheetBehavior bs = BottomSheetBehavior.from(BSsheet);
 
@@ -316,6 +319,28 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         TextView bs_comname = findViewById(R.id.bs_comname);
         bs_comname.setText(mkbusi); // 회사이름 변경
+
+        TextView tv1 = findViewById(R.id.textView15);
+        tv1.setText(formatType.format(TimeActivity.sDate) +" ~ "+formatType.format(TimeActivity.eDate));
+        TextView tv2 = findViewById(R.id.textView16);
+        tv2.setText("충전 금액 : "+ Integer.toString((int)mkfee)+" 원");
+        TextView tv3 = findViewById(R.id.textView17);
+        for(int i=0;i<3;i++){
+            if(i == 0){
+                showfee += Integer.toString((int)estimated_fee.get(estimated_fee.size()-i-1).getFee());
+                showfee += "시간 충전 시  |  ";
+            }
+            else if(i==1){
+                showfee += Integer.toString((int)estimated_fee.get(estimated_fee.size()-i-2).getFee());
+                showfee += " KWh 충전  |  ";
+            }
+            else if(i==2){
+                showfee += Integer.toString((int)estimated_fee.get(estimated_fee.size()-i).getFee());
+                showfee += " % 충전 가능";
+            }
+        }
+        tv3.setText(showfee);
+
 
 
         FloatingActionButton fab1 = (FloatingActionButton) findViewById(R.id.fab1);
@@ -543,6 +568,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     // 마커 클릭 이벤트
     public static String mkname = "NULL";
     public static String mkbusi = "NULL";
+    public static float mkfee = 0;
     Marker lastClicked = null;
     @Override
     public synchronized boolean onClick(@NonNull Overlay overlay) {
@@ -551,7 +577,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (((Marker) overlay).getPosition().latitude == chargingStation.get(i).getLat() && ((Marker) overlay).getPosition().longitude == chargingStation.get(i).getLng()) {
                     mkname = chargingStation.get(i).getName();
                     mkbusi = chargingStation.get(i).getBusiNm();
-//                    feecheck = i;
+                    for(int j=0;j<estimated_fee.size();j++){
+                        if(chargingStation.get(i).getId().startsWith(estimated_fee.get(j).getBusiId())) {
+                            mkfee = estimated_fee.get(j).getFee();
+                            break;
+                        }
+                    }
                     break;
                 }
             }

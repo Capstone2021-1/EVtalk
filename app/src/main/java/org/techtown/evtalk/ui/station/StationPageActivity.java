@@ -44,9 +44,7 @@ public class StationPageActivity extends AppCompatActivity {
     private Button button;
     public static List<Station> station = new ArrayList<>(); // API 호출 충전소 정보
     Station bus = null;
-    public static int parsingcount;
     private RetrofitConnection retrofit = new RetrofitConnection();
-//    public static int chargingcount = 0;
 
 
     @Override
