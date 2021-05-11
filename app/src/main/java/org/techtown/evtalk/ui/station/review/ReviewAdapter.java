@@ -65,13 +65,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
         public void setItem(Review item) {
             review_name.setText(item.getName());
             review_contents.setText(item.getReview());
-
-//            review_date.setText(getTime());
-
-//             리뷰 작성했던 시간을 서버에서 가져오기
             review_date.setText(getTime(item.getDate()));
-
-
         }
 
         public String getTime(Date date){

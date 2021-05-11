@@ -269,7 +269,7 @@ public class StationPageActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<List<Review>> call, Throwable t) {
-                    //실패
+                    Log.i("리뷰 확인 실패", "" + t.toString());
                 }
             });
 
