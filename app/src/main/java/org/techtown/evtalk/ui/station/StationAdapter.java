@@ -55,7 +55,7 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
             imageView3 = itemView.findViewById(R.id.imageView6);
             imageView4 = itemView.findViewById(R.id.imageView8);
             imageView5 = itemView.findViewById(R.id.imageView9);
-            imageView6 = itemView.findViewById(R.id.textView12);
+            imageView6 = itemView.findViewById(R.id.report_button);
         }
 
         public void setItem(Station item) {

@@ -43,6 +43,7 @@ public class SearchResultActivity extends AppCompatActivity implements LocationL
 
     public RetrofitConnection retrofit = new RetrofitConnection();
 
+    // 현재 위치 변수들
     public static String provider;
     public static double longitude;
     public static double latitude;
