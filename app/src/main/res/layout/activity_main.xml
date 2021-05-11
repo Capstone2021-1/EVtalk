@@ -96,13 +96,33 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/bs_fee"
+                        android:id="@+id/textView15"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
                         android:gravity="center"
-                        android:text="예상 요금 표시"
-                        android:textSize="30sp"
+                        android:text="TextView" />
+
+                    <TextView
+                        android:id="@+id/textView16"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="TextView"
+                        android:textSize="18sp"
                         android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textView17"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="TextView" />
                 </LinearLayout>
 
             </LinearLayout>
