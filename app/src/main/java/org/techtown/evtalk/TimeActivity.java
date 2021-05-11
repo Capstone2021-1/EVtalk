@@ -3,6 +3,7 @@ package org.techtown.evtalk;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +14,8 @@ import android.widget.TextView;
 
 import com.github.florent37.singledateandtimepicker.dialog.DoubleDateAndTimePickerDialog;
 
+import org.techtown.evtalk.user.Fee;
+import org.techtown.evtalk.user.RetrofitConnection;
 import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
@@ -22,6 +25,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class TimeActivity extends AppCompatActivity {
 
@@ -35,6 +42,8 @@ public class TimeActivity extends AppCompatActivity {
     public static String start_time="";
     public static String end_time="";
     public static String total_time="";
+    public static Date sDate;   //시작 시간 Date 타입
+    public static Date eDate;   //종료 시간 Date 타입
 
     public static final int TIMERESULTCODE = 1001;
 
@@ -80,13 +89,15 @@ public class TimeActivity extends AppCompatActivity {
         buttonOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                EstimatedFee ef = new EstimatedFee();
+                ef.execute();
                 // MainActivity로 전달
-                Intent intent = new Intent();
-                intent.putExtra("start_time", start_time);  // 선택된 값 Intent로 전달
-                intent.putExtra("end_time", end_time);  // 선택된 값 Intent로 전달
-                intent.putExtra("total_time", total_time);  // 선택된 값 Intent로 전달
-
-                setResult(TIMERESULTCODE, intent);
+//                Intent intent = new Intent();
+//                intent.putExtra("start_time", start_time);  // 선택된 값 Intent로 전달
+//                intent.putExtra("end_time", end_time);  // 선택된 값 Intent로 전달
+//                intent.putExtra("total_time", total_time);  // 선택된 값 Intent로 전달
+//
+//                setResult(TIMERESULTCODE, intent);
                 finish();
             }
         });
@@ -137,6 +148,8 @@ public class TimeActivity extends AppCompatActivity {
                             stringBuilder.append(simpleDateFormat.format(date)).append("\n");
                         }
                         int middle = stringBuilder.indexOf("\n");
+                        sDate = dates.get(0);
+                        eDate = dates.get(1);
 
                         start_time = stringBuilder.substring(0, middle);
                         end_time = stringBuilder.substring(middle + 1);
@@ -155,6 +168,41 @@ public class TimeActivity extends AppCompatActivity {
                     }
                 });
         doubleBuilder.display();
+    }
+
+    public class EstimatedFee extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected synchronized Void doInBackground(Void... voids) {
+            //설정 된 충전 시간 서버로 보내기
+            //MainActivity의 estimated_fee에 저장됨.
+            RetrofitConnection retrofit = new RetrofitConnection();
+            retrofit.server.getEstimatedFee(MainActivity.user.getId(), sDate, eDate, 7).enqueue(new Callback<List<Fee>>() {
+                @Override
+                public void onResponse(Call<List<Fee>> call, Response<List<Fee>> response) {
+                    List<Fee> temp = response.body();
+                    for(Fee i : temp)
+                        MainActivity.estimated_fee.add(i);
+                }
+
+                @Override
+                public void onFailure(Call<List<Fee>> call, Throwable t) {
+                    Log.i("예상요금 실패", "" + t.toString());
+                }
+            });
+            return null;
+        }
+
+        @Override
+        protected synchronized void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Intent intent = new Intent();
+            intent.putExtra("start_time", start_time);  // 선택된 값 Intent로 전달
+            intent.putExtra("end_time", end_time);  // 선택된 값 Intent로 전달
+            intent.putExtra("total_time", total_time);  // 선택된 값 Intent로 전달
+
+            setResult(TIMERESULTCODE, intent);
+        }
     }
 
 

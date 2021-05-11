@@ -2,6 +2,7 @@ package org.techtown.evtalk.user;
 
 import org.techtown.evtalk.ui.station.review.Review;
 
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -71,5 +72,14 @@ public interface Service {
 
     @GET("/search/review")
     Call<List<Review>> getReviews(@Query("stat_id") String stat_id);
+
+    @GET("/user/estimated-charges")
+    Call<List<Fee>> getEstimatedFee(@Query("id") long id, @Query("date1") Date d1, @Query("date2") Date d2, @Query("kwh") int kwh);
+
+    @GET("/search/destination")
+    Call<String> getDestinationUser(@Query("stat_id") String stat_id);
+
+    @POST("/destination")
+    Call<Void> setDestination(@Query("stat_id") String stat_id, @Query("user_id") long user_id, @Query("distance") double distance, @Query("date") Date date);
 
 }

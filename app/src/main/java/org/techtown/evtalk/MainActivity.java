@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static List<ChargingStation> charg = new ArrayList<>();
     public static List<Station> station = new ArrayList<>(); // API 호출 충전소 정보
     ;   //충전소 기본 정보
+    public static List<Fee> estimated_fee = new ArrayList<>();  //예상 요금 정보
     private AppBarConfiguration mAppBarConfiguration;
     private static NaverMap naverMap;
     private static FrameLayout BSsheet;
@@ -643,94 +644,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return bmImg;
         }
     }
-
-//    //메인 엑티비티 실행 시 DB에서 유저 정보 받아오기
-//    public void getUserInfo() {
-//        retrofit.server.getUserInfo(user.getId()).enqueue(new Callback<User>() {
-//            @Override
-//            public void onResponse(Call<User> call, Response<User> response) {
-//                User resource = response.body();
-//                if (resource.getCar_number() != null)
-//                    user.setCar_number(resource.getCar_number());
-//                else
-//                    user.setCar_number("");
-//                if (resource.getMessage() != null)
-//                    user.setMessage(resource.getMessage());
-//                else
-//                    user.setMessage("");
-//            }
-//
-//            @Override
-//            public void onFailure(Call<User> call, Throwable t) {
-//                Log.i("failure", "사용자 정보 받아오기 실패");
-//            }
-//        });
-//
-//        retrofit.server.getMembershipInfo(user.getId()).enqueue(new Callback<List<Card>>() {
-//            @Override
-//            public void onResponse(Call<List<Card>> call, Response<List<Card>> response) {
-//                if (response.isSuccessful()) {
-//                    List<Card> result = response.body();
-//                    for (Card i : result) {
-//                        membership.add(i);
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<Card>> call, Throwable t) {
-//                Log.i("failure", "회원카드 받아오기 실패");
-//            }
-//        });
-//
-//        retrofit.server.getPaymentInfo(user.getId()).enqueue(new Callback<List<Card>>() {
-//            @Override
-//            public void onResponse(Call<List<Card>> call, Response<List<Card>> response) {
-//                if (response.isSuccessful()) {
-//                    List<Card> result = response.body();
-//                    for (Card i : result) {
-//                        payment.add(i);
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<Card>> call, Throwable t) {
-//                Log.i("failure", "결제카드 받아오기 실패");
-//            }
-//        });
-//
-//        retrofit.server.getCarInfo(user.getId()).enqueue(new Callback<Car>() {
-//            @Override
-//            public void onResponse(Call<Car> call, Response<Car> response) {
-//                if (response.body() != null) {
-//                    car = response.body();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Car> call, Throwable t) {
-//                Log.i("failure", "차량 정보 받아오기 실패");
-//            }
-//        });
-//
-//        retrofit.server.getChargingFee(user.getId()).enqueue(new Callback<List<Fee>>() {
-//            @Override
-//            public void onResponse(Call<List<Fee>> call, Response<List<Fee>> response) {
-//                for (Fee f : response.body()) {
-//                    for (ChargingStation i : chargingStation) {
-//                        if (i.getId().contains(f.getBusiId()))
-//                            i.setFee(f.getFee());
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<Fee>> call, Throwable t) {
-//                Log.i("오류", "" + t);
-//            }
-//        });
-//    }
 
     public class UserInfo extends AsyncTask<String, Void, String> {
 

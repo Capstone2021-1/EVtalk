@@ -43,6 +43,7 @@ public class StationPageActivity extends AppCompatActivity {
     public static List<Station> station = new ArrayList<>(); // API 호출 충전소 정보
     Station bus = null;
     public static int parsingcount;
+    private RetrofitConnection retrofit = new RetrofitConnection();
 
 
     @Override
@@ -94,8 +95,10 @@ public class StationPageActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(StationPageActivity.this, DestinationActivity.class);
-                startActivity(intent);
+                GetDestination gd = new GetDestination();   //같은 목적지를 향하고 있는 사용자가 있는 지 확인
+                gd.execute();
+//                Intent intent = new Intent(StationPageActivity.this, DestinationActivity.class);
+//                startActivity(intent);
             }
         });
 
@@ -257,7 +260,6 @@ public class StationPageActivity extends AppCompatActivity {
             textView.setText(station.get(right).getAddr()); // 충전소 주소 텍스트 변경
 
             //DB에서 선택된 충전소 리뷰 가져오기
-            RetrofitConnection retrofit = new RetrofitConnection();
             StationFragment3.reviews = new ArrayList<>();
             retrofit.server.getReviews(StationPageActivity.station.get(right).getStaId()).enqueue(new Callback<List<Review>>() {
                 @Override
@@ -284,6 +286,34 @@ public class StationPageActivity extends AppCompatActivity {
 
 //            TextView textView = findViewById(R.id.textView8);
 //            textView.setText(station.get(right).getBusiNm());
+        }
+
+    }
+
+    //같은 목적지를 향하는 사용자가 있는지 확인
+    public class GetDestination extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected synchronized Void doInBackground(Void... voids) {
+            retrofit.server.getDestinationUser(station.get(StationFragment1.parsingcount).getStaId()).enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+                    DestinationActivity.rText = response.body();
+                    onPostExecute();
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+
+                }
+            });
+            return null;
+        }
+
+        protected synchronized void onPostExecute() {
+            super.onPostExecute(null);
+            Intent intent = new Intent(StationPageActivity.this, DestinationActivity.class);
+            startActivity(intent);
         }
 
     }
