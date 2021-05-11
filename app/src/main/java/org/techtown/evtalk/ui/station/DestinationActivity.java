@@ -8,11 +8,16 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.techtown.evtalk.MainActivity;
 import org.techtown.evtalk.R;
 import org.techtown.evtalk.user.RetrofitConnection;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class DestinationActivity extends AppCompatActivity {
     private long mNow;
