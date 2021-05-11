@@ -18,6 +18,7 @@ import org.techtown.evtalk.user.Fee;
 import org.techtown.evtalk.user.RetrofitConnection;
 import org.w3c.dom.Text;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -90,19 +91,19 @@ public class TimeActivity extends AppCompatActivity {
         buttonOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(sDate == null || eDate == null) {
-                    // MainActivity로 전달
-                    Intent intent = new Intent();
-                    intent.putExtra("start_time", start_time);  // 선택된 값 Intent로 전달
-                    intent.putExtra("end_time", end_time);  // 선택된 값 Intent로 전달
-                    intent.putExtra("total_time", total_time);  // 선택된 값 Intent로 전달
+                    if(sDate != null && eDate != null) {
+                        EstimatedFee ef = new EstimatedFee();
+                        ef.execute();
+                    }
+                    else {
+                        // MainActivity로 전달
+                        Intent intent = new Intent();
+                        intent.putExtra("start_time", start_time);  // 선택된 값 Intent로 전달
+                        intent.putExtra("end_time", end_time);  // 선택된 값 Intent로 전달
+                        intent.putExtra("total_time", total_time);  // 선택된 값 Intent로 전달
 
-                    setResult(TIMERESULTCODE, intent);
-                }
-                else {
-                    EstimatedFee ef = new EstimatedFee();
-                    ef.execute();
-                }
+                        setResult(TIMERESULTCODE, intent);
+                    }
                 finish();
             }
         });
