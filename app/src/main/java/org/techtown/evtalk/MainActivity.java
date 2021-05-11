@@ -526,7 +526,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             @NonNull
                             @Override
                             public CharSequence getText(@NonNull InfoWindow infoWindow) {
-                                Log.d("요금은...." ,Float.toString(chargingStation.get(feecheck).getFee()));
 //                                return feeget.get(feecheck);
                                 return Float.toString(chargingStation.get(feecheck).getFee());
                             }
