@@ -3,10 +3,10 @@ package org.techtown.evtalk.user;
 import com.google.gson.annotations.SerializedName;
 
 public class Fee {
-    @SerializedName("busiId")
+    @SerializedName("busiId")   //회사 Id
     private String busiId;
 
-    @SerializedName("fee")
+    @SerializedName("fee")      //1kwh당 요금  or 충전시간 설정 시 예상 요금
     private float fee;
 
     public String getBusiId() {

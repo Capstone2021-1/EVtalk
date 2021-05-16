@@ -3,25 +3,25 @@ package org.techtown.evtalk.user;
 import com.google.gson.annotations.SerializedName;
 
 public class Car {
-    @SerializedName("id")
+    @SerializedName("id")   //차량 Id
     private int id;
 
-    @SerializedName("enterprise")
+    @SerializedName("enterprise")   //차량 회사
     private String enterprise;
 
-    @SerializedName("vehicle_type")
+    @SerializedName("vehicle_type") //차량 이름(년식 + 이름)
     private String vehicle;
 
-    @SerializedName("energy_capacity")
+    @SerializedName("energy_capacity")  //에너지 용량
     private float energy_capacity;
 
-    @SerializedName("distance")
+    @SerializedName("distance") //주행가능 거리
     private int distance;
 
-    @SerializedName("charging_type")
+    @SerializedName("charging_type")    //충전타입
     private String charging_type;
 
-    @SerializedName("image")
+    @SerializedName("image")    //이미지 주소
     private String image;
 
     public void setId(int id) {

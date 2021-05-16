@@ -26,6 +26,7 @@ import org.techtown.evtalk.user.RetrofitConnection;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
@@ -86,7 +87,9 @@ public class StationPageActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentView(Fragment_3);
+                GetReviews gr = new GetReviews();
+                gr.execute();
+                //FragmentView(Fragment_3);
             }
         });
         FragmentView(Fragment_1); // 초기 프래그먼트
@@ -261,22 +264,6 @@ public class StationPageActivity extends AppCompatActivity {
             textView = findViewById(R.id.stationaddr);
             textView.setText(station.get(right).getAddr()); // 충전소 주소 텍스트 변경
 
-            //DB에서 선택된 충전소 리뷰 가져오기
-            StationFragment3.reviews = new ArrayList<>();
-            retrofit.server.getReviews(StationPageActivity.station.get(right).getStaId()).enqueue(new Callback<List<Review>>() {
-                @Override
-                public void onResponse(Call<List<Review>> call, Response<List<Review>> response) {
-                    List<Review> temp = response.body();
-                    for(Review i : temp)
-                        StationFragment3.reviews.add(i);
-                }
-
-                @Override
-                public void onFailure(Call<List<Review>> call, Throwable t) {
-                    Log.i("리뷰 확인 실패", "" + t.toString());
-                }
-            });
-
             Log.d("갯수임","="+Integer.parseInt(station.get(StationFragment1.parsingcount).getChgerId()) );
 
             StationFragment1.adapter = new StationAdapter();
@@ -320,6 +307,31 @@ public class StationPageActivity extends AppCompatActivity {
             Intent intent = new Intent(StationPageActivity.this, DestinationActivity.class);
             startActivity(intent);
         }
+    }
 
+    //충전소 리뷰 가져오기
+    public class GetReviews extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected synchronized Void doInBackground(Void... voids) {
+            //DB에서 선택된 충전소 리뷰 가져오기
+            StationFragment3.reviews = new ArrayList<>();
+            try {
+                Response<List<Review>> response = retrofit.server.getReviews(station.get(StationFragment1.parsingcount).getStaId()).execute();
+                List<Review> temp = response.body();
+                for(Review i : temp)
+                    StationFragment3.reviews.add(i);
+                onPostExecute();
+            }
+            catch (IOException e) {
+                Log.e("리뷰 확인 실패", "" + toString());
+            }
+            return null;
+        }
+
+        protected synchronized void onPostExecute() {
+            super.onPostExecute(null);
+            FragmentView(Fragment_3);
+        }
     }
 }
