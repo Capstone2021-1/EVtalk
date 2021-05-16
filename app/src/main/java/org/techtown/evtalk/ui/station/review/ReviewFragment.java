@@ -1,13 +1,7 @@
 package org.techtown.evtalk.ui.station.review;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,27 +9,24 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import org.techtown.evtalk.MainActivity;
 import org.techtown.evtalk.R;
-import org.techtown.evtalk.ui.station.DestinationActivity;
 import org.techtown.evtalk.ui.station.StationFragment1;
 import org.techtown.evtalk.ui.station.StationPageActivity;
-import org.techtown.evtalk.user.ChargingStation;
 import org.techtown.evtalk.user.RetrofitConnection;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ReviewFragment extends Fragment {
-
     StationPageActivity activity;
 
     Review review;
@@ -45,8 +36,7 @@ public class ReviewFragment extends Fragment {
     String text_result;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_review, container, false);
     }
@@ -58,6 +48,7 @@ public class ReviewFragment extends Fragment {
         Button cancel = (Button) view.findViewById(R.id.cancelButton);
         Button save = (Button) view.findViewById(R.id.saveButton);
         EditText editText = (EditText) view.findViewById(R.id.review_text);
+
 
         activity = (StationPageActivity)getActivity();
 
@@ -77,9 +68,6 @@ public class ReviewFragment extends Fragment {
                 rr.execute();
             }
         });
-
-
-
     }
 
     // 현재 시간 구하기
@@ -116,9 +104,7 @@ public class ReviewFragment extends Fragment {
 
         protected synchronized void onPostExecute() {
             super.onPostExecute(null);
-            activity.FragmentView(3);
+            activity.findViewById(R.id.fragch_3).performClick();
         }
     }
-
-
 }
