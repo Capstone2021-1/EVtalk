@@ -107,11 +107,6 @@ public class StationPageActivity extends AppCompatActivity {
 
     }
 
-    public void asdf(){
-        TextView textView = findViewById(R.id.stationaddr);
-//        textView.setText(MainActivity.station.get(MainActivity.right).getAddr()); // 충전소 주소 텍스트 변경
-    }
-
     @Override // 뒤로가기 버튼 동작 구현
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {

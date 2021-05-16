@@ -1,7 +1,5 @@
 package org.techtown.evtalk;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,14 +9,13 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.florent37.singledateandtimepicker.dialog.DoubleDateAndTimePickerDialog;
 
 import org.techtown.evtalk.user.Fee;
 import org.techtown.evtalk.user.RetrofitConnection;
-import org.w3c.dom.Text;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;

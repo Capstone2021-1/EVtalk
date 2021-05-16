@@ -60,7 +60,6 @@ import com.naver.maps.map.widget.LocationButtonView;
 import com.pedro.library.AutoPermissions;
 
 import org.techtown.evtalk.ui.search.SearchResultActivity;
-import org.techtown.evtalk.ui.station.Station;
 import org.techtown.evtalk.ui.station.StationPageActivity;
 import org.techtown.evtalk.ui.userinfo.DrawerCardAdapter;
 import org.techtown.evtalk.ui.userinfo.UserInfoActivity;
@@ -96,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static List<Card> payment = new ArrayList<>();
     public static List<ChargingStation> chargingStation = new ArrayList<>();   //충전소 기본 정보
     public static List<ChargingStation> charg = new ArrayList<>();
-    public static List<Station> station = new ArrayList<>(); // API 호출 충전소 정보
+
     ;   //충전소 기본 정보
     public static List<Fee> estimated_fee = new ArrayList<>();  //예상 요금 정보
     private AppBarConfiguration mAppBarConfiguration;
@@ -551,7 +550,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             @NonNull
                             @Override
                             public CharSequence getText(@NonNull InfoWindow infoWindow) {
-//                                return feeget.get(feecheck);
                                 return Float.toString(chargingStation.get(feecheck).getFee());
                             }
                         });

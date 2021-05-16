@@ -8,11 +8,17 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.kakao.kakaonavi.KakaoNaviParams;
+import com.kakao.kakaonavi.KakaoNaviService;
+import com.kakao.kakaonavi.Location;
+import com.kakao.kakaonavi.NaviOptions;
+import com.kakao.kakaonavi.options.CoordType;
+import com.kakao.kakaonavi.options.RpOption;
+import com.kakao.kakaonavi.options.VehicleType;
+
 import org.techtown.evtalk.MainActivity;
 import org.techtown.evtalk.R;
 import org.techtown.evtalk.ui.search.GpsTracker;
-import org.techtown.evtalk.ui.search.SearchAdapter;
-import org.techtown.evtalk.ui.search.SearchResultActivity;
 import org.techtown.evtalk.user.RetrofitConnection;
 
 import java.text.SimpleDateFormat;
@@ -79,7 +85,15 @@ public class DestinationActivity extends AppCompatActivity {
                 Date dNow = new Date(System.currentTimeMillis());
                 retrofit.server.setDestination(StationPageActivity.station.get(StationFragment1.parsingcount).getStaId(), MainActivity.user.getId(), dist, dNow).enqueue(new Callback<Void>() {
                     @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {
+                    public void onResponse(Call<Void> call, Response<Void> response) { // 카카오 호출 해보자
+                        // 목적지 이름, 경도, 위도 담기
+                        Location destination = Location.newBuilder(StationPageActivity.station.get(StationFragment1.parsingcount).getStaNm(), StationPageActivity.station.get(StationFragment1.parsingcount).getLng(), StationPageActivity.station.get(StationFragment1.parsingcount).getLat()).build();
+                        // WGS84 좌표계 / 1종 승용차,소형승합차,소형화물차 / 추천 경로 기본값으로 사용
+                        NaviOptions options = NaviOptions.newBuilder().setCoordType(CoordType.WGS84).setVehicleType(VehicleType.FIRST).setRpOption(RpOption.RECOMMENDED ).build();
+                        // 객체 담기 / 경유지 없이
+                        KakaoNaviParams.Builder builder = KakaoNaviParams.newBuilder(destination).setNaviOptions(options);
+                        // 카카오내비 호출
+                        KakaoNaviService.getInstance().navigate(getApplicationContext(), builder.build());
                     }
 
                     @Override
@@ -87,13 +101,6 @@ public class DestinationActivity extends AppCompatActivity {
                         Log.i("도착지 설정 실패", "" + t.toString());
                     }
                 });
-
-//                if (NaviClient.instance.isKakaoNaviInstalled(context)) {
-//                    Log.i(TAG, "카카오내비 앱으로 길안내 가능")
-//                } else {
-//                    Log.i(TAG, "카카오내비 미설치: 웹 길안내 사용 권장")
-//                }
-
                 currentTime = getTime();
                 Log.d("dest", getTime());
                 finish();
