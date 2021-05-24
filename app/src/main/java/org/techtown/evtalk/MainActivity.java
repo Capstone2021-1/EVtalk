@@ -776,6 +776,24 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         return super.onOptionsItemSelected(item);
     }
 
+    //차량 번호 검색 수정 중
+    public class SearchPerson extends AsyncTask<Void, Void, Void> {
 
+        @Override
+        protected synchronized Void doInBackground(Void... voids) {
+            try {
+                Response<User> response = retrofit.server.getPerson("").execute();
+                User result = response.body();
+            } catch (IOException e) {
+                Log.i("차번호 검색 오류", "" + e.toString());
+            }
+            return null;
+        }
+
+        protected synchronized void onPostExecute() {
+            super.onPostExecute(null);
+
+        }
+    }
 
 }

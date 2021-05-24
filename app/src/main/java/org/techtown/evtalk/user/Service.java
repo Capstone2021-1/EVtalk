@@ -82,4 +82,7 @@ public interface Service {
     @POST("/destination")
     Call<Void> setDestination(@Query("stat_id") String stat_id, @Query("user_id") long user_id, @Query("distance") double distance, @Query("date") Date date);
 
+    @GET("/search/person")
+    Call<User> getPerson(@Query("car_number") String car_number);
+
 }

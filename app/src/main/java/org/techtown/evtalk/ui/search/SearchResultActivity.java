@@ -15,7 +15,6 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,13 +25,9 @@ import android.widget.TextView;
 
 import org.techtown.evtalk.MainActivity;
 import org.techtown.evtalk.R;
-import org.techtown.evtalk.ui.station.StationFragment1;
-import org.techtown.evtalk.ui.station.review.Review;
-import org.techtown.evtalk.ui.station.review.StationFragment3;
 import org.techtown.evtalk.user.RetrofitConnection;
 import org.techtown.evtalk.user.SearchResult;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +39,6 @@ public class SearchResultActivity extends AppCompatActivity implements LocationL
 
     SearchAdapter adapter;
     TextView textView;
-    RecyclerView recyclerView;
     public static List<SearchResult> results2 = new ArrayList<>(); //검색 결과 저장.
 
     public RetrofitConnection retrofit = new RetrofitConnection();
@@ -78,7 +72,7 @@ public class SearchResultActivity extends AppCompatActivity implements LocationL
 
 
 
-        recyclerView = findViewById(R.id.recyclerView_search_result);
+        RecyclerView recyclerView = findViewById(R.id.recyclerView_search_result);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         //GridLayoutManager layoutManager = new GridLayoutManager(this, 1);
@@ -88,9 +82,23 @@ public class SearchResultActivity extends AppCompatActivity implements LocationL
 
         Log.d("search", MainActivity.search_result);
 
-        SearchResults sr = new SearchResults();
-        sr.execute();
+        retrofit.server.searchChSt(MainActivity.search_result).enqueue(new Callback<List<SearchResult>>() {
+            @Override
+            public void onResponse(Call<List<SearchResult>> call, Response<List<SearchResult>> response) {
+                List<SearchResult> temp = response.body();
+                for (SearchResult i : temp){
+                    results2.add(i);
+                    adapter.addItem(i);
+                    Log.d("search", "success");
+                }
+                recyclerView.setAdapter(adapter);
+            }
 
+            @Override
+            public void onFailure(Call<List<SearchResult>> call, Throwable t) {
+                Log.i("error", "" + t.toString());
+            }
+        });
 
 //
         adapter.setOnItemClickListener(new OnSearchResultClickListener() {
@@ -135,29 +143,4 @@ public class SearchResultActivity extends AppCompatActivity implements LocationL
 
     }
 
-    //충전소 검색 결과 가져오기
-    public class SearchResults extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected synchronized Void doInBackground(Void... voids) {
-            try {
-                Response<List<SearchResult>> response = retrofit.server.searchChSt(MainActivity.search_result).execute();
-                List<SearchResult> temp = response.body();
-                for (SearchResult i : temp){
-                    results2.add(i);
-                    adapter.addItem(i);
-                }
-                onPostExecute();
-            } catch (IOException e) {
-                e.printStackTrace();
-                Log.i("error", "" + e.toString());
-            }
-            return null;
-        }
-
-        protected synchronized void onPostExecute() {
-            super.onPostExecute(null);
-            recyclerView.setAdapter(adapter);
-        }
-    }
 }
