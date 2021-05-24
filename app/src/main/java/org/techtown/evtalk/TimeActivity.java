@@ -66,7 +66,7 @@ public class TimeActivity extends AppCompatActivity {
             Date currentTime = Calendar.getInstance().getTime();
             start_time = new SimpleDateFormat("M월 d일 EEE HH:mm", Locale.getDefault()).format(currentTime);
             end_time = new SimpleDateFormat("M월 d일 EEE HH:mm", Locale.getDefault()).format(currentTime);
-            total_time = "0시간";
+            total_time = "1시간";
         }
         startText.setText(start_time);
         endText.setText(end_time);
