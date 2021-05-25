@@ -32,7 +32,7 @@
             <TextView
                 android:id="@+id/textView91"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="45dp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -155,10 +155,12 @@
         <ImageView
             android:id="@+id/report_button"
             android:layout_width="57dp"
-            android:layout_height="30dp"
+            android:layout_height="45dp"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
-            app:srcCompat="@drawable/ic_st_ill" />
+            android:clickable="true"
+            app:srcCompat="@drawable/ic_st_ill"
+            android:focusable="true" />
     </LinearLayout>
 </LinearLayout>

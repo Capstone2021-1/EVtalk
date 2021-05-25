@@ -313,7 +313,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         TextView bs_comname = findViewById(R.id.bs_comname);
         bs_comname.setText(mkbusi); // 회사이름 변경
 
-        if(start_time ==null) {
+        if(TimeActivity.start_time == "") {
             Date currentTime = Calendar.getInstance().getTime();
             start_time = new SimpleDateFormat("M월 d일 EEE HH:mm", Locale.getDefault()).format(currentTime);
             end_time = new SimpleDateFormat("M월 d일 EEE HH:mm", Locale.getDefault()).format(currentTime);
@@ -327,21 +327,21 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         TextView tv2 = findViewById(R.id.textView16);
         tv2.setText("충전 금액 : "+ Integer.toString((int)mkfee)+" 원");
         TextView tv3 = findViewById(R.id.textView17);
-//        for(int i=0;i<3;i++){
-//            if(i == 0){
-//                showfee += Integer.toString((int)estimated_fee.get(estimated_fee.size()-i-1).getFee());
-//                showfee += "시간 충전 시  |  ";
-//            }
-//            else if(i==1){
-//                showfee += Integer.toString((int)estimated_fee.get(estimated_fee.size()-i-2).getFee());
-//                showfee += " KWh 충전  |  ";
-//            }
-//            else if(i==2){
-//                showfee += Integer.toString((int)estimated_fee.get(estimated_fee.size()-i).getFee());
-//                showfee += " % 충전 가능";
-//            }
-//        }
-//        tv3.setText(showfee);
+        for(int i=0;i<3;i++){
+            if(i == 0){
+                showfee += Integer.toString((int)estimated_fee.get(estimated_fee.size()-i-1).getFee());
+                showfee += "시간 충전 시  |  ";
+            }
+            else if(i==1){
+                showfee += Integer.toString((int)estimated_fee.get(estimated_fee.size()-i-2).getFee());
+                showfee += " KWh 충전  |  ";
+            }
+            else if(i==2){
+                showfee += Integer.toString((int)estimated_fee.get(estimated_fee.size()-i).getFee());
+                showfee += " % 충전 가능";
+            }
+        }
+        tv3.setText(showfee);
 
 
 

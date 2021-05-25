@@ -65,7 +65,7 @@ public class TimeActivity extends AppCompatActivity {
             Date currentTime = Calendar.getInstance().getTime();
             start_time = new SimpleDateFormat("M월 d일 EEE HH:mm", Locale.getDefault()).format(currentTime);
             end_time = new SimpleDateFormat("M월 d일 EEE HH:mm", Locale.getDefault()).format(currentTime);
-            total_time = "1시간";
+            total_time = "0시간";
         }
         startText.setText(start_time);
         endText.setText(end_time);
@@ -159,6 +159,7 @@ public class TimeActivity extends AppCompatActivity {
                         startText.setText(start_time);
                         endText.setText(end_time);
 
+                        // 시작 시간과 끝 시간 시간 계산하기
                         long calDate = dates.get(1).getTime() - dates.get(0).getTime();
                         long result = calDate / (60 * 60 * 1000);
                         long result_min = (calDate - result * (60 * 60 * 1000)) / (60 * 1000);
