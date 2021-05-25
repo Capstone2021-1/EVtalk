@@ -206,15 +206,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
         FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab2);
-        fab2.setOnClickListener(new View.OnClickListener() { // 충전소 설정 - fab2 클릭 시 동작
+        fab2.setOnClickListener(new View.OnClickListener() { // 충전소 카테고리 설정 - fab2 클릭 시 동작
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "새로고침..", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent1 = new Intent(getApplicationContext(), ChargCategoryActivity.class);
+                startActivity(intent1);
 
+
+                /*// 새로고침 기능 혹시 나중에 쓰일까....
                 overridePendingTransition(0, 0);
                 recreate();
-                overridePendingTransition(0, 0);
+                overridePendingTransition(0, 0);*/
             }
         });
 
