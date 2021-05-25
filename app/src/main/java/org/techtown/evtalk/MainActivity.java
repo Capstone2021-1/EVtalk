@@ -75,9 +75,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Vector;
 
 import retrofit2.Response;
@@ -305,26 +309,35 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         TextView bs_comname = findViewById(R.id.bs_comname);
         bs_comname.setText(mkbusi); // 회사이름 변경
 
-        TextView tv1 = findViewById(R.id.textView15);
-        tv1.setText(formatType.format(TimeActivity.sDate) +" ~ "+formatType.format(TimeActivity.eDate));
+        if(start_time ==null) {
+            Date currentTime = Calendar.getInstance().getTime();
+            start_time = new SimpleDateFormat("M월 d일 EEE HH:mm", Locale.getDefault()).format(currentTime);
+            end_time = new SimpleDateFormat("M월 d일 EEE HH:mm", Locale.getDefault()).format(currentTime);
+            TextView tv1 = findViewById(R.id.textView15);
+            tv1.setText(start_time + " ~ " + end_time);
+        } else{
+            TextView tv1 = findViewById(R.id.textView15);
+            tv1.setText(formatType.format(TimeActivity.sDate) +" ~ "+formatType.format(TimeActivity.eDate));
+        }
+
         TextView tv2 = findViewById(R.id.textView16);
         tv2.setText("충전 금액 : "+ Integer.toString((int)mkfee)+" 원");
         TextView tv3 = findViewById(R.id.textView17);
-        for(int i=0;i<3;i++){
-            if(i == 0){
-                showfee += Integer.toString((int)estimated_fee.get(estimated_fee.size()-i-1).getFee());
-                showfee += "시간 충전 시  |  ";
-            }
-            else if(i==1){
-                showfee += Integer.toString((int)estimated_fee.get(estimated_fee.size()-i-2).getFee());
-                showfee += " KWh 충전  |  ";
-            }
-            else if(i==2){
-                showfee += Integer.toString((int)estimated_fee.get(estimated_fee.size()-i).getFee());
-                showfee += " % 충전 가능";
-            }
-        }
-        tv3.setText(showfee);
+//        for(int i=0;i<3;i++){
+//            if(i == 0){
+//                showfee += Integer.toString((int)estimated_fee.get(estimated_fee.size()-i-1).getFee());
+//                showfee += "시간 충전 시  |  ";
+//            }
+//            else if(i==1){
+//                showfee += Integer.toString((int)estimated_fee.get(estimated_fee.size()-i-2).getFee());
+//                showfee += " KWh 충전  |  ";
+//            }
+//            else if(i==2){
+//                showfee += Integer.toString((int)estimated_fee.get(estimated_fee.size()-i).getFee());
+//                showfee += " % 충전 가능";
+//            }
+//        }
+//        tv3.setText(showfee);
 
 
 
@@ -784,4 +797,25 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Log.d("navi", "selected");
         return super.onOptionsItemSelected(item);
     }
+
+    //차량 번호 검색 수정 중
+    public class SearchPerson extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected synchronized Void doInBackground(Void... voids) {
+            try {
+                Response<User> response = retrofit.server.getPerson("").execute();
+                User result = response.body();
+            } catch (IOException e) {
+                Log.i("차번호 검색 오류", "" + e.toString());
+            }
+            return null;
+        }
+
+        protected synchronized void onPostExecute() {
+            super.onPostExecute(null);
+
+        }
+    }
+
 }

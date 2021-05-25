@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.util.Log;
@@ -37,6 +38,9 @@ import com.kakao.usermgmt.callback.UnLinkResponseCallback;
 import org.techtown.evtalk.LoginActivity;
 import org.techtown.evtalk.MainActivity;
 import org.techtown.evtalk.R;
+import org.techtown.evtalk.ui.station.StationFragment1;
+import org.techtown.evtalk.ui.station.StationPageActivity;
+import org.techtown.evtalk.ui.station.review.Review;
 import org.techtown.evtalk.user.Car;
 import org.techtown.evtalk.user.Card;
 import org.techtown.evtalk.user.RetrofitConnection;
@@ -61,7 +65,7 @@ public class UserInfoActivity extends AppCompatActivity {
     private Button btn_logout;
     public static List<Card> membership_list = new ArrayList<>();     //회원카드 리스트
     public static List<Card> payment_list = new ArrayList<>();        //결제카드 리스트
-    public static List<Car> car_list = new ArrayList<>();             //차량 리스트(getVehicle() : 차량이름 만 들어있습니다.)
+    public static List<Car> car_list = new ArrayList<>();             //차량 리스트(enterprise, vehicle_type, image)
 
     private static int flag = 0; // 서버에서 로컬로 정보 한번만 받아오는 flag
 
@@ -84,7 +88,8 @@ public class UserInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_info);
 
         if (flag == 0) {
-            getInfo();
+            GetInfo gi = new GetInfo();
+            gi.execute();
             flag = 1;
         }
 
@@ -489,56 +494,35 @@ public class UserInfoActivity extends AppCompatActivity {
     }
 
     //DB에서 차량, 회원카드, 결제카드 리스트 받아오기
-    public void getInfo() {
-        RetrofitConnection retrofit = new RetrofitConnection();
-        retrofit.server.getCar_list().enqueue(new Callback<List<Car>>() {
-            @Override
-            public void onResponse(Call<List<Car>> call, Response<List<Car>> response) {
-                if (response.isSuccessful()) {
-                    List<Car> result = response.body();
-                    for (Car i : result) {
-                        car_list.add(i);
-                    }
-                }
-            }
+    public class GetInfo extends AsyncTask<Void, Void, Void> {
 
-            @Override
-            public void onFailure(Call<List<Car>> call, Throwable t) {
-                Log.d("failure", "실패");
-            }
-        });
-        retrofit.server.getMembership_list().enqueue(new Callback<List<Card>>() {
-            @Override
-            public void onResponse(Call<List<Card>> call, Response<List<Card>> response) {
-                if (response.isSuccessful()) {
-                    List<Card> result = response.body();
-                    for (Card i : result) {
-                        membership_list.add(i);
-                    }
+        @Override
+        protected synchronized Void doInBackground(Void... voids) {
+            RetrofitConnection retrofit = new RetrofitConnection();
+            try {
+                Response<List<Car>> cResponse = retrofit.server.getCar_list().execute();
+                List<Car> result1 = cResponse.body();
+                for (Car i : result1) {
+                    car_list.add(i);
                 }
-            }
 
-            @Override
-            public void onFailure(Call<List<Card>> call, Throwable t) {
-                Log.d("failure", "실패");
-            }
-        });
-        retrofit.server.getPayment_list().enqueue(new Callback<List<Card>>() {
-            @Override
-            public void onResponse(Call<List<Card>> call, Response<List<Card>> response) {
-                if (response.isSuccessful()) {
-                    List<Card> result = response.body();
-                    for (Card i : result) {
-                        payment_list.add(i);
-                    }
+                Response<List<Card>> mResponse = retrofit.server.getMembership_list().execute();
+                List<Card> result2 = mResponse.body();
+                for (Card i : result2) {
+                    membership_list.add(i);
                 }
-            }
 
-            @Override
-            public void onFailure(Call<List<Card>> call, Throwable t) {
-                Log.d("failure", "실패");
+                Response<List<Card>> pResponse = retrofit.server.getPayment_list().execute();
+                List<Card> result3 = pResponse.body();
+                for (Card i : result3) {
+                    payment_list.add(i);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.i("error", "" + e.toString());
             }
-        });
+            return null;
+        }
     }
 
     // 화면 다른 부분 터치 시 키보드 내리기

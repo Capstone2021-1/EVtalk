@@ -53,6 +53,7 @@
                         android:text="주소"
                         android:textColor="@color/maincolor"
                         android:textSize="16sp" />
+
                 </LinearLayout>
 
                 <TextView
