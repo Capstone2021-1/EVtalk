@@ -18,7 +18,7 @@
         android:theme="@style/Theme.EVtalk"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".StatusmessageActivity"
+            android:name=".ui.message.StatusmessageActivity"
             android:theme="@style/Theme.AppCompat.Dialog" />
         <activity
             android:name=".ui.station.DestinationActivity"

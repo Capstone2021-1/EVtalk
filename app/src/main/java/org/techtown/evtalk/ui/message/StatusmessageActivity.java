@@ -1,4 +1,4 @@
-package org.techtown.evtalk;
+package org.techtown.evtalk.ui.message;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import org.techtown.evtalk.R;
 
 public class StatusmessageActivity extends AppCompatActivity {
 
@@ -24,7 +26,7 @@ public class StatusmessageActivity extends AppCompatActivity {
 
         // 상태 메시기 텍스트 변경 부분
         TextView textView1 = findViewById(R.id.stmessage);
-        textView1.setText("그 차량의 상태 메시지~~~~~~"); // 여기서 변경 
+        textView1.setText("그 차량의 상태 메시지~~~~~~"); // 여기서 변경
 
         // 채팅하기 버튼 클릭 시 이벤트
         Button button = findViewById(R.id.chatbtn);
