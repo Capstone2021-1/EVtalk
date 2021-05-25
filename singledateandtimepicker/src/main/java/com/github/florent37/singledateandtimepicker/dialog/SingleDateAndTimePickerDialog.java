@@ -84,7 +84,7 @@ public class SingleDateAndTimePickerDialog extends BaseDialog {
             }
         }
 
-        final TextView buttonOk = (TextView) view.findViewById(R.id.buttonOk);
+        final TextView buttonOk = (TextView) view.findViewById(R.id.okbtn);
         if (buttonOk != null) {
             buttonOk.setOnClickListener(new View.OnClickListener() {
                 @Override

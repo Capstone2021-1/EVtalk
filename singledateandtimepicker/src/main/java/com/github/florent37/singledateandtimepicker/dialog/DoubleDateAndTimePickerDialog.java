@@ -183,7 +183,7 @@ public class DoubleDateAndTimePickerDialog extends BaseDialog {
         //noinspection deprecation
         buttonTab1.setBackgroundDrawable(getTabsListDrawable());
 
-        final TextView buttonOk = (TextView) view.findViewById(R.id.buttonOk);
+        final TextView buttonOk = (TextView) view.findViewById(R.id.okbtn);
         if (buttonOk != null) {
             if (buttonOkText != null) {
                 buttonOk.setText(buttonOkText);

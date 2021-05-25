@@ -118,7 +118,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private static CameraUpdate cameraUpdate;
 
-
     public static NaverMap getNaverMap(){
         return naverMap;
     }
@@ -172,17 +171,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //        NavigationUI.setupWithNavController(
 //                toolbar, navController, appBarConfiguration);
 
-
-        //-----------------------------drawer 설정 부분-----------------------------------------------------//
-        // navigation drawer 회원이름 변경
-        View headerView = navigationView.getHeaderView(0);
-        TextView test = (TextView) headerView.findViewById(R.id.textView);
-        if (user.getName() == null)
-            test.setText("로그인 해주세요");
-        else
-            test.setText("" + user.getName());
-
-        //-----------------------------drawer 설정 부분-----------------------------------------------------//
         // 지도 객체 만들기
         FragmentManager fm = getSupportFragmentManager();
         MapFragment mapFragment = (MapFragment) fm.findFragmentById(R.id.map);
@@ -262,8 +250,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }).start();
             }
         });
-
-
     }
 
     @Override
@@ -772,10 +758,30 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         recyclerView2.setAdapter(adapter2);
 
+        // drawer 하단 차량검색 확인 버튼 클릭 시 StatusmessageActivity로 입력한 차량번호 전달
+        TextView carnumbertext = findViewById(R.id.nav_number_search);
+        Button carnumbersearch = findViewById(R.id.button);
+        carnumbersearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 키보드 내리기
+                InputMethodManager mInputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                mInputMethodManager.hideSoftInputFromWindow(carnumbertext.getWindowToken(), 0);
+
+                String getinputtext = carnumbertext.getText().toString();
+                if(getinputtext.length() <= 0){ // 입력값 없을 때
+                    Snackbar.make(v, "차량 번호를 입력해 주세요.", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                }
+                else{
+                    carnumbertext.setText(null); // 텍스트 초기화
+                    Intent intent = new Intent(getApplicationContext(), StatusmessageActivity.class);
+                    intent.putExtra("inputcarnumber", getinputtext); // 입력한 차량번호
+                    startActivity(intent);
+                }
+                Log.d("테스트임", "이게되네");
+            }
+        });
         Log.d("navi", "selected");
         return super.onOptionsItemSelected(item);
     }
-
-
-
 }

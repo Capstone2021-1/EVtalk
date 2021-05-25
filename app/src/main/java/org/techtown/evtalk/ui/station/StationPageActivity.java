@@ -53,8 +53,8 @@ public class StationPageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_station_page);
 
-        doparsing asdf = new doparsing();
-        asdf.execute(); // 파싱..
+        doparsing parsingstart = new doparsing();
+        parsingstart.execute(); // 파싱..
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -271,8 +271,6 @@ public class StationPageActivity extends AppCompatActivity {
             button = findViewById(R.id.fragch_1);
             button.performClick();
 
-//            TextView textView = findViewById(R.id.textView8);
-//            textView.setText(station.get(right).getBusiNm());
         }
 
     }

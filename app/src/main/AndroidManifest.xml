@@ -17,8 +17,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EVtalk"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.station.DestinationActivity"
-            android:theme="@style/Theme.AppCompat.Dialog"></activity>
+        <activity
+            android:name=".StatusmessageActivity"
+            android:theme="@style/Theme.AppCompat.Dialog" />
+        <activity
+            android:name=".ui.station.DestinationActivity"
+            android:theme="@style/Theme.AppCompat.Dialog" />
         <activity android:name=".ui.station.StationPageActivity" />
         <activity
             android:name=".TimeActivity"
@@ -34,7 +38,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/Theme.EVtalk"></activity>
+            android:theme="@style/Theme.EVtalk" />
         <activity
             android:name=".ui.search.SearchResultActivity"
             android:label="검색 결과 표시"

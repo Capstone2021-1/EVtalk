@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -50,7 +49,7 @@ public class TimeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+
         setContentView(R.layout.activity_time);
 
 
@@ -75,7 +74,7 @@ public class TimeActivity extends AppCompatActivity {
 
 
         // Time Setting Button
-        Button setting = (Button) findViewById(R.id.double_button);
+        Button setting = (Button) findViewById(R.id.chatbtn);
         setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -84,7 +83,7 @@ public class TimeActivity extends AppCompatActivity {
             }
         });
         // OK Button
-        TextView buttonOK = (TextView) findViewById(R.id.buttonOk);
+        TextView buttonOK = (TextView) findViewById(R.id.okbtn);
         buttonOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -174,7 +173,6 @@ public class TimeActivity extends AppCompatActivity {
     }
 
     public class EstimatedFee extends AsyncTask<Void, Void, Void> {
-
         @Override
         protected synchronized Void doInBackground(Void... voids) {
             //설정 된 충전 시간 서버로 보내기
