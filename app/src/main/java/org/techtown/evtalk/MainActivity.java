@@ -84,6 +84,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
 
+import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 
@@ -786,6 +788,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     Snackbar.make(v, "차량 번호를 입력해 주세요.", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 }
                 else{
+                    SearchPerson sp = new SearchPerson();
+                    sp.execute();
                     carnumbertext.setText(null); // 텍스트 초기화
                     Intent intent = new Intent(getApplicationContext(), StatusmessageActivity.class);
                     intent.putExtra("inputcarnumber", getinputtext); // 입력한 차량번호
@@ -800,12 +804,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     //차량 번호 검색 수정 중
     public class SearchPerson extends AsyncTask<Void, Void, Void> {
+        User result = null;
 
         @Override
         protected synchronized Void doInBackground(Void... voids) {
             try {
-                Response<User> response = retrofit.server.getPerson("").execute();
-                User result = response.body();
+                TextView carnumbertext = findViewById(R.id.nav_number_search);
+                String getinputtext = carnumbertext.getText().toString();
+                Response<User> response = retrofit.server.getPerson(getinputtext).execute();
+                result = response.body();
+                onPostExecute();
             } catch (IOException e) {
                 Log.i("차번호 검색 오류", "" + e.toString());
             }
@@ -814,7 +822,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         protected synchronized void onPostExecute() {
             super.onPostExecute(null);
-
+            StatusmessageActivity.result = result;
         }
     }
 
