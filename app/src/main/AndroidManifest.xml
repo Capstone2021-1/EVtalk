@@ -17,7 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EVtalk"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ChargCategoryActivity"
+        <activity android:name=".ChargingSettingActivity"
             android:theme="@style/Theme.AppCompat.Dialog" />
         <activity
             android:name=".ui.message.StatusmessageActivity"
