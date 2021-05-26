@@ -17,6 +17,10 @@ android {
         multiDexEnabled true
     }
 
+    buildFeatures {
+        viewBinding = true
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -48,6 +52,10 @@ dependencies {
     implementation 'com.naver.maps:map-sdk:3.11.0'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation ('io.socket:socket.io-client:2.0.0') {   //채팅에 필요한 socket.io
+        exclude group: 'org.json', module: 'json'
+    }
+    implementation 'com.google.code.gson:gson:2.8.6'    //채팅에 필요함
     implementation "androidx.cardview:cardview:1.0.0"
     // 원형 프로필 위함
     implementation 'de.hdodenhof:circleimageview:3.1.0'  // 원형 프로필 위함
