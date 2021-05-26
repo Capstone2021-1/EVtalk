@@ -531,43 +531,47 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         naverMap.addOnCameraChangeListener(new NaverMap.OnCameraChangeListener() {
             @Override
             public synchronized void onCameraChange(int reason, boolean animated) {
-                int test1 = 0;
                 feecheck = 0;
                 freeActiveMarkers();
                 // 정의된 마커위치들중 가시거리 내에있는것들만 마커 생성
                 LatLng currentPosition = getCurrentPosition(naverMap);
                 for (LatLng markerPosition : markersPosition) {
                     if (!withinSightMarker(currentPosition, markerPosition)) {
-                        feecheck++; test1++;
+                        feecheck++;
                         continue;
                     }
-                    if(checkboxarray.get(26) == 0){ if(chargingStation.get(test1).getId().contains("제한")) continue; } // 출입제한 충전소 제외
-                    if(checkboxarray.get(0) == 0){ if(chargingStation.get(test1).getId().contains("CU")) continue; } // 씨어스 CU
-                    if(checkboxarray.get(1) == 0){ if(chargingStation.get(test1).getId().contains("CV")) continue; } // 대영채비 CV
-                    if(checkboxarray.get(2) == 0){ if(chargingStation.get(test1).getId().contains("EM")) continue; } // evmost EM
-                    if(checkboxarray.get(3) == 0){ if(chargingStation.get(test1).getId().contains("EP")) continue; } // 이카플러그 EP
-                    if(checkboxarray.get(4) == 0){ if(chargingStation.get(test1).getId().contains("EV")) continue; } // 에버온 EV
-                    if(checkboxarray.get(5) == 0){ if(chargingStation.get(test1).getId().contains("EZ")) continue; } // 차지인 EZ
-                    if(checkboxarray.get(6) == 0){ if(chargingStation.get(test1).getId().contains("GN")) continue; } // 지엔텔 GN
-                    if(checkboxarray.get(7) == 0){ if(chargingStation.get(test1).getId().contains("GS")) continue; } // GS칼텍스 GS
-                    if(checkboxarray.get(8) == 0){ if(chargingStation.get(test1).getId().contains("HE")) continue; } // 한국전기차충전서비스 HE
-                    if(checkboxarray.get(9) == 0){ if(chargingStation.get(test1).getId().contains("HM")) continue; } // HUMAX EV HM
-                    if(checkboxarray.get(10) == 0){ if(chargingStation.get(test1).getId().contains("JE")) continue; } // 제주전기자동차서비스 JE
-                    if(checkboxarray.get(11) == 0){ if(chargingStation.get(test1).getId().contains("KE")) continue; } // 한국전기차인프라기술q KE
-                    if(checkboxarray.get(12) == 0){ if(chargingStation.get(test1).getId().contains("KL")) continue; } // 클린일렉스 KL
-                    if(checkboxarray.get(13) == 0){ if(chargingStation.get(test1).getId().contains("KP")) continue; } // 한국전력 KP
-                    if(checkboxarray.get(14) == 0){ if(chargingStation.get(test1).getId().contains("KT")) continue; } // KT KT
-                    if(checkboxarray.get(15) == 0){ if(chargingStation.get(test1).getId().contains("LH")) continue; } // LG헬로비전 LH
-                    if(checkboxarray.get(16) == 0){ if(chargingStation.get(test1).getId().contains("ME")) continue; } // 환경부 ME
-                    if(checkboxarray.get(17) == 0){ if(chargingStation.get(test1).getId().contains("MO")) continue; } // 매니지온 MO
-                    if(checkboxarray.get(18) == 0){ if(chargingStation.get(test1).getId().contains("PI")) continue; } // 포스코ICT PI
-                    if(checkboxarray.get(19) == 0){ if(chargingStation.get(test1).getId().contains("PW")) continue; } // 파워큐브 PW
-                    if(checkboxarray.get(20) == 0){ if(chargingStation.get(test1).getId().contains("SE")) continue; } // 서울시 SE
-                    if(checkboxarray.get(21) == 0){ if(chargingStation.get(test1).getId().contains("SF")) continue; } // 스타코프 SF
-                    if(checkboxarray.get(22) == 0){ if(chargingStation.get(test1).getId().contains("SK")) continue; } // SK에너지 SK
-                    if(checkboxarray.get(23) == 0){ if(chargingStation.get(test1).getId().contains("SS")) continue; } // 삼성이브이씨 SS
-                    if(checkboxarray.get(24) == 0){ if(chargingStation.get(test1).getId().contains("ST")) continue; } // 에스트래픽 ST
-                    if(checkboxarray.get(25) == 0){ if(chargingStation.get(test1).getId().contains("TD")) continue; } // 타디스테크놀로지 TD
+                    if(checkboxarray.get(26) == 1){ // 출입제한 충전소 제외
+                        try{
+                            if(chargingStation.get(feecheck).getLimitDetail() != null && chargingStation.get(feecheck).getLimitDetail().contains("제한")) { feecheck++; continue; }
+                            if(chargingStation.get(feecheck).getNote() != null &&  chargingStation.get(feecheck).getNote().contains("제한")) { feecheck++; continue; }
+                        }catch (NullPointerException e){}
+                    }
+                    if(checkboxarray.get(0) == 0){ if(chargingStation.get(feecheck).getId().contains("CU")){ feecheck++; continue; }} // 씨어스 CU
+                    if(checkboxarray.get(1) == 0){ if(chargingStation.get(feecheck).getId().contains("CV")){ feecheck++; continue; }} // 대영채비 CV
+                    if(checkboxarray.get(2) == 0){ if(chargingStation.get(feecheck).getId().contains("EM")){ feecheck++; continue; }} // evmost EM
+                    if(checkboxarray.get(3) == 0){ if(chargingStation.get(feecheck).getId().contains("EP")){ feecheck++; continue; }} // 이카플러그 EP
+                    if(checkboxarray.get(4) == 0){ if(chargingStation.get(feecheck).getId().contains("EV")){ feecheck++; continue; }} // 에버온 EV
+                    if(checkboxarray.get(5) == 0){ if(chargingStation.get(feecheck).getId().contains("EZ")){ feecheck++; continue; }} // 차지인 EZ
+                    if(checkboxarray.get(6) == 0){ if(chargingStation.get(feecheck).getId().contains("GN")){ feecheck++; continue; }} // 지엔텔 GN
+                    if(checkboxarray.get(7) == 0){ if(chargingStation.get(feecheck).getId().contains("GS")){ feecheck++; continue; }} // GS칼텍스 GS
+                    if(checkboxarray.get(8) == 0){ if(chargingStation.get(feecheck).getId().contains("HE")){ feecheck++; continue; }} // 한국전기차충전서비스 HE
+                    if(checkboxarray.get(9) == 0){ if(chargingStation.get(feecheck).getId().contains("HM")){ feecheck++; continue; }} // HUMAX EV HM
+                    if(checkboxarray.get(10) == 0){ if(chargingStation.get(feecheck).getId().contains("JE")){ feecheck++; continue; }} // 제주전기자동차서비스 JE
+                    if(checkboxarray.get(11) == 0){ if(chargingStation.get(feecheck).getId().contains("KE")){ feecheck++; continue; }} // 한국전기차인프라기술q KE
+                    if(checkboxarray.get(12) == 0){ if(chargingStation.get(feecheck).getId().contains("KL")){ feecheck++; continue; }} // 클린일렉스 KL
+                    if(checkboxarray.get(13) == 0){ if(chargingStation.get(feecheck).getId().contains("KP")){ feecheck++; continue; }} // 한국전력 KP
+                    if(checkboxarray.get(14) == 0){ if(chargingStation.get(feecheck).getId().contains("KT")){ feecheck++; continue; }} // KT KT
+                    if(checkboxarray.get(15) == 0){ if(chargingStation.get(feecheck).getId().contains("LH")){ feecheck++; continue; }} // LG헬로비전 LH
+                    if(checkboxarray.get(16) == 0){ if(chargingStation.get(feecheck).getId().contains("ME")){ feecheck++; continue; }} // 환경부 ME
+                    if(checkboxarray.get(17) == 0){ if(chargingStation.get(feecheck).getId().contains("MO")){ feecheck++; continue; }} // 매니지온 MO
+                    if(checkboxarray.get(18) == 0){ if(chargingStation.get(feecheck).getId().contains("PI")){ feecheck++; continue; }} // 포스코ICT PI
+                    if(checkboxarray.get(19) == 0){ if(chargingStation.get(feecheck).getId().contains("PW")){ feecheck++; continue; }} // 파워큐브 PW
+                    if(checkboxarray.get(20) == 0){ if(chargingStation.get(feecheck).getId().contains("SE")){ feecheck++; continue; }} // 서울시 SE
+                    if(checkboxarray.get(21) == 0){ if(chargingStation.get(feecheck).getId().contains("SF")){ feecheck++; continue; }} // 스타코프 SF
+                    if(checkboxarray.get(22) == 0){ if(chargingStation.get(feecheck).getId().contains("SK")){ feecheck++; continue; }} // SK에너지 SK
+                    if(checkboxarray.get(23) == 0){ if(chargingStation.get(feecheck).getId().contains("SS")){ feecheck++; continue; }} // 삼성이브이씨 SS
+                    if(checkboxarray.get(24) == 0){ if(chargingStation.get(feecheck).getId().contains("ST")){ feecheck++; continue; }} // 에스트래픽 ST
+                    if(checkboxarray.get(25) == 0){ if(chargingStation.get(feecheck).getId().contains("TD")){ feecheck++; continue; }} // 타디스테크놀로지 TD
                     Marker marker = new Marker();
                     marker.setIconPerspectiveEnabled(true); // 원근감 표시
                     marker.setIcon(OverlayImage.fromResource(R.drawable.ic_marker));
@@ -586,7 +590,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         });
                         infoWindow.open(marker);
                     }
-                    feecheck++; test1++;
+                    feecheck++;
                 }
             }
         });
