@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.techtown.evtalk.MainActivity;
 import org.techtown.evtalk.R;
 import org.techtown.evtalk.user.User;
 
@@ -23,25 +24,30 @@ public class StatusmessageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_statusmessage);
 
         Intent intent = getIntent();
-        String receiveStr = intent.getExtras().getString("inputcarnumber"); // 전달된 차량 번호
+//        String receiveStr = intent.getExtras().getString("inputcarnumber"); // 전달된 차량 번호
         TextView textView = findViewById(R.id.text3);
-        textView.setText(receiveStr); // 입력한 차량번호로 텍스트 설정
+        textView.setText(result.getCar_number()); // 입력한 차량번호로 텍스트 설정 -> result의 차량번호로 텍스트 설정
 
         // 상태 메시기 텍스트 변경 부분
         TextView textView1 = findViewById(R.id.stmessage);
-        try {
+        if(result.getId() != -1)
             textView1.setText(result.getMessage()); // 여기서 변경
-        }catch (NullPointerException e){
-//            textView1.setText("흠...");
-        }
-
+        else
+            textView1.setText("회원이 존재하지 않습니다.");
 
         // 채팅하기 버튼 클릭 시 이벤트
         Button button = findViewById(R.id.chatbtn);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // 여기에 작성
+                String roomNumber = "";
+                if(result.getId() < MainActivity.user.getId())
+                    roomNumber += result.getId() + "" + MainActivity.user.getId();
+                else roomNumber += MainActivity.user.getId() + "" + result.getId();
+                Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+                intent.putExtra("username", MainActivity.user.getName());
+                intent.putExtra("roomNumber", roomNumber);
+                startActivity(intent);
             }
         });
 

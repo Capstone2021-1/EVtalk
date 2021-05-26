@@ -18,6 +18,12 @@ public class ChargingStation {
     @SerializedName("lng")
     private double lng;
 
+    @SerializedName("limitDetail")
+    private String limitDetail;
+
+    @SerializedName("note")
+    private String note;
+
     @SerializedName("fee")
     private float fee;
 
@@ -33,7 +39,7 @@ public class ChargingStation {
         this.name = name;
     }
 
-    public void setLat(float lat) {
+    public void setLat(double lat) {
         this.lat = lat;
     }
 
@@ -69,4 +75,19 @@ public class ChargingStation {
         return fee;
     }
 
+    public String getLimitDetail() {
+        return limitDetail;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setLimitDetail(String limitDetail) {
+        this.limitDetail = limitDetail;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
 }

@@ -225,11 +225,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         fab3.setOnClickListener(new View.OnClickListener() { // 주변 맛집 - fab3 클릭 시 동작
             @Override
             public void onClick(View view) {
-                /*Snackbar.make(view, "주변 맛집은 나중에...", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();*/
-                overridePendingTransition(0, 0);
-                recreate();
-                overridePendingTransition(0, 0);
+                Snackbar.make(view, "주변 맛집은 나중에...", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
 
@@ -821,12 +818,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     Snackbar.make(v, "차량 번호를 입력해 주세요.", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 }
                 else{
+                    StatusmessageActivity.result = null;
                     SearchPerson sp = new SearchPerson();
                     sp.execute();
                     carnumbertext.setText(null); // 텍스트 초기화
-                    Intent intent = new Intent(getApplicationContext(), StatusmessageActivity.class);
-                    intent.putExtra("inputcarnumber", getinputtext); // 입력한 차량번호
-                    startActivity(intent);
+//                    Intent intent = new Intent(getApplicationContext(), StatusmessageActivity.class);
+//                    intent.putExtra("inputcarnumber", getinputtext); // 입력한 차량번호
+//                    startActivity(intent);
                 }
                 Log.d("테스트임", "이게되네");
             }
@@ -837,7 +835,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     //차량 번호 검색 수정 중
     public class SearchPerson extends AsyncTask<Void, Void, Void> {
-        User result = null;
 
         @Override
         protected synchronized Void doInBackground(Void... voids) {
@@ -845,7 +842,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 TextView carnumbertext = findViewById(R.id.nav_number_search);
                 String getinputtext = carnumbertext.getText().toString();
                 Response<User> response = retrofit.server.getPerson(getinputtext).execute();
-                result = response.body();
+                StatusmessageActivity.result = response.body();
                 onPostExecute();
             } catch (IOException e) {
                 Log.i("차번호 검색 오류", "" + e.toString());
@@ -855,14 +852,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         protected synchronized void onPostExecute() {
             super.onPostExecute(null);
-            if(StatusmessageActivity.result != null)
-                StatusmessageActivity.result = null;
-            StatusmessageActivity.result = result;
+            Intent intent = new Intent(getApplicationContext(), StatusmessageActivity.class);
+            startActivity(intent);
         }
-
-//        public void onPause() {
-//            super.onPause();
-//            result = null;
-//        }
     }
 }
