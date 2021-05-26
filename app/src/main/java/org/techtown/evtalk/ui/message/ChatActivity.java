@@ -40,7 +40,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private void init() {
         try {
-            mSocket = IO.socket("https://www.evtalk.kr:3000");
+            mSocket = IO.socket("https://www.evtalk.kr");
             Log.d("SOCKET", "Connection success : " + mSocket.id());
         } catch (URISyntaxException e) {
             e.printStackTrace();
