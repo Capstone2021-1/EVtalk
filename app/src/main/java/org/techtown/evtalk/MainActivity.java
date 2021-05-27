@@ -326,7 +326,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             showfee += "0시간 충전 시  |  0 KWh 충전  |  0 % 충전 가능";
             tv3.setText(showfee);
-        } else{ // 시간 설정 되어있을 때
+        }
+        else{ // 시간 설정 되어있을 때
             tv1.setText(formatType.format(TimeActivity.sDate) +" ~ "+formatType.format(TimeActivity.eDate));
             tv2.setText("충전 금액 : "+ Integer.toString((int)mkfee)+" 원");
 
@@ -346,13 +347,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
             tv3.setText(showfee);
         }
-
-
-
-
-
-
-
 
         FloatingActionButton fab1 = (FloatingActionButton) findViewById(R.id.fab1);
         FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab2);
