@@ -65,10 +65,12 @@ import com.skt.Tmap.TMapTapi;
 
 
 import org.techtown.evtalk.ui.message.StatusmessageActivity;
+import org.techtown.evtalk.ui.restaurant.RestaurantActivity;
 import org.techtown.evtalk.ui.search.GpsTracker;
 import org.techtown.evtalk.ui.search.SearchResultActivity;
 import org.techtown.evtalk.ui.station.StationPageActivity;
 import org.techtown.evtalk.ui.userinfo.DrawerCardAdapter;
+import org.techtown.evtalk.ui.userinfo.PaymentSettingActivity;
 import org.techtown.evtalk.ui.userinfo.UserInfoActivity;
 import org.techtown.evtalk.user.Car;
 import org.techtown.evtalk.user.Card;
@@ -129,6 +131,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static CameraUpdate cameraUpdate;
 
     public static ArrayList<TMapPOIItem> restItem = new ArrayList<>();
+    public static double latitude;
+    public static double longitude;
 
     public static NaverMap getNaverMap(){
         return naverMap;
@@ -229,49 +233,42 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
+        /* 주변 맛집 데이터 저장하기 20개만 */
         GpsTracker gpsTracker = new GpsTracker(getApplicationContext());
-        double longitude = gpsTracker.getLongitude();
-        double latitude = gpsTracker.getLatitude();
+        latitude = gpsTracker.getLatitude();
+        longitude = gpsTracker.getLongitude();
 
         TMapTapi tmaptapi = new TMapTapi(this);
         tmaptapi.setSKTMapAuthentication ("l7xx68d24409582244c887acd07632eaefcb");
-
         TMapPoint point = new TMapPoint(latitude, longitude);
 
-
         TMapData tmapdata = new TMapData();
-        tmapdata.findAroundNamePOI(point, "맛집", 1, 20,
-                new TMapData.FindAroundNamePOIListenerCallback() {
-                    @Override
-                    public void onFindAroundNamePOI(ArrayList<TMapPOIItem> poiItem) {
-                        for (int i = 0; i < poiItem.size(); i++) {
-                            TMapPOIItem item = poiItem.get(i);
-                            if(item.getPOIName().contains("주차장")||item.getPOIName().contains("정문")){
-                                continue;
-                            }else {
-                                restItem.add(item);
-                            }
-                        }
-                    }
-                });
-
-
 
         FloatingActionButton fab3 = (FloatingActionButton) findViewById(R.id.fab3);
         fab3.setOnClickListener(new View.OnClickListener() { // 주변 맛집 - fab3 클릭 시 동작
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "주변 맛집은 나중에...", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-
-                for (int i = 0; i < restItem.size(); i++) {
-                    TMapPOIItem item = restItem.get(i);
-                    if(item.getPOIName().contains("주차장")||item.getPOIName().contains("정문")){
-                        continue;
-                    }
-                    Log.d("맛집","POI Name: " + item.getPOIName() + "," + "Address: "
-                            + item.getPOIAddress().replace("null", ""));
+                makeRestList();   // 주변 맛집 리스트 만드는 부분
+                try {
+                    Thread.sleep(300);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
+                // 잘 나오나 출력으로 확인
+//                for (int i = 0; i < restItem.size(); i++) {
+//                    TMapPOIItem item = restItem.get(i);
+//                    if(item.getPOIName().contains("주차장")||item.getPOIName().contains("정문")){
+//                        continue;
+//                    }
+//                    Log.d("맛집","POI Name: " + item.getPOIName() + "," + "Address: "
+//                            + item.getPOIAddress().replace("null", "")
+//                            + " Distance: "+ Double.toString(item.getDistance(point))
+//                            + " 업종: ");
+//                }
+                Intent intent = new Intent(MainActivity.this, RestaurantActivity.class);
+                startActivity(intent);
+                overridePendingTransition(0, 0); // 전환효과 제거
+
             }
         });
 
@@ -344,6 +341,32 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    // 맛집 리스트 생성 함수
+    public void makeRestList(){
+        GpsTracker gpsTracker = new GpsTracker(getApplicationContext());
+        latitude = gpsTracker.getLatitude();
+        longitude = gpsTracker.getLongitude();
+
+        TMapPoint point = new TMapPoint(latitude, longitude);
+
+        TMapData tmapdata = new TMapData();
+        tmapdata.findAroundNamePOI(point, "음식점", 1, 20,
+                new TMapData.FindAroundNamePOIListenerCallback() {
+                    @Override
+                    public void onFindAroundNamePOI(ArrayList<TMapPOIItem> poiItem) {
+                        for (int i = 0; i < poiItem.size(); i++) {
+                            TMapPOIItem item = poiItem.get(i);
+                            if(item.getPOIName().contains("주차장")||item.getPOIName().contains("정문")){
+                                continue;
+                            }else {
+                                restItem.add(item);
+                            }
+                        }
+                    }
+                });
+    }
+
 
     // 바텀 시트 출현
     public synchronized void showbs(double lat, double lng){

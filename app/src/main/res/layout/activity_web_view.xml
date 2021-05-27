@@ -5,16 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.restaurant.RestaurantActivity">
+    tools:context=".ui.restaurant.WebViewActivity">
 
     <include
-        android:id="@+id/toolbar_restaurant"
+        android:id="@+id/toolbar_web"
         layout="@layout/toolbar_back"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView_restaurant"
+    <WebView
+        android:id="@+id/webView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>
