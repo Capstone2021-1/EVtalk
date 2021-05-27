@@ -312,35 +312,45 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         TextView bs_comname = findViewById(R.id.bs_comname);
         bs_comname.setText(mkbusi); // 회사이름 변경
 
-        if(TimeActivity.start_time == "") {
+        TextView tv1 = findViewById(R.id.textView15);
+        TextView tv2 = findViewById(R.id.textView16);
+        TextView tv3 = findViewById(R.id.textView17);
+
+        if(TimeActivity.start_time == "") { // 시간 설정 안 했을 때
             Date currentTime = Calendar.getInstance().getTime();
             start_time = new SimpleDateFormat("M월 d일 EEE HH:mm", Locale.getDefault()).format(currentTime);
             end_time = new SimpleDateFormat("M월 d일 EEE HH:mm", Locale.getDefault()).format(currentTime);
-            TextView tv1 = findViewById(R.id.textView15);
+
             tv1.setText(start_time + " ~ " + end_time);
-        } else{
-            TextView tv1 = findViewById(R.id.textView15);
+            tv2.setText("충전 금액 : "+ "0" +" 원");
+
+            showfee += "0시간 충전 시  |  0 KWh 충전  |  0 % 충전 가능";
+            tv3.setText(showfee);
+        } else{ // 시간 설정 되어있을 때
             tv1.setText(formatType.format(TimeActivity.sDate) +" ~ "+formatType.format(TimeActivity.eDate));
+            tv2.setText("충전 금액 : "+ Integer.toString((int)mkfee)+" 원");
+
+            for(int i=0;i<3;i++){
+                if(i == 0){
+                    showfee += Integer.toString((int)estimated_fee.get(estimated_fee.size()-i-1).getFee());
+                    showfee += "시간 충전 시  |  ";
+                }
+                else if(i==1){
+                    showfee += Integer.toString((int)estimated_fee.get(estimated_fee.size()-i-2).getFee());
+                    showfee += " KWh 충전  |  ";
+                }
+                else if(i==2){
+                    showfee += Integer.toString((int)estimated_fee.get(estimated_fee.size()-i).getFee());
+                    showfee += " % 충전 가능";
+                }
+            }
+            tv3.setText(showfee);
         }
 
-        TextView tv2 = findViewById(R.id.textView16);
-        tv2.setText("충전 금액 : "+ Integer.toString((int)mkfee)+" 원");
-        TextView tv3 = findViewById(R.id.textView17);
-        for(int i=0;i<3;i++){
-            if(i == 0){
-                showfee += Integer.toString((int)estimated_fee.get(estimated_fee.size()-i-1).getFee());
-                showfee += "시간 충전 시  |  ";
-            }
-            else if(i==1){
-                showfee += Integer.toString((int)estimated_fee.get(estimated_fee.size()-i-2).getFee());
-                showfee += " KWh 충전  |  ";
-            }
-            else if(i==2){
-                showfee += Integer.toString((int)estimated_fee.get(estimated_fee.size()-i).getFee());
-                showfee += " % 충전 가능";
-            }
-        }
-        tv3.setText(showfee);
+
+
+
+
 
 
 
