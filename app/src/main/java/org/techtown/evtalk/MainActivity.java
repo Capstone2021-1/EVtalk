@@ -387,7 +387,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         TextView tv2 = findViewById(R.id.textView16);
         TextView tv3 = findViewById(R.id.textView17);
 
-        if(TimeActivity.start_time == "") { // 시간 설정 안 했을 때
+        if(TimeActivity.total_time == "" || TimeActivity.total_time == "0시간") { // 시간 설정 안 했을 때
             Date currentTime = Calendar.getInstance().getTime();
             start_time = new SimpleDateFormat("M월 d일 EEE HH:mm", Locale.getDefault()).format(currentTime);
             end_time = new SimpleDateFormat("M월 d일 EEE HH:mm", Locale.getDefault()).format(currentTime);
