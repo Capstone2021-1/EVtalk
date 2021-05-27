@@ -250,21 +250,21 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {
                 makeRestList();   // 주변 맛집 리스트 만드는 부분
                 try {
-                    Thread.sleep(300);
+                    Thread.sleep(400);     // intent가 너무 빨리 실행 되어서 sleep 씀
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 // 잘 나오나 출력으로 확인
-//                for (int i = 0; i < restItem.size(); i++) {
-//                    TMapPOIItem item = restItem.get(i);
-//                    if(item.getPOIName().contains("주차장")||item.getPOIName().contains("정문")){
-//                        continue;
-//                    }
-//                    Log.d("맛집","POI Name: " + item.getPOIName() + "," + "Address: "
-//                            + item.getPOIAddress().replace("null", "")
-//                            + " Distance: "+ Double.toString(item.getDistance(point))
-//                            + " 업종: ");
-//                }
+                for (int i = 0; i < restItem.size(); i++) {
+                    TMapPOIItem item = restItem.get(i);
+                    if(item.getPOIName().contains("주차장")||item.getPOIName().contains("정문")){
+                        continue;
+                    }
+                    Log.d("맛집","POI Name: " + item.getPOIName() + "," + "Address: "
+                            + item.getPOIAddress().replace("null", "")
+                            + " Distance: "+ Double.toString(item.getDistance(point))
+                            + " 전화 번호: "+item.telNo);
+                }
                 Intent intent = new Intent(MainActivity.this, RestaurantActivity.class);
                 startActivity(intent);
                 overridePendingTransition(0, 0); // 전환효과 제거
@@ -357,7 +357,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     public void onFindAroundNamePOI(ArrayList<TMapPOIItem> poiItem) {
                         for (int i = 0; i < poiItem.size(); i++) {
                             TMapPOIItem item = poiItem.get(i);
-                            if(item.getPOIName().contains("주차장")||item.getPOIName().contains("정문")){
+                            if(item.getPOIName().contains("주차장")||item.getPOIName().contains("정문")|| item.telNo == null){
                                 continue;
                             }else {
                                 restItem.add(item);

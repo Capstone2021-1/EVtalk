@@ -73,7 +73,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Vi
         TextView restName;
         TextView restDistance;
         TextView restParking;
-
+        TextView restTel;
 
         public ViewHolder(View itemView, final OnRestaurantClickListener listener) {
             super(itemView);
