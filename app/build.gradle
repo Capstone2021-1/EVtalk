@@ -45,6 +45,7 @@ dependencies {
     implementation 'androidx.mediarouter:mediarouter:1.2.2'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation project(path: ':singledateandtimepicker')
+    implementation files('libs/com.skt.Tmap_1.67.jar')
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
