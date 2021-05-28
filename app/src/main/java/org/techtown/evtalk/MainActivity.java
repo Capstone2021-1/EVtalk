@@ -344,14 +344,32 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     // 맛집 리스트 생성 함수
     public void makeRestList(){
-        GpsTracker gpsTracker = new GpsTracker(getApplicationContext());
-        latitude = gpsTracker.getLatitude();
-        longitude = gpsTracker.getLongitude();
+//        GpsTracker gpsTracker = new GpsTracker(getApplicationContext());
+//        latitude = gpsTracker.getLatitude();
+//        longitude = gpsTracker.getLongitude();
+        LatLng curLatLng = getCurrentPosition(naverMap);
+        latitude = curLatLng.latitude;
+        longitude = curLatLng.longitude;
 
         TMapPoint point = new TMapPoint(latitude, longitude);
 
         TMapData tmapdata = new TMapData();
-        tmapdata.findAroundNamePOI(point, "음식점", 1, 20,
+        tmapdata.findAroundNamePOI(point, "음식점", 3, 20,
+                new TMapData.FindAroundNamePOIListenerCallback() {
+                    @Override
+                    public void onFindAroundNamePOI(ArrayList<TMapPOIItem> poiItem) {
+                        for (int i = 0; i < poiItem.size(); i++) {
+                            TMapPOIItem item = poiItem.get(i);
+                            if(item.getPOIName().contains("주차장")||item.getPOIName().contains("정문")|| item.telNo == null){
+                                continue;
+                            }else {
+                                restItem.add(item);
+                            }
+                        }
+                    }
+                });
+
+        tmapdata.findAroundNamePOI(point, "카페", 3, 20,
                 new TMapData.FindAroundNamePOIListenerCallback() {
                     @Override
                     public void onFindAroundNamePOI(ArrayList<TMapPOIItem> poiItem) {
