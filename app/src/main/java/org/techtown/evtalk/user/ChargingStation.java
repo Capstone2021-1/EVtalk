@@ -27,6 +27,9 @@ public class ChargingStation {
     @SerializedName("fee")
     private float fee;
 
+    @SerializedName("chgerType")
+    private String chgerType;
+
     public void setId(String id) {
         this.id = id;
     }
@@ -49,6 +52,18 @@ public class ChargingStation {
 
     public void setFee(float fee) {
         this.fee = fee;
+    }
+
+    public void setLimitDetail(String limitDetail) {
+        this.limitDetail = limitDetail;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public void setchgerType(String chgerType) {
+        this.chgerType = chgerType;
     }
 
     public String getId() {
@@ -83,11 +98,7 @@ public class ChargingStation {
         return note;
     }
 
-    public void setLimitDetail(String limitDetail) {
-        this.limitDetail = limitDetail;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
+    public String getchgerType() {
+        return chgerType;
     }
 }

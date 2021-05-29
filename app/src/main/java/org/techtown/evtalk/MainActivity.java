@@ -640,17 +640,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         }catch (NullPointerException e){}
                     }
                     if(checkboxarray.get(27) == 0){ // DC콤보 제외
-
-                    }
+                        if(chargingStation.get(feecheck).getchgerType().equals("04") || chargingStation.get(feecheck).getchgerType().equals("05")) { feecheck++; continue; } }
                     if(checkboxarray.get(28) == 0){ // DC차데모 제외
-
-                    }
+                        if(chargingStation.get(feecheck).getchgerType().equals("01") || chargingStation.get(feecheck).getchgerType().equals("03") || chargingStation.get(feecheck).getchgerType().equals("05") || chargingStation.get(feecheck).getchgerType().equals("06")) { feecheck++; continue; } }
                     if(checkboxarray.get(29) == 0){ // AC3상 제외
-
-                    }
+                        if(chargingStation.get(feecheck).getchgerType().equals("03") || chargingStation.get(feecheck).getchgerType().equals("06") || chargingStation.get(feecheck).getchgerType().equals("07")) { feecheck++; continue; } }
                     if(checkboxarray.get(30) == 0){ // 완속 제외
-
-                    }
+                        if(chargingStation.get(feecheck).getchgerType().equals("02")) { feecheck++; continue; } }
                     if(checkboxarray.get(0) == 0){ if(chargingStation.get(feecheck).getId().contains("CU")){ feecheck++; continue; }} // 씨어스 CU
                     if(checkboxarray.get(1) == 0){ if(chargingStation.get(feecheck).getId().contains("CV")){ feecheck++; continue; }} // 대영채비 CV
                     if(checkboxarray.get(2) == 0){ if(chargingStation.get(feecheck).getId().contains("EM")){ feecheck++; continue; }} // evmost EM
