@@ -10,11 +10,12 @@
     <include
         android:id="@+id/toolbar_restaurant"
         layout="@layout/toolbar_back"
-        android:layout_width="match_parent"
+        android:layout_width="410dp"
         android:layout_height="wrap_content" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView_restaurant"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        />
 </LinearLayout>
