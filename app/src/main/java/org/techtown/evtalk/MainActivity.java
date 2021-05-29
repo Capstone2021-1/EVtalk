@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.PointF;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -63,14 +64,12 @@ import com.skt.Tmap.TMapPOIItem;
 import com.skt.Tmap.TMapPoint;
 import com.skt.Tmap.TMapTapi;
 
-
 import org.techtown.evtalk.ui.message.StatusmessageActivity;
 import org.techtown.evtalk.ui.restaurant.RestaurantActivity;
 import org.techtown.evtalk.ui.search.GpsTracker;
 import org.techtown.evtalk.ui.search.SearchResultActivity;
 import org.techtown.evtalk.ui.station.StationPageActivity;
 import org.techtown.evtalk.ui.userinfo.DrawerCardAdapter;
-import org.techtown.evtalk.ui.userinfo.PaymentSettingActivity;
 import org.techtown.evtalk.ui.userinfo.UserInfoActivity;
 import org.techtown.evtalk.user.Car;
 import org.techtown.evtalk.user.Card;
@@ -140,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static CameraUpdate getCameraUpdate(){ return cameraUpdate;}
     public static ArrayList<Integer> checkboxarray = new ArrayList<>(); // 차량 회사 설정 배열
 
+    Marker lastClicked = null;
     Bitmap bmImg;
 
     @Override
@@ -609,7 +609,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         cameraUpdate = CameraUpdate.scrollTo(initialPosition);
         naverMap.moveCamera(cameraUpdate);
 
-        for(int i=0 ;i<27;i++) { // 충전소 카테고리 설정 배열 초기화
+        for(int i=0 ;i<31;i++) { // 충전소 카테고리 설정 배열 초기화
             checkboxarray.add(i,1); // 초기 모두 체크 된 상태로 1 저장  // checked = 1 , unchecked = 0
         }
 
@@ -639,6 +639,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                             if(chargingStation.get(feecheck).getNote() != null &&  chargingStation.get(feecheck).getNote().contains("제한")) { feecheck++; continue; }
                         }catch (NullPointerException e){}
                     }
+                    if(checkboxarray.get(27) == 0){ // DC콤보 제외
+
+                    }
+                    if(checkboxarray.get(28) == 0){ // DC차데모 제외
+
+                    }
+                    if(checkboxarray.get(29) == 0){ // AC3상 제외
+
+                    }
+                    if(checkboxarray.get(30) == 0){ // 완속 제외
+
+                    }
                     if(checkboxarray.get(0) == 0){ if(chargingStation.get(feecheck).getId().contains("CU")){ feecheck++; continue; }} // 씨어스 CU
                     if(checkboxarray.get(1) == 0){ if(chargingStation.get(feecheck).getId().contains("CV")){ feecheck++; continue; }} // 대영채비 CV
                     if(checkboxarray.get(2) == 0){ if(chargingStation.get(feecheck).getId().contains("EM")){ feecheck++; continue; }} // evmost EM
@@ -667,8 +679,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     if(checkboxarray.get(25) == 0){ if(chargingStation.get(feecheck).getId().contains("TD")){ feecheck++; continue; }} // 타디스테크놀로지 TD
                     Marker marker = new Marker();
                     marker.setIconPerspectiveEnabled(true); // 원근감 표시
-                    marker.setIcon(OverlayImage.fromResource(R.drawable.ic_marker));
                     marker.setPosition(markerPosition); // 마커 위치
+                    if(lastClicked != null){
+                        if (marker.getPosition().equals(lastClicked.getPosition())) {
+                            marker.setIcon(OverlayImage.fromResource(R.drawable.ic_marker_clicked));
+                            lastClicked = marker;
+                        }else
+                            marker.setIcon(OverlayImage.fromResource(R.drawable.ic_marker));
+                    }else{
+                        marker.setIcon(OverlayImage.fromResource(R.drawable.ic_marker));
+                    }
                     marker.setMap(naverMap);
                     marker.setOnClickListener(MainActivity.this::onClick);
                     activeMarkers.add(marker);
@@ -687,14 +707,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
         });
-
+        // 지도 터치 이벤트
+        naverMap.setOnMapClickListener(new NaverMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(@NonNull PointF pointF, @NonNull LatLng latLng) {
+                if(lastClicked != null){
+                    lastClicked.setIcon((OverlayImage.fromResource(R.drawable.ic_marker)));
+                    lastClicked = null;
+                    hidebs();
+                }
+            }
+        });
     }
 
     // 마커 클릭 이벤트
     public static String mkname = "NULL";
     public static String mkbusi = "NULL";
     public static float mkfee = 0;
-    Marker lastClicked = null;
     @Override
     public synchronized boolean onClick(@NonNull Overlay overlay) {
         if(overlay instanceof Marker){
@@ -711,23 +740,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     break;
                 }
             }
-//            infoWindow = new InfoWindow();
-//            Marker marker = (Marker)overlay;
-//            marker.setTag("chargingStation.get(feecheck).getFee()");
-//            infoWindow.open(marker);
-            // 마커 클릭 시 카메라 이동 - 이동 후 클릭된 마커 이미지 변경 안되는 오류
-            /*LatLng markercenter = new LatLng(station.getLat(), station.getLng());
-            CameraUpdate cameraUpdate = CameraUpdate.scrollTo(markercenter);
-            naverMap.moveCamera(cameraUpdate);*/
 
-            if (lastClicked!=null) {
+            if(lastClicked != null){
                 lastClicked.setIcon((OverlayImage.fromResource(R.drawable.ic_marker)));
-                Log.d("marker", "purple");
-            }
-            lastClicked = (Marker) overlay;
-            if (lastClicked!=null) {
+                lastClicked = (Marker) overlay;
                 ((Marker) overlay).setIcon((OverlayImage.fromResource(R.drawable.ic_marker_clicked)));
-                Log.d("marker", "pink");
+            }else{
+                ((Marker) overlay).setIcon((OverlayImage.fromResource(R.drawable.ic_marker_clicked)));
+                lastClicked = (Marker) overlay;
             }
 
             showbs(((Marker) overlay).getPosition().latitude, ((Marker) overlay).getPosition().latitude);

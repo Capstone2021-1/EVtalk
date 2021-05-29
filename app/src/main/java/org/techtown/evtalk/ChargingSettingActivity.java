@@ -24,7 +24,11 @@ public class ChargingSettingActivity extends AppCompatActivity {
         CheckBox ch16 = findViewById(R.id.chbox16);CheckBox ch17 = findViewById(R.id.chbox17);CheckBox ch18 = findViewById(R.id.chbox18);
         CheckBox ch19 = findViewById(R.id.chbox19);CheckBox ch20 = findViewById(R.id.chbox20);CheckBox ch21 = findViewById(R.id.chbox21);
         CheckBox ch22 = findViewById(R.id.chbox22);CheckBox ch23 = findViewById(R.id.chbox23);CheckBox ch24 = findViewById(R.id.chbox24);
-        CheckBox ch25 = findViewById(R.id.chbox25);CheckBox ch26 = findViewById(R.id.chbox26);CheckBox ch30 = findViewById(R.id.chbox30);
+        CheckBox ch25 = findViewById(R.id.chbox25);CheckBox ch26 = findViewById(R.id.chbox26);
+        CheckBox ch30 = findViewById(R.id.chbox30); // 제한구역 제외
+        CheckBox ch41 = findViewById(R.id.chbox41);CheckBox ch42 = findViewById(R.id.chbox42);
+        CheckBox ch43 = findViewById(R.id.chbox43);CheckBox ch44 = findViewById(R.id.chbox44);
+
 
         if(MainActivity.checkboxarray.get(0) == 0) ch1.setChecked(false);
         if(MainActivity.checkboxarray.get(1) == 0) ch2.setChecked(false);
@@ -53,6 +57,10 @@ public class ChargingSettingActivity extends AppCompatActivity {
         if(MainActivity.checkboxarray.get(24) == 0) ch25.setChecked(false);
         if(MainActivity.checkboxarray.get(25) == 0) ch26.setChecked(false);
         if(MainActivity.checkboxarray.get(26) == 0) ch30.setChecked(false); // 출입제한 제외
+        if(MainActivity.checkboxarray.get(27) == 0) ch41.setChecked(false); // DC콤보
+        if(MainActivity.checkboxarray.get(28) == 0) ch42.setChecked(false); // DC차데모
+        if(MainActivity.checkboxarray.get(29) == 0) ch43.setChecked(false); // AC3상
+        if(MainActivity.checkboxarray.get(30) == 0) ch44.setChecked(false); // 완속
 
         ch1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -236,11 +244,39 @@ public class ChargingSettingActivity extends AppCompatActivity {
                 else                    MainActivity.checkboxarray.set(25,0);
             }
         });
-        ch30.setOnClickListener(new View.OnClickListener() {
+        ch30.setOnClickListener(new View.OnClickListener() { // 출입제한 제외
             @Override
             public void onClick(View v) {
                 if(ch30.isChecked())                    MainActivity.checkboxarray.set(26,1);
                 else                    MainActivity.checkboxarray.set(26,0);
+            }
+        });
+        ch41.setOnClickListener(new View.OnClickListener() { // DC콤보
+            @Override
+            public void onClick(View v) {
+                if(ch41.isChecked())                    MainActivity.checkboxarray.set(27,1);
+                else                    MainActivity.checkboxarray.set(27,0);
+            }
+        });
+        ch42.setOnClickListener(new View.OnClickListener() { // DC차데모
+            @Override
+            public void onClick(View v) {
+                if(ch42.isChecked())                    MainActivity.checkboxarray.set(28,1);
+                else                    MainActivity.checkboxarray.set(28,0);
+            }
+        });
+        ch43.setOnClickListener(new View.OnClickListener() { // AC3상
+            @Override
+            public void onClick(View v) {
+                if(ch43.isChecked())                    MainActivity.checkboxarray.set(29,1);
+                else                    MainActivity.checkboxarray.set(29,0);
+            }
+        });
+        ch44.setOnClickListener(new View.OnClickListener() { // 완속
+            @Override
+            public void onClick(View v) {
+                if(ch44.isChecked())                    MainActivity.checkboxarray.set(30,1);
+                else                    MainActivity.checkboxarray.set(30,0);
             }
         });
 
