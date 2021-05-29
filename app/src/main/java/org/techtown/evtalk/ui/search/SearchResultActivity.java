@@ -75,8 +75,8 @@ public class SearchResultActivity extends AppCompatActivity implements LocationL
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView_search_result);
 
-//        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+//        GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
         recyclerView.setLayoutManager(layoutManager);
 
         adapter = new SearchAdapter();
