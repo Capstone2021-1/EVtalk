@@ -84,6 +84,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.message.ChatActivity"/>
+        <activity android:name=".ui.message.ChatListActivity"/>
     </application>
 
 </manifest>

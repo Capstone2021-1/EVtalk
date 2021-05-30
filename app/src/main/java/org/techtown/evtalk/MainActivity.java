@@ -59,6 +59,7 @@ import com.naver.maps.map.util.FusedLocationSource;
 import com.naver.maps.map.widget.LocationButtonView;
 import com.pedro.library.AutoPermissions;
 
+import org.techtown.evtalk.ui.message.ChatListActivity;
 import org.techtown.evtalk.ui.message.StatusmessageActivity;
 import org.techtown.evtalk.ui.search.SearchResultActivity;
 import org.techtown.evtalk.ui.station.StationPageActivity;
@@ -381,6 +382,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             ActivityCompat.finishAffinity(this); // 앱 종료
             toast.cancel(); // 현재 표시된 Toast 취소
         }
+    }
+
+    // 채팅리스트페이지 이동
+    public void startChatListActivity(View view) {
+        Intent intent = new Intent(MainActivity.this, ChatListActivity.class);
+        intent.putExtra("user_id", user.getId());
+        intent.putExtra("car_number", user.getCar_number());
+        startActivity(intent);
     }
 
     // 마이페이지 이동

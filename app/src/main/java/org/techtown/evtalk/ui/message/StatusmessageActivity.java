@@ -44,7 +44,8 @@ public class StatusmessageActivity extends AppCompatActivity {
                     roomNumber += result.getId() + "" + MainActivity.user.getId();
                 else roomNumber += MainActivity.user.getId() + "" + result.getId();
                 Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
-                intent.putExtra("username", MainActivity.user.getName());
+                intent.putExtra("username1", MainActivity.user.getCar_number());
+                intent.putExtra("username2", result.getCar_number());
                 intent.putExtra("roomNumber", roomNumber);
                 startActivity(intent);
             }

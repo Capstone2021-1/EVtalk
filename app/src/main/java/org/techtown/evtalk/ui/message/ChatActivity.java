@@ -14,6 +14,7 @@ import org.techtown.evtalk.databinding.ActivityChatBinding;
 
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import io.socket.client.IO;
@@ -23,9 +24,11 @@ public class ChatActivity extends AppCompatActivity {
     private ActivityChatBinding binding;
 
     private Socket mSocket;
-    private String username;
+    private String username1;   //MainActivity 사용자
+    private String username2;   //상대방
     private String roomNumber;
     private ChatAdapter adapter;
+    private long lastSendTime = 0;
 
     private Gson gson = new Gson();
 
@@ -47,7 +50,8 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         Intent intent = getIntent();
-        username = intent.getStringExtra("username");
+        username1 = intent.getStringExtra("username1");
+        username2 = intent.getStringExtra("username2");
         roomNumber = intent.getStringExtra("roomNumber");
 
         adapter = new ChatAdapter(getApplicationContext());
@@ -60,11 +64,14 @@ public class ChatActivity extends AppCompatActivity {
 
         mSocket.connect();
         mSocket.on(Socket.EVENT_CONNECT, args -> {
-            mSocket.emit("enter", gson.toJson(new RoomData(username, roomNumber))); //수정필요
+            mSocket.emit("enter", gson.toJson(new RoomData(username1, username2, roomNumber)));
         });
         mSocket.on("update", args -> {
             MessageData data = gson.fromJson(args[0].toString(), MessageData.class);
-            addChat(data);
+            if(data.getSendTime() > lastSendTime) {
+                lastSendTime = data.getSendTime();
+                addChat(data);
+            }
         });
     }
 
@@ -88,7 +95,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private void sendMessage() {
         mSocket.emit("newMessage", gson.toJson(new MessageData("MESSAGE",
-                username,
+                username1,
                 roomNumber,
                 binding.contentEdit.getText().toString(),
                 System.currentTimeMillis())));
@@ -104,7 +111,8 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mSocket.emit("left", gson.toJson(new RoomData(username, roomNumber)));
+        mSocket.emit("left", gson.toJson(new RoomData(username1, username2, roomNumber)));
         mSocket.disconnect();
+        lastSendTime = 0;
     }
 }
