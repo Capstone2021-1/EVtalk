@@ -146,7 +146,10 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:nestedScrollingEnabled="false"
-                android:padding="15dp" />
+                android:paddingLeft="25dp"
+                android:paddingTop="10dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="15dp" />
 
             <View
                 android:layout_width="match_parent"
