@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.PointF;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -58,9 +59,15 @@ import com.naver.maps.map.overlay.OverlayImage;
 import com.naver.maps.map.util.FusedLocationSource;
 import com.naver.maps.map.widget.LocationButtonView;
 import com.pedro.library.AutoPermissions;
+import com.skt.Tmap.TMapData;
+import com.skt.Tmap.TMapPOIItem;
+import com.skt.Tmap.TMapPoint;
+import com.skt.Tmap.TMapTapi;
 
 import org.techtown.evtalk.ui.message.ChatListActivity;
 import org.techtown.evtalk.ui.message.StatusmessageActivity;
+import org.techtown.evtalk.ui.restaurant.RestaurantActivity;
+import org.techtown.evtalk.ui.search.GpsTracker;
 import org.techtown.evtalk.ui.search.SearchResultActivity;
 import org.techtown.evtalk.ui.station.StationPageActivity;
 import org.techtown.evtalk.ui.userinfo.DrawerCardAdapter;
@@ -85,8 +92,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
 
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 
@@ -125,11 +130,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private static CameraUpdate cameraUpdate;
 
+    public static ArrayList<TMapPOIItem> restItem = new ArrayList<>();
+    public static double latitude;
+    public static double longitude;
+
     public static NaverMap getNaverMap(){
         return naverMap;
     }
     public static CameraUpdate getCameraUpdate(){ return cameraUpdate;}
+    public static ArrayList<Integer> checkboxarray = new ArrayList<>(); // 차량 회사 설정 배열
 
+    Marker lastClicked = null;
     Bitmap bmImg;
 
     @Override
@@ -212,25 +223,52 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         fab2.setOnClickListener(new View.OnClickListener() { // 충전소 카테고리 설정 - fab2 클릭 시 동작
             @Override
             public void onClick(View view) {
-                Intent intent1 = new Intent(getApplicationContext(), ChargCategoryActivity.class);
+                Intent intent1 = new Intent(getApplicationContext(), ChargingSettingActivity.class);
                 startActivity(intent1);
-
-
-                /*// 새로고침 기능 혹시 나중에 쓰일까....
-                overridePendingTransition(0, 0);
-                recreate();
-                overridePendingTransition(0, 0);*/
             }
         });
+
+        /* 주변 맛집 데이터 저장하기 20개만 */
+        GpsTracker gpsTracker = new GpsTracker(getApplicationContext());
+        latitude = gpsTracker.getLatitude();
+        longitude = gpsTracker.getLongitude();
+
+        TMapTapi tmaptapi = new TMapTapi(this);
+        tmaptapi.setSKTMapAuthentication ("l7xx68d24409582244c887acd07632eaefcb");
+        TMapPoint point = new TMapPoint(latitude, longitude);
+
+        TMapData tmapdata = new TMapData();
 
         FloatingActionButton fab3 = (FloatingActionButton) findViewById(R.id.fab3);
         fab3.setOnClickListener(new View.OnClickListener() { // 주변 맛집 - fab3 클릭 시 동작
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "주변 맛집은 나중에...", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                makeRestList();   // 주변 맛집 리스트 만드는 부분
+                try {
+                    Thread.sleep(400);     // intent가 너무 빨리 실행 되어서 sleep 씀
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                // 잘 나오나 출력으로 확인
+                for (int i = 0; i < restItem.size(); i++) {
+                    TMapPOIItem item = restItem.get(i);
+                    if(item.getPOIName().contains("주차장")||item.getPOIName().contains("정문")){
+                        continue;
+                    }
+                    Log.d("맛집","POI Name: " + item.getPOIName() + "," + "Address: "
+                            + item.getPOIAddress().replace("null", "")
+                            + " Distance: "+ Double.toString(item.getDistance(point))
+                            + " 전화 번호: "+item.telNo);
+                }
+                Intent intent = new Intent(MainActivity.this, RestaurantActivity.class);
+                startActivity(intent);
+                overridePendingTransition(0, 0); // 전환효과 제거
+
             }
         });
+
+
+
 
         // 바텀 시트 취소 버튼 동작
         Button btn_cancel = (Button) findViewById(R.id.btn_cancel);
@@ -299,6 +337,50 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    // 맛집 리스트 생성 함수
+    public void makeRestList(){
+//        GpsTracker gpsTracker = new GpsTracker(getApplicationContext());
+//        latitude = gpsTracker.getLatitude();
+//        longitude = gpsTracker.getLongitude();
+        LatLng curLatLng = getCurrentPosition(naverMap);
+        latitude = curLatLng.latitude;
+        longitude = curLatLng.longitude;
+
+        TMapPoint point = new TMapPoint(latitude, longitude);
+
+        TMapData tmapdata = new TMapData();
+        tmapdata.findAroundNamePOI(point, "음식점", 3, 20,
+                new TMapData.FindAroundNamePOIListenerCallback() {
+                    @Override
+                    public void onFindAroundNamePOI(ArrayList<TMapPOIItem> poiItem) {
+                        for (int i = 0; i < poiItem.size(); i++) {
+                            TMapPOIItem item = poiItem.get(i);
+                            if(item.getPOIName().contains("주차장")||item.getPOIName().contains("정문")|| item.telNo == null){
+                                continue;
+                            }else {
+                                restItem.add(item);
+                            }
+                        }
+                    }
+                });
+
+        tmapdata.findAroundNamePOI(point, "카페", 3, 20,
+                new TMapData.FindAroundNamePOIListenerCallback() {
+                    @Override
+                    public void onFindAroundNamePOI(ArrayList<TMapPOIItem> poiItem) {
+                        for (int i = 0; i < poiItem.size(); i++) {
+                            TMapPOIItem item = poiItem.get(i);
+                            if(item.getPOIName().contains("주차장")||item.getPOIName().contains("정문")|| item.telNo == null){
+                                continue;
+                            }else {
+                                restItem.add(item);
+                            }
+                        }
+                    }
+                });
+    }
+
+
     // 바텀 시트 출현
     public synchronized void showbs(double lat, double lng){
         SimpleDateFormat formatType = new SimpleDateFormat("MM월 dd일 HH:mm");
@@ -314,37 +396,41 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         TextView bs_comname = findViewById(R.id.bs_comname);
         bs_comname.setText(mkbusi); // 회사이름 변경
 
-        if(TimeActivity.start_time == "") {
+        TextView tv1 = findViewById(R.id.textView15);
+        TextView tv2 = findViewById(R.id.textView16);
+        TextView tv3 = findViewById(R.id.textView17);
+
+        if(TimeActivity.total_time == "" || TimeActivity.total_time == "0시간") { // 시간 설정 안 했을 때
             Date currentTime = Calendar.getInstance().getTime();
             start_time = new SimpleDateFormat("M월 d일 EEE HH:mm", Locale.getDefault()).format(currentTime);
             end_time = new SimpleDateFormat("M월 d일 EEE HH:mm", Locale.getDefault()).format(currentTime);
-            TextView tv1 = findViewById(R.id.textView15);
+
             tv1.setText(start_time + " ~ " + end_time);
-        } else{
-            TextView tv1 = findViewById(R.id.textView15);
+            tv2.setText("충전 금액 : "+ "0" +" 원");
+
+            showfee += "0시간 충전 시  |  0 KWh 충전  |  0 % 충전 가능";
+            tv3.setText(showfee);
+        }
+        else{ // 시간 설정 되어있을 때
             tv1.setText(formatType.format(TimeActivity.sDate) +" ~ "+formatType.format(TimeActivity.eDate));
+            tv2.setText("충전 금액 : "+ Integer.toString((int)mkfee)+" 원");
+
+            for(int i=0;i<3;i++){
+                if(i == 0){
+                    showfee += Integer.toString((int)estimated_fee.get(estimated_fee.size()-i-1).getFee());
+                    showfee += "시간 충전 시  |  ";
+                }
+                else if(i==1){
+                    showfee += Integer.toString((int)estimated_fee.get(estimated_fee.size()-i-2).getFee());
+                    showfee += " KWh 충전  |  ";
+                }
+                else if(i==2){
+                    showfee += Integer.toString((int)estimated_fee.get(estimated_fee.size()-i).getFee());
+                    showfee += " % 충전 가능";
+                }
+            }
+            tv3.setText(showfee);
         }
-
-        TextView tv2 = findViewById(R.id.textView16);
-        tv2.setText("충전 금액 : "+ Integer.toString((int)mkfee)+" 원");
-        TextView tv3 = findViewById(R.id.textView17);
-        for(int i=0;i<3;i++){
-            if(i == 0){
-                showfee += Integer.toString((int)estimated_fee.get(estimated_fee.size()-i-1).getFee());
-                showfee += "시간 충전 시  |  ";
-            }
-            else if(i==1){
-                showfee += Integer.toString((int)estimated_fee.get(estimated_fee.size()-i-2).getFee());
-                showfee += " KWh 충전  |  ";
-            }
-            else if(i==2){
-                showfee += Integer.toString((int)estimated_fee.get(estimated_fee.size()-i).getFee());
-                showfee += " % 충전 가능";
-            }
-        }
-        tv3.setText(showfee);
-
-
 
         FloatingActionButton fab1 = (FloatingActionButton) findViewById(R.id.fab1);
         FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab2);
@@ -526,17 +612,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         cameraUpdate = CameraUpdate.scrollTo(initialPosition);
         naverMap.moveCamera(cameraUpdate);
 
+        for(int i=0 ;i<31;i++) { // 충전소 카테고리 설정 배열 초기화
+            checkboxarray.add(i,1); // 초기 모두 체크 된 상태로 1 저장  // checked = 1 , unchecked = 0
+        }
+
         // 마커들 위치 정의
-//        feeget = new Vector<String>();
         markersPosition = new Vector<LatLng>();
         for (int i = 0; i < chargingStation.size(); i++) {
             markersPosition.add(new LatLng(chargingStation.get(i).getLat(),chargingStation.get(i).getLng()));
-//            feeget.add(Float.toString(chargingStation.get(i).getFee()));
         }
 
-//        int i,z=0;
 
-        // 카메라 이동 되면 호출 되는 이벤트
+        // 카메라 이동 되면 호출 되는 이벤트 // 마커찍기
         naverMap.addOnCameraChangeListener(new NaverMap.OnCameraChangeListener() {
             @Override
             public synchronized void onCameraChange(int reason, boolean animated) {
@@ -549,10 +636,58 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         feecheck++;
                         continue;
                     }
+                    if(checkboxarray.get(26) == 1){ // 출입제한 충전소 제외
+                        try{
+                            if(chargingStation.get(feecheck).getLimitDetail() != null && chargingStation.get(feecheck).getLimitDetail().contains("제한")) { feecheck++; continue; }
+                            if(chargingStation.get(feecheck).getNote() != null &&  chargingStation.get(feecheck).getNote().contains("제한")) { feecheck++; continue; }
+                        }catch (NullPointerException e){}
+                    }
+                    if(checkboxarray.get(27) == 0){ // DC콤보 제외
+                        if(chargingStation.get(feecheck).getchgerType().equals("04") || chargingStation.get(feecheck).getchgerType().equals("05")) { feecheck++; continue; } }
+                    if(checkboxarray.get(28) == 0){ // DC차데모 제외
+                        if(chargingStation.get(feecheck).getchgerType().equals("01") || chargingStation.get(feecheck).getchgerType().equals("03") || chargingStation.get(feecheck).getchgerType().equals("05") || chargingStation.get(feecheck).getchgerType().equals("06")) { feecheck++; continue; } }
+                    if(checkboxarray.get(29) == 0){ // AC3상 제외
+                        if(chargingStation.get(feecheck).getchgerType().equals("03") || chargingStation.get(feecheck).getchgerType().equals("06") || chargingStation.get(feecheck).getchgerType().equals("07")) { feecheck++; continue; } }
+                    if(checkboxarray.get(30) == 0){ // 완속 제외
+                        if(chargingStation.get(feecheck).getchgerType().equals("02")) { feecheck++; continue; } }
+                    if(checkboxarray.get(0) == 0){ if(chargingStation.get(feecheck).getId().contains("CU")){ feecheck++; continue; }} // 씨어스 CU
+                    if(checkboxarray.get(1) == 0){ if(chargingStation.get(feecheck).getId().contains("CV")){ feecheck++; continue; }} // 대영채비 CV
+                    if(checkboxarray.get(2) == 0){ if(chargingStation.get(feecheck).getId().contains("EM")){ feecheck++; continue; }} // evmost EM
+                    if(checkboxarray.get(3) == 0){ if(chargingStation.get(feecheck).getId().contains("EP")){ feecheck++; continue; }} // 이카플러그 EP
+                    if(checkboxarray.get(4) == 0){ if(chargingStation.get(feecheck).getId().contains("EV")){ feecheck++; continue; }} // 에버온 EV
+                    if(checkboxarray.get(5) == 0){ if(chargingStation.get(feecheck).getId().contains("EZ")){ feecheck++; continue; }} // 차지인 EZ
+                    if(checkboxarray.get(6) == 0){ if(chargingStation.get(feecheck).getId().contains("GN")){ feecheck++; continue; }} // 지엔텔 GN
+                    if(checkboxarray.get(7) == 0){ if(chargingStation.get(feecheck).getId().contains("GS")){ feecheck++; continue; }} // GS칼텍스 GS
+                    if(checkboxarray.get(8) == 0){ if(chargingStation.get(feecheck).getId().contains("HE")){ feecheck++; continue; }} // 한국전기차충전서비스 HE
+                    if(checkboxarray.get(9) == 0){ if(chargingStation.get(feecheck).getId().contains("HM")){ feecheck++; continue; }} // HUMAX EV HM
+                    if(checkboxarray.get(10) == 0){ if(chargingStation.get(feecheck).getId().contains("JE")){ feecheck++; continue; }} // 제주전기자동차서비스 JE
+                    if(checkboxarray.get(11) == 0){ if(chargingStation.get(feecheck).getId().contains("KE")){ feecheck++; continue; }} // 한국전기차인프라기술q KE
+                    if(checkboxarray.get(12) == 0){ if(chargingStation.get(feecheck).getId().contains("KL")){ feecheck++; continue; }} // 클린일렉스 KL
+                    if(checkboxarray.get(13) == 0){ if(chargingStation.get(feecheck).getId().contains("KP")){ feecheck++; continue; }} // 한국전력 KP
+                    if(checkboxarray.get(14) == 0){ if(chargingStation.get(feecheck).getId().contains("KT")){ feecheck++; continue; }} // KT KT
+                    if(checkboxarray.get(15) == 0){ if(chargingStation.get(feecheck).getId().contains("LH")){ feecheck++; continue; }} // LG헬로비전 LH
+                    if(checkboxarray.get(16) == 0){ if(chargingStation.get(feecheck).getId().contains("ME")){ feecheck++; continue; }} // 환경부 ME
+                    if(checkboxarray.get(17) == 0){ if(chargingStation.get(feecheck).getId().contains("MO")){ feecheck++; continue; }} // 매니지온 MO
+                    if(checkboxarray.get(18) == 0){ if(chargingStation.get(feecheck).getId().contains("PI")){ feecheck++; continue; }} // 포스코ICT PI
+                    if(checkboxarray.get(19) == 0){ if(chargingStation.get(feecheck).getId().contains("PW")){ feecheck++; continue; }} // 파워큐브 PW
+                    if(checkboxarray.get(20) == 0){ if(chargingStation.get(feecheck).getId().contains("SE")){ feecheck++; continue; }} // 서울시 SE
+                    if(checkboxarray.get(21) == 0){ if(chargingStation.get(feecheck).getId().contains("SF")){ feecheck++; continue; }} // 스타코프 SF
+                    if(checkboxarray.get(22) == 0){ if(chargingStation.get(feecheck).getId().contains("SK")){ feecheck++; continue; }} // SK에너지 SK
+                    if(checkboxarray.get(23) == 0){ if(chargingStation.get(feecheck).getId().contains("SS")){ feecheck++; continue; }} // 삼성이브이씨 SS
+                    if(checkboxarray.get(24) == 0){ if(chargingStation.get(feecheck).getId().contains("ST")){ feecheck++; continue; }} // 에스트래픽 ST
+                    if(checkboxarray.get(25) == 0){ if(chargingStation.get(feecheck).getId().contains("TD")){ feecheck++; continue; }} // 타디스테크놀로지 TD
                     Marker marker = new Marker();
                     marker.setIconPerspectiveEnabled(true); // 원근감 표시
-                    marker.setIcon(OverlayImage.fromResource(R.drawable.ic_marker));
                     marker.setPosition(markerPosition); // 마커 위치
+                    if(lastClicked != null){
+                        if (marker.getPosition().equals(lastClicked.getPosition())) {
+                            marker.setIcon(OverlayImage.fromResource(R.drawable.ic_marker_clicked));
+                            lastClicked = marker;
+                        }else
+                            marker.setIcon(OverlayImage.fromResource(R.drawable.ic_marker));
+                    }else{
+                        marker.setIcon(OverlayImage.fromResource(R.drawable.ic_marker));
+                    }
                     marker.setMap(naverMap);
                     marker.setOnClickListener(MainActivity.this::onClick);
                     activeMarkers.add(marker);
@@ -571,14 +706,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
         });
-
+        // 지도 터치 이벤트
+        naverMap.setOnMapClickListener(new NaverMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(@NonNull PointF pointF, @NonNull LatLng latLng) {
+                if(lastClicked != null){
+                    lastClicked.setIcon((OverlayImage.fromResource(R.drawable.ic_marker)));
+                    lastClicked = null;
+                    hidebs();
+                }
+            }
+        });
     }
 
     // 마커 클릭 이벤트
     public static String mkname = "NULL";
     public static String mkbusi = "NULL";
     public static float mkfee = 0;
-    Marker lastClicked = null;
     @Override
     public synchronized boolean onClick(@NonNull Overlay overlay) {
         if(overlay instanceof Marker){
@@ -595,23 +739,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     break;
                 }
             }
-//            infoWindow = new InfoWindow();
-//            Marker marker = (Marker)overlay;
-//            marker.setTag("chargingStation.get(feecheck).getFee()");
-//            infoWindow.open(marker);
-            // 마커 클릭 시 카메라 이동 - 이동 후 클릭된 마커 이미지 변경 안되는 오류
-            /*LatLng markercenter = new LatLng(station.getLat(), station.getLng());
-            CameraUpdate cameraUpdate = CameraUpdate.scrollTo(markercenter);
-            naverMap.moveCamera(cameraUpdate);*/
 
-            if (lastClicked!=null) {
+            if(lastClicked != null){
                 lastClicked.setIcon((OverlayImage.fromResource(R.drawable.ic_marker)));
-                Log.d("marker", "purple");
-            }
-            lastClicked = (Marker) overlay;
-            if (lastClicked!=null) {
+                lastClicked = (Marker) overlay;
                 ((Marker) overlay).setIcon((OverlayImage.fromResource(R.drawable.ic_marker_clicked)));
-                Log.d("marker", "pink");
+            }else{
+                ((Marker) overlay).setIcon((OverlayImage.fromResource(R.drawable.ic_marker_clicked)));
+                lastClicked = (Marker) overlay;
             }
 
             showbs(((Marker) overlay).getPosition().latitude, ((Marker) overlay).getPosition().latitude);
@@ -837,5 +972,4 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             startActivity(intent);
         }
     }
-
 }

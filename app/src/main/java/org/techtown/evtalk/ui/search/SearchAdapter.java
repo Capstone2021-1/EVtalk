@@ -1,11 +1,7 @@
 package org.techtown.evtalk.ui.search;
 
-import android.app.Application;
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.location.LocationManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.naver.maps.geometry.LatLng;
@@ -25,8 +19,6 @@ import com.naver.maps.map.CameraUpdate;
 
 import org.techtown.evtalk.MainActivity;
 import org.techtown.evtalk.R;
-import org.techtown.evtalk.ui.userinfo.CardAdapter;
-import org.techtown.evtalk.ui.userinfo.OnCardItemClickListener;
 import org.techtown.evtalk.user.SearchResult;
 
 

@@ -17,7 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EVtalk"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ChargCategoryActivity"
+        <activity android:name=".ui.restaurant.WebViewActivity"></activity>
+        <activity
+            android:name=".ChargingSettingActivity"
             android:theme="@style/Theme.AppCompat.Dialog" />
         <activity
             android:name=".ui.message.StatusmessageActivity"
@@ -40,11 +42,13 @@
         <activity android:name=".ui.userinfo.PaymentSettingActivity" />
         <activity android:name=".ui.userinfo.MembershipSettingActivity" />
         <activity android:name=".ui.userinfo.UserInfoActivity" />
+        <activity android:name=".ui.restaurant.RestaurantActivity"
+            android:theme="@style/Theme.AppCompat.Transparent.NoActionBar"/>
         <activity android:name=".gethash" />
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/Theme.EVtalk"></activity>
+            android:theme="@style/Theme.EVtalk" />
         <activity
             android:name=".ui.search.SearchResultActivity"
             android:label="검색 결과 표시"

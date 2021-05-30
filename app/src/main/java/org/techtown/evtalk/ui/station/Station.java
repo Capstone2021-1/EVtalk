@@ -28,8 +28,6 @@ public class Station {
     /*충전기 정보 삭제 여부 (최근 삭제된 충전기 정보 제공)*/
     private String delDetail = "NULL"; // 충전기 정보 삭제 사유
 
-    private int a1 = 0;
-    private int temp1 = 0;
     private String Seoul = "11"; // 행정구역코드 앞 2자리_서울
 
 

@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_sheet_background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <LinearLayout
+        android:id="@+id/sheetContentLayout"
+        android:layout_width="300dp"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:elevation="4dp"
+        android:orientation="vertical"
+        >
+
+        <FrameLayout
+            android:id="@+id/sheetTitleLayout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/maincolor">
+
+            <TextView
+                android:id="@+id/sheetTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="EVTALK"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:layout_marginTop="20dp">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="1dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/text4"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginLeft="5dp"
+                            android:layout_weight="1"
+                            android:text="충전 타입"
+                            android:textColor="#6E6A6A" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="1dp"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/chbox41"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:buttonTint="#000000"
+                            android:text="DC콤보"
+                            android:textColor="#000000" />
+
+                        <CheckBox
+                            android:id="@+id/chbox42"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:buttonTint="#000000"
+                            android:text="DC차데모"
+                            android:textColor="#000000" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="1dp"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/chbox43"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:buttonTint="#000000"
+                            android:text="AC3상"
+                            android:textColor="#000000" />
+
+                        <CheckBox
+                            android:id="@+id/chbox44"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:buttonTint="#000000"
+                            android:text="완속"
+                            android:textColor="#000000" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="1dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/text5"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginLeft="5dp"
+                            android:layout_weight="1"
+                            android:text="충전소"
+                            android:textColor="#6E6A6A" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="1dp"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/chbox30"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:buttonTint="#000000"
+                            android:text="출입제한 제외"
+                            android:textColor="#000000" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="1dp"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/chbox1"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:buttonTint="#000000"
+                            android:text="씨어스"
+                            android:textColor="#000000" />
+
+                        <CheckBox
+                            android:id="@+id/chbox2"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:buttonTint="#000000"
+                            android:text="대영채비"
+                            android:textColor="#000000" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="1dp"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/chbox3"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:textColor="#000000"
+                            android:buttonTint="#000000"
+                            android:text="evmost" />
+
+                        <CheckBox
+                            android:id="@+id/chbox4"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:textColor="#000000"
+                            android:buttonTint="#000000"
+                            android:text="이카플러그" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="1dp"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/chbox5"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:buttonTint="#000000"
+                            android:text="에버온"
+                            android:textColor="#000000" />
+
+                        <CheckBox
+                            android:id="@+id/chbox6"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:buttonTint="#000000"
+                            android:text="차지인"
+                            android:textColor="#000000" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="1dp"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/chbox7"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:textColor="#000000"
+                            android:buttonTint="#000000"
+                            android:text="지엔텔" />
+
+                        <CheckBox
+                            android:id="@+id/chbox8"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:textColor="#000000"
+                            android:buttonTint="#000000"
+                            android:text="GS칼텍스" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="1dp"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/chbox9"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:textColor="#000000"
+                            android:buttonTint="#000000"
+                            android:text="한국전기차충전서비스" />
+
+                        <CheckBox
+                            android:id="@+id/chbox10"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:textColor="#000000"
+                            android:buttonTint="#000000"
+                            android:text="HUMAX EV" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="1dp"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/chbox11"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:textColor="#000000"
+                            android:buttonTint="#000000"
+                            android:text="제주전기자동차서비스" />
+
+                        <CheckBox
+                            android:id="@+id/chbox12"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:textColor="#000000"
+                            android:buttonTint="#000000"
+                            android:text="한국전기차인프라기술" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="1dp"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/chbox13"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:textColor="#000000"
+                            android:buttonTint="#000000"
+                            android:text="클린일렉스" />
+
+                        <CheckBox
+                            android:id="@+id/chbox14"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:textColor="#000000"
+                            android:buttonTint="#000000"
+                            android:text="한국전력" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="1dp"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/chbox15"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:textColor="#000000"
+                            android:buttonTint="#000000"
+                            android:text="KT" />
+
+                        <CheckBox
+                            android:id="@+id/chbox16"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:textColor="#000000"
+                            android:buttonTint="#000000"
+                            android:text="LG헬로비전" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="1dp"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/chbox17"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:textColor="#000000"
+                            android:buttonTint="#000000"
+                            android:text="환경부" />
+
+                        <CheckBox
+                            android:id="@+id/chbox18"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:textColor="#000000"
+                            android:buttonTint="#000000"
+                            android:text="매니지온" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="1dp"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/chbox19"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:textColor="#000000"
+                            android:buttonTint="#000000"
+                            android:text="포스코ICT" />
+
+                        <CheckBox
+                            android:id="@+id/chbox20"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:textColor="#000000"
+                            android:buttonTint="#000000"
+                            android:text="파워큐브" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="1dp"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/chbox21"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:textColor="#000000"
+                            android:buttonTint="#000000"
+                            android:text="서울시" />
+
+                        <CheckBox
+                            android:id="@+id/chbox22"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:textColor="#000000"
+                            android:buttonTint="#000000"
+                            android:text="스타코프" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="1dp"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/chbox23"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:textColor="#000000"
+                            android:buttonTint="#000000"
+                            android:text="SK에너지" />
+
+                        <CheckBox
+                            android:id="@+id/chbox24"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:textColor="#000000"
+                            android:buttonTint="#000000"
+                            android:text="삼성이브이씨" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="1dp"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/chbox25"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:textColor="#000000"
+                            android:buttonTint="#000000"
+                            android:text="에스트래픽" />
+
+                        <CheckBox
+                            android:id="@+id/chbox26"
+                            android:layout_width="150dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:textColor="#000000"
+                            android:buttonTint="#000000"
+                            android:text="타디스테크놀로지" />
+
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+
+            <TextView
+                android:id="@+id/okbttn"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="right|center_vertical"
+                android:background="?android:attr/selectableItemBackground"
+                android:gravity="center"
+                android:paddingLeft="20dp"
+                android:paddingRight="25dp"
+                android:text="@android:string/ok"
+                android:textAllCaps="true"
+                android:textColor="@color/maincolor"
+                android:textStyle="bold" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+</FrameLayout>
+

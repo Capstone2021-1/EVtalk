@@ -83,7 +83,7 @@ public class TimeActivity extends AppCompatActivity {
             }
         });
         // OK Button
-        TextView buttonOK = (TextView) findViewById(R.id.okbtn);
+        TextView buttonOK = (TextView) findViewById(R.id.okbttn);
         buttonOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

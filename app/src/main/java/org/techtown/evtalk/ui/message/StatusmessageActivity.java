@@ -22,6 +22,7 @@ public class StatusmessageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_statusmessage);
+
         Intent intent = getIntent();
 //        String receiveStr = intent.getExtras().getString("inputcarnumber"); // 전달된 차량 번호
         TextView textView = findViewById(R.id.text3);
@@ -52,7 +53,7 @@ public class StatusmessageActivity extends AppCompatActivity {
         });
 
         // 확인 버튼 클릭 시 이벤트
-        TextView textView2 = findViewById(R.id.okbtn);
+        TextView textView2 = findViewById(R.id.okbttn);
         textView2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
