@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -57,8 +58,52 @@ public class TimeActivity extends AppCompatActivity {
         endText = (TextView) findViewById(R.id.endText);
         totalText = (TextView) findViewById(R.id.totalText);
 
-        this.simpleDateFormat = new SimpleDateFormat("M월 d일 EEE HH:mm", Locale.getDefault());
+        CheckBox cv1 = findViewById(R.id.cvbox1);
+        CheckBox cv2 = findViewById(R.id.cvbox2);
+        CheckBox cv3 = findViewById(R.id.cvbox3);
 
+        if(MainActivity.checkboxvelocityarray.get(0) == 0) cv1.setChecked(false); else cv1.setChecked(true);
+        if(MainActivity.checkboxvelocityarray.get(1) == 0) cv2.setChecked(false); else cv2.setChecked(true);
+        if(MainActivity.checkboxvelocityarray.get(2) == 0) cv3.setChecked(false); else cv3.setChecked(true);
+
+        cv1.setOnClickListener(new View.OnClickListener() { // 7KWh 클릭 시
+            @Override
+            public void onClick(View v) {
+                if(cv1.isChecked()) {
+                    MainActivity.checkboxvelocityarray.set(0, 1); // 7KWh 값 1
+                    MainActivity.checkboxvelocityarray.set(1, 0); // 50KWh 값 0
+                    MainActivity.checkboxvelocityarray.set(2, 0); // 100KWh 값 0
+                    cv2.setChecked(false); // 체크 해제
+                    cv3.setChecked(false); // 체크 해제
+                }
+            }
+        });
+        cv2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(cv2.isChecked()){
+                    MainActivity.checkboxvelocityarray.set(0, 0); // 7KWh 값 0
+                    MainActivity.checkboxvelocityarray.set(1, 1); // 50KWh 값 1
+                    MainActivity.checkboxvelocityarray.set(2, 0); // 100KWh 값 0
+                    cv1.setChecked(false); // 체크 해제
+                    cv3.setChecked(false); // 체크 해제
+                }
+            }
+        });
+        cv3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(cv3.isChecked()) {
+                    MainActivity.checkboxvelocityarray.set(0, 0); // 7KWh 값 0
+                    MainActivity.checkboxvelocityarray.set(1, 0); // 50KWh 값 0
+                    MainActivity.checkboxvelocityarray.set(2, 1); // 100KWh 값 1
+                    cv1.setChecked(false); // 체크 해제
+                    cv2.setChecked(false); // 체크 해제
+                }
+            }
+        });
+
+        this.simpleDateFormat = new SimpleDateFormat("M월 d일 EEE HH:mm", Locale.getDefault());
 
         // 초기에 시간이 설정이 안되어 있다면
         if(start_time.equals("")) {
@@ -87,19 +132,19 @@ public class TimeActivity extends AppCompatActivity {
         buttonOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    if(sDate != null && eDate != null) {
-                        EstimatedFee ef = new EstimatedFee();
-                        ef.execute();
-                    }
-                    else {
-                        // MainActivity로 전달
-                        Intent intent = new Intent();
-                        intent.putExtra("start_time", start_time);  // 선택된 값 Intent로 전달
-                        intent.putExtra("end_time", end_time);  // 선택된 값 Intent로 전달
-                        intent.putExtra("total_time", total_time);  // 선택된 값 Intent로 전달
+                if(sDate != null && eDate != null) {
+                    EstimatedFee ef = new EstimatedFee();
+                    ef.execute();
+                }
+                else {
+                    // MainActivity로 전달
+                    Intent intent = new Intent();
+                    intent.putExtra("start_time", start_time);  // 선택된 값 Intent로 전달
+                    intent.putExtra("end_time", end_time);  // 선택된 값 Intent로 전달
+                    intent.putExtra("total_time", total_time);  // 선택된 값 Intent로 전달
 
-                        setResult(TIMERESULTCODE, intent);
-                    }
+                    setResult(TIMERESULTCODE, intent);
+                }
                 finish();
             }
         });
@@ -166,8 +211,6 @@ public class TimeActivity extends AppCompatActivity {
                         total_time = Long.toString(result)+"시간" + Long.toString(result_min)+"분";
 
                         totalText.setText(total_time);
-
-
                     }
                 });
         doubleBuilder.display();

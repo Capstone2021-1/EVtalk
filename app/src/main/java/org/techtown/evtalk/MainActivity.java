@@ -139,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
     public static CameraUpdate getCameraUpdate(){ return cameraUpdate;}
     public static ArrayList<Integer> checkboxarray = new ArrayList<>(); // 차량 회사 설정 배열
+    public static ArrayList<Integer> checkboxvelocityarray = new ArrayList<>(); // 차량 회사 설정 배열
 
     Marker lastClicked = null;
     Bitmap bmImg;
@@ -181,13 +182,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-//        AppBarConfiguration appBarConfiguration =
-//                new AppBarConfiguration.Builder(navController.getGraph()).build();
-//        toolbar = findViewById(R.id.toolbar);
-//        NavigationUI.setupWithNavController(
-//                toolbar, navController, appBarConfiguration);
 
         // 지도 객체 만들기
         FragmentManager fm = getSupportFragmentManager();
@@ -266,9 +261,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             }
         });
-
-
-
 
         // 바텀 시트 취소 버튼 동작
         Button btn_cancel = (Button) findViewById(R.id.btn_cancel);
@@ -611,6 +603,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         LatLng initialPosition = new LatLng(37.506855, 127.066242);
         cameraUpdate = CameraUpdate.scrollTo(initialPosition);
         naverMap.moveCamera(cameraUpdate);
+
+        for(int i=0 ;i<3;i++) { // 충전소 카테고리 설정 배열 초기화
+            checkboxvelocityarray.add(i,0); // 초기 50KWh, 100KWh 는 체크 안된 상태
+            if(i == 0) checkboxvelocityarray.add(i,1); // 초기 완속 7KWh 체크된 상태태
+        }
 
         for(int i=0 ;i<31;i++) { // 충전소 카테고리 설정 배열 초기화
             checkboxarray.add(i,1); // 초기 모두 체크 된 상태로 1 저장  // checked = 1 , unchecked = 0
