@@ -133,9 +133,9 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
             Log.d("report", Double.toString(dist));
 
             // 고속 충전기, 사용중, 2시간 이상, 현재 그 충전소에 있을 경우(50m이내) 신고 버튼 활성화
-            if(!item.getChgerType().equals("02") && (item.getStat().equals("3"))
+            if(item.getStatUpdDt()!=null && !item.getChgerType().equals("02") && (item.getStat().equals("3"))
                     && timePass>=20000 && dist<=0.05){
-                imageView6.setImageResource(R.drawable.ic_st_wait);
+                imageView6.setImageResource(R.drawable.ic_st_ill_red);
                 imageView6.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
