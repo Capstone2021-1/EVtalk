@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "194951230474",
+    "project_id": "evtalk-67e89",
+    "storage_bucket": "evtalk-67e89.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:194951230474:android:4901061dd906152f25dbf3",
+        "android_client_info": {
+          "package_name": "org.techtown.evtalk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "194951230474-rth8h726k86rkjurlcder698sgn6ik3b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.techtown.evtalk",
+            "certificate_hash": "cceb5c59e5cc2cca4ea2711e7d2426524b630c65"
+          }
+        },
+        {
+          "client_id": "194951230474-nr9jsei54f2hm9k0sv5mqkhb1iju2v3j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4bmbfjDUOy1oZB0uC3z0o6464psocrX0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "194951230474-nr9jsei54f2hm9k0sv5mqkhb1iju2v3j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
 }
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 30
@@ -57,6 +58,8 @@ dependencies {
         exclude group: 'org.json', module: 'json'
     }
     implementation 'com.google.code.gson:gson:2.8.6'    //채팅에 필요함
+    implementation platform('com.google.firebase:firebase-bom:28.0.1')
+    implementation 'com.google.firebase:firebase-analytics'
     implementation "androidx.cardview:cardview:1.0.0"
     // 원형 프로필 위함
     implementation 'de.hdodenhof:circleimageview:3.1.0'  // 원형 프로필 위함

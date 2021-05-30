@@ -12,6 +12,13 @@ public class RoomData {
         this.roomNumber = roomNumber;
     }
 
+    public RoomData(String username1, String username2, String roomNumber, String content) {
+        this.username1 = username1;
+        this.username2 = username2;
+        this.roomNumber = roomNumber;
+        this.content = content;
+    }
+
     public String getUsername1() {
         return username1;
     }
