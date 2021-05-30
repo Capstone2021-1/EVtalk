@@ -224,12 +224,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View view) {
                 Intent intent1 = new Intent(getApplicationContext(), ChargingSettingActivity.class);
                 startActivity(intent1);
-
-
-                /*// 새로고침 기능 혹시 나중에 쓰일까....
-                overridePendingTransition(0, 0);
-                recreate();
-                overridePendingTransition(0, 0);*/
             }
         });
 

@@ -51,7 +51,7 @@ public class ParkingAdapter extends RecyclerView.Adapter<ParkingAdapter.ViewHold
         }
 
         public void setItem(Station item) {
-            textView1.setText("충전기속도 "+item.getChgerId());
+            textView1.setText(item.getChgerId() + " 충전기속도 ");
             if(item.getPowerType().equals("NULL")) { // powertype 값이 없는경우 완속인지 급속인지만 구분
                 if (item.getChgerType().equals("02"))
                     textView2.setText("정보없음 | 완속 (평균 7KWh)");
