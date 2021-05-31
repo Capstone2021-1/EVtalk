@@ -97,6 +97,7 @@ public class ChatListActivity extends AppCompatActivity {
                 intent.putExtra("roomNumber", roomNumber);
                 intent.putExtra("username1", username1);
                 intent.putExtra("username2", username2);
+                finish();
                 startActivity(intent);
             }
         });

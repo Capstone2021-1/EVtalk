@@ -20,7 +20,6 @@ import org.techtown.evtalk.databinding.ActivityChatBinding;
 
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 import io.socket.client.IO;
@@ -135,9 +134,13 @@ public class ChatActivity extends AppCompatActivity {
 
     @Override // 뒤로가기 버튼 동작 구현
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Intent intent = new Intent(ChatActivity.this, ChatListActivity.class);
+        intent.putExtra("user_id", MainActivity.user.getId());
+        intent.putExtra("car_number", MainActivity.user.getCar_number());
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
+                startActivity(intent);
                 return true;
         }
         return super.onOptionsItemSelected(item);
