@@ -1,6 +1,8 @@
 package org.techtown.evtalk.ui.station;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -56,7 +58,6 @@ public class StationPageActivity extends AppCompatActivity {
         doparsing parsingstart = new doparsing();
         parsingstart.execute(); // 파싱..
 
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         textView = (TextView) findViewById(R.id.toolbar_title);
@@ -89,13 +90,9 @@ public class StationPageActivity extends AppCompatActivity {
             public void onClick(View v) {
                 GetReviews gr = new GetReviews();
                 gr.execute();
-                //FragmentView(Fragment_3);
             }
         });
         FragmentView(Fragment_1); // 초기 프래그먼트
-
-
-
 
         button =  findViewById(R.id.set_button);
         button.setOnClickListener(new View.OnClickListener() {
@@ -103,11 +100,8 @@ public class StationPageActivity extends AppCompatActivity {
             public void onClick(View view) {
                 GetDestination gd = new GetDestination();   //같은 목적지를 향하고 있는 사용자가 있는 지 확인
                 gd.execute();
-//                Intent intent = new Intent(StationPageActivity.this, DestinationActivity.class);
-//                startActivity(intent);
             }
         });
-
     }
 
     @Override // 뒤로가기 버튼 동작 구현
@@ -150,7 +144,16 @@ public class StationPageActivity extends AppCompatActivity {
 
     //    public static int right = 0;
     public class doparsing extends AsyncTask<String, Void, String> {
+        LoadingDialog customdialog = new LoadingDialog(StationPageActivity.this);
         int right = 0;
+        @Override
+        protected void onPreExecute() {
+            customdialog.setCancelable(false);
+            customdialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            customdialog.show();
+            super.onPreExecute();
+        }
+
         @Override
         protected synchronized String doInBackground(String... strings) {
             Log.i("파싱시작합니다.", "파싱파싱");
@@ -248,7 +251,6 @@ public class StationPageActivity extends AppCompatActivity {
             } catch (Exception e) {
                 Log.i("파싱실패ㅠ", "파싱실패요~");
             }
-
             StationFragment1.parsingcount = right;
             return null;
         }
@@ -270,9 +272,8 @@ public class StationPageActivity extends AppCompatActivity {
 
             button = findViewById(R.id.fragch_1);
             button.performClick();
-
+            customdialog.dismiss(); // 로딩중 다이얼로그 해제
         }
-
     }
 
     //같은 목적지를 향하는 사용자가 있는지 확인

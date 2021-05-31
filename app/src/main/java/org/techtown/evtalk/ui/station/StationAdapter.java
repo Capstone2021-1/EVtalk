@@ -72,10 +72,17 @@ public class StationAdapter extends RecyclerView.Adapter<StationAdapter.ViewHold
         }
 
         public void setItem(Station item) {
-            if (item.getStat().equals("2")) // 충전 대기 상태
-                imageview1.setImageResource(R.drawable.ic_st_wait);
+            // 기본 상태 = 대기중 2
+            if (item.getStat().equals("1")) // 통신이상
+                imageview1.setImageResource(R.drawable.ic_st_stat_1);
             else if (item.getStat().equals("3")) // 충전중
-                imageview1.setImageResource(R.drawable.ic_st_using);
+                imageview1.setImageResource(R.drawable.ic_st_stat_3);
+            else if (item.getStat().equals("4")) // 운영중지
+                imageview1.setImageResource(R.drawable.ic_st_stat_4);
+            else if (item.getStat().equals("5")) // 점검중
+                imageview1.setImageResource(R.drawable.ic_st_stat_5);
+            else if (item.getStat().equals("9")) // 상태미확인
+                imageview1.setImageResource(R.drawable.ic_st_stat_9);
 
             textView1.setText("정보없음"); // 마지막 변경 시간 NULL값 처리
 
