@@ -17,7 +17,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EVtalk"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.restaurant.WebViewActivity"></activity>
+        <activity android:name=".ui.station.LoadingDialog"></activity>
+        <activity android:name=".ui.restaurant.WebViewActivity" />
         <activity
             android:name=".ChargingSettingActivity"
             android:theme="@style/Theme.AppCompat.Dialog" />
@@ -42,8 +43,9 @@
         <activity android:name=".ui.userinfo.PaymentSettingActivity" />
         <activity android:name=".ui.userinfo.MembershipSettingActivity" />
         <activity android:name=".ui.userinfo.UserInfoActivity" />
-        <activity android:name=".ui.restaurant.RestaurantActivity"
-            android:theme="@style/Theme.AppCompat.Transparent.NoActionBar"/>
+        <activity
+            android:name=".ui.restaurant.RestaurantActivity"
+            android:theme="@style/Theme.AppCompat.Transparent.NoActionBar" />
         <activity android:name=".gethash" />
         <activity
             android:name=".MainActivity"
@@ -87,8 +89,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.message.ChatActivity"/>
-        <activity android:name=".ui.message.ChatListActivity"/>
+        <activity android:name=".ui.message.ChatActivity" />
+        <activity android:name=".ui.message.ChatListActivity" />
     </application>
 
 </manifest>
