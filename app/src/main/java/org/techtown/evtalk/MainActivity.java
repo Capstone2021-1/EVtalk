@@ -863,6 +863,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 else
                     user.setMessage("");
 
+                Response<User> rResponse = retrofit.server.getUserReview(MainActivity.user.getId()).execute();
+                user.setTotal_review(rResponse.body().getTotal_review());
+
                 Response<Car> carResponse = retrofit.server.getCarInfo(user.getId()).execute();
                 car = carResponse.body();
 

@@ -46,11 +46,24 @@
                         android:id="@+id/review_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_toEndOf="@+id/review_name"
+                        android:layout_toRightOf="@+id/review_name"
                         android:text="2021년 5월 9일"
                         android:textColor="@color/maincolor"
-                        android:textSize="16sp" />
+                        android:textSize="15sp" />
+
+                    <Button
+                        android:id="@+id/review_delete"
+                        android:layout_width="40dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentRight="true"
+                        android:background="#00FFFFFF"
+                        android:enabled="false"
+                        android:text="X"
+                        android:textColor="#F87B7B"
+                        android:textSize="10dp"
+                        android:visibility="invisible" />
 
                 </RelativeLayout>
 

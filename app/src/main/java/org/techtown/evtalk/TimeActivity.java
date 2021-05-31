@@ -44,6 +44,7 @@ public class TimeActivity extends AppCompatActivity {
     public static String total_time="";
     public static Date sDate;   //시작 시간 Date 타입
     public static Date eDate;   //종료 시간 Date 타입
+    public static int kwh = 7;
 
     public static final int TIMERESULTCODE = 1001;
 
@@ -75,6 +76,7 @@ public class TimeActivity extends AppCompatActivity {
                     MainActivity.checkboxvelocityarray.set(2, 0); // 100KWh 값 0
                     cv2.setChecked(false); // 체크 해제
                     cv3.setChecked(false); // 체크 해제
+                    kwh = 7;
                 }
             }
         });
@@ -87,6 +89,7 @@ public class TimeActivity extends AppCompatActivity {
                     MainActivity.checkboxvelocityarray.set(2, 0); // 100KWh 값 0
                     cv1.setChecked(false); // 체크 해제
                     cv3.setChecked(false); // 체크 해제
+                    kwh = 50;
                 }
             }
         });
@@ -99,6 +102,7 @@ public class TimeActivity extends AppCompatActivity {
                     MainActivity.checkboxvelocityarray.set(2, 1); // 100KWh 값 1
                     cv1.setChecked(false); // 체크 해제
                     cv2.setChecked(false); // 체크 해제
+                    kwh = 100;
                 }
             }
         });
@@ -222,7 +226,7 @@ public class TimeActivity extends AppCompatActivity {
             //설정 된 충전 시간 서버로 보내기
             //MainActivity의 estimated_fee에 저장됨.
             RetrofitConnection retrofit = new RetrofitConnection();
-            retrofit.server.getEstimatedFee(MainActivity.user.getId(), sDate, eDate, 7).enqueue(new Callback<List<Fee>>() {
+            retrofit.server.getEstimatedFee(MainActivity.user.getId(), sDate, eDate, kwh).enqueue(new Callback<List<Fee>>() {
                 @Override
                 public void onResponse(Call<List<Fee>> call, Response<List<Fee>> response) {
                     List<Fee> temp = response.body();

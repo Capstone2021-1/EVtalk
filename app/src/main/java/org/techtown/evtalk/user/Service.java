@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
@@ -87,5 +88,11 @@ public interface Service {
 
     @POST("/user/saveToken")
     Call<Void> setUserToken(@Query("id") long id, @Query("token") String token);
+
+    @DELETE("/user/deleteReview")
+    Call<Void> deleteReview(@Query("id") long id, @Query("stat_id") String stat_id, @Query("review") String review);
+
+    @GET("/user/getReview")
+    Call<User> getUserReview(@Query("id") long id);
 
 }

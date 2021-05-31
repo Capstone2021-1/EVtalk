@@ -26,6 +26,9 @@ public class User {
     @SerializedName("payment")
     private List<String> payment;
 
+    @SerializedName("total")
+    private int total_review = 0;
+
     public User(long id, String name, String profile_image) {
         this.id = id;
         this.name = name;
@@ -70,5 +73,13 @@ public class User {
 
     public List<String> getPayment() {
         return payment;
+    }
+
+    public int getTotal_review() {
+        return total_review;
+    }
+
+    public void setTotal_review(int total_review) {
+        this.total_review = total_review;
     }
 }

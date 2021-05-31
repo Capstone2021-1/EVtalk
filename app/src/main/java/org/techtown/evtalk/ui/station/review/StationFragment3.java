@@ -11,14 +11,21 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.techtown.evtalk.R;
 import org.techtown.evtalk.ui.station.StationPageActivity;
+import org.techtown.evtalk.user.RetrofitConnection;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class StationFragment3 extends Fragment {
 
@@ -51,6 +58,25 @@ public class StationFragment3 extends Fragment {
         }
         recyclerView.setAdapter(adapter);
 
+        adapter.setOnItemClickListener(new OnReviewClickListener() {
+            @Override
+            public void onItemClick(ReviewAdapter.ViewHolder holder, View view, int position) {
+                Review item = adapter.items.get(position);
+                RetrofitConnection retrofit = new RetrofitConnection();
+                retrofit.server.deleteReview(item.getUser_id(), item.getStat_id(), item.getReview()).enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                    }
+                });
+                adapter.items.remove(position);
+                adapter.notifyItemRemoved(position);
+            }
+        });
+
         review_count = (TextView) view.findViewById(R.id.review_count);
         review_count.setText(Integer.toString(reviews.size()));
 
@@ -65,4 +91,6 @@ public class StationFragment3 extends Fragment {
         });
 
     }
+
+
 }

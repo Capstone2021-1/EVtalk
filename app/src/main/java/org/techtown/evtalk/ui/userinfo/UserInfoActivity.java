@@ -118,6 +118,11 @@ public class UserInfoActivity extends AppCompatActivity {
             name_txt.setText(MainActivity.user.getName());
         }
 
+        //작성 리뷰 수 설정
+        TextView review = (TextView) findViewById(R.id.totalReview);
+        if(MainActivity.user.getTotal_review() != 0)
+            review.setText(Integer.toString(MainActivity.user.getTotal_review()));
+
         // 상태 메시지 수정하기 버튼
         Button status_edit = (Button) findViewById(R.id.btn_status_edit);
         EditText status_txt = (EditText) findViewById(R.id.status_txt);
