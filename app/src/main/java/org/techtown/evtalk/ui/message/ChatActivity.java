@@ -114,7 +114,8 @@ public class ChatActivity extends AppCompatActivity {
                 username1,
                 roomNumber,
                 binding.contentEdit.getText().toString(),
-                System.currentTimeMillis())));
+                System.currentTimeMillis(),
+                MainActivity.user.getId())));
         binding.contentEdit.setText("");
     }
 

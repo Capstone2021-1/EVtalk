@@ -6,13 +6,15 @@ public class MessageData {
     private String to;      //메세지를 보낼 방 (roomNumber)
     private String content; //메세지의 내용
     private long sendTime;  //메세지를 보낸 시간
+    private long sendUserId;    //메시지를 보낸 유저의 아디이
 
-    public MessageData(String type, String from, String to, String content, long sendTime) {
+    public MessageData(String type, String from, String to, String content, long sendTime, long sendUserId) {
         this.type = type;
         this.from = from;
         this.to = to;
         this.content = content;
         this.sendTime = sendTime;
+        this.sendUserId = sendUserId;
     }
 
     public String getType() { return type; }

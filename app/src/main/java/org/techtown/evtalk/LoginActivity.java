@@ -22,10 +22,7 @@ import com.kakao.usermgmt.response.model.UserAccount;
 import com.kakao.util.OptionalBoolean;
 import com.kakao.util.exception.KakaoException;
 
-import org.techtown.evtalk.user.Car;
-import org.techtown.evtalk.user.Card;
 import org.techtown.evtalk.user.ChargingStation;
-import org.techtown.evtalk.user.Fee;
 import org.techtown.evtalk.user.RetrofitConnection;
 import org.techtown.evtalk.user.User;
 

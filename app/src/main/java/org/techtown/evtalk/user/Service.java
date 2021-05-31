@@ -85,4 +85,7 @@ public interface Service {
     @GET("/search/person")
     Call<User> getPerson(@Query("car_number") String car_number);
 
+    @POST("/user/saveToken")
+    Call<Void> setUserToken(@Query("id") long id, @Query("token") String token);
+
 }
