@@ -3,13 +3,19 @@ package org.techtown.evtalk.ui.message;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.gson.Gson;
 
 import org.techtown.evtalk.MainActivity;
+import org.techtown.evtalk.R;
 import org.techtown.evtalk.databinding.ActivityChatBinding;
 
 import java.net.URISyntaxException;
@@ -23,6 +29,7 @@ import io.socket.client.Socket;
 public class ChatActivity extends AppCompatActivity {
     private ActivityChatBinding binding;
 
+    private TextView textView;
     private Socket mSocket;
     private String username1;   //MainActivity 사용자
     private String username2;   //상대방
@@ -38,6 +45,20 @@ public class ChatActivity extends AppCompatActivity {
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        Intent intent = getIntent();
+        username1 = intent.getStringExtra("username1");
+        username2 = intent.getStringExtra("username2");
+        roomNumber = intent.getStringExtra("roomNumber");
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        textView = (TextView) findViewById(R.id.toolbar_title);
+        ActionBar ac = getSupportActionBar();
+        ac.setDisplayShowCustomEnabled(true);
+        ac.setDisplayShowTitleEnabled(false);
+        ac.setDisplayHomeAsUpEnabled(true); // 뒤로가기 버튼
+        textView.setText(username2); // 타이틀 수정
+
         init();
     }
 
@@ -48,11 +69,6 @@ public class ChatActivity extends AppCompatActivity {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-
-        Intent intent = getIntent();
-        username1 = intent.getStringExtra("username1");
-        username2 = intent.getStringExtra("username2");
-        roomNumber = intent.getStringExtra("roomNumber");
 
         adapter = new ChatAdapter(getApplicationContext());
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
@@ -82,7 +98,7 @@ public class ChatActivity extends AppCompatActivity {
                 adapter.addItem(new ChatItem(data.getFrom(), data.getContent(), toDate(data.getSendTime()), ChatType.CENTER_MESSAGE));
                 binding.recyclerView.scrollToPosition(adapter.getItemCount() - 1);
             } else if (data.getType().equals("MESSAGE")) {
-                if(data.getFrom().equals(MainActivity.user.getName())) {
+                if(data.getFrom().equals(username1) || data.getFrom().equals(MainActivity.user.getName())) {    //DB에 메시지 내용 지우면 수정 필요
                     adapter.addItem(new ChatItem(data.getFrom(), data.getContent(), toDate(data.getSendTime()), ChatType.RIGHT_MESSAGE));
                     binding.recyclerView.scrollToPosition(adapter.getItemCount() - 1);
                 } else {
@@ -114,5 +130,15 @@ public class ChatActivity extends AppCompatActivity {
         mSocket.emit("left", gson.toJson(new RoomData(username1, username2, roomNumber)));
         mSocket.disconnect();
         lastSendTime = 0;
+    }
+
+    @Override // 뒤로가기 버튼 동작 구현
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

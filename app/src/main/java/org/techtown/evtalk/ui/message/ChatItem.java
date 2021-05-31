@@ -5,12 +5,21 @@ public class ChatItem {
     private String content;
     private String sendTime;
     private int viewType;    // 0일 시 왼쪽(상대가 보낸 메세지), 1일 시 중앙(~가 입장하셨습니다), 2일 시 오른쪽(내가 보낸 메세지)
+    private String roomNumber;
 
     public ChatItem(String name, String content, String sendTime, int viewType) {
         this.name = name;
         this.content = content;
         this.sendTime = sendTime;
         this.viewType = viewType;
+    }
+
+    public ChatItem(String name, String content, String sendTime, int viewType, String roomNumber) {
+        this.name = name;
+        this.content = content;
+        this.sendTime = sendTime;
+        this.viewType = viewType;
+        this.roomNumber = roomNumber;
     }
 
     public String getName() { return name; }
@@ -28,4 +37,12 @@ public class ChatItem {
     public int getViewType() { return viewType; }
 
     public void setViewType(int viewType) { this.viewType = viewType; }
+
+    public String getRoomNumber() {
+        return roomNumber;
+    }
+
+    public void setRoomNumber(String roomNumber) {
+        this.roomNumber = roomNumber;
+    }
 }
