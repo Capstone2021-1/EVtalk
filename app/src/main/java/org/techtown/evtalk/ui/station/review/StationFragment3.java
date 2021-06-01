@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.techtown.evtalk.MainActivity;
 import org.techtown.evtalk.R;
 import org.techtown.evtalk.ui.station.StationPageActivity;
 import org.techtown.evtalk.user.RetrofitConnection;
@@ -74,6 +75,7 @@ public class StationFragment3 extends Fragment {
                 });
                 adapter.items.remove(position);
                 adapter.notifyItemRemoved(position);
+                MainActivity.user.setTotal_review(MainActivity.user.getTotal_review() - 1);
             }
         });
 

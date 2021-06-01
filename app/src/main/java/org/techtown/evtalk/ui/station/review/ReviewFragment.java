@@ -99,6 +99,7 @@ public class ReviewFragment extends Fragment {
                     Log.i("리뷰 작성 실패", "" + t.toString());
                 }
             });
+            MainActivity.user.setTotal_review(MainActivity.user.getTotal_review() + 1);
             return null;
         }
 
