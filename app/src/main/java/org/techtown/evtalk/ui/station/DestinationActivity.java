@@ -85,11 +85,15 @@ public class DestinationActivity extends AppCompatActivity {
                 Date dNow = new Date(System.currentTimeMillis());
                 retrofit.server.setDestination(StationPageActivity.station.get(StationFragment1.parsingcount).getStaId(), MainActivity.user.getId(), dist, dNow).enqueue(new Callback<Void>() {
                     @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) { // 카카오 호출 해보자
+                    public void onResponse(Call<Void> call, Response<Void> response) {
                         // 목적지 이름, 경도, 위도 담기
-                        Location destination = Location.newBuilder(StationPageActivity.station.get(StationFragment1.parsingcount).getStaNm(), StationPageActivity.station.get(StationFragment1.parsingcount).getLng(), StationPageActivity.station.get(StationFragment1.parsingcount).getLat()).build();
+                        Location destination = Location.newBuilder(StationPageActivity.station.get(StationFragment1.parsingcount).getStaNm(),
+                                StationPageActivity.station.get(StationFragment1.parsingcount).getLng(),
+                                StationPageActivity.station.get(StationFragment1.parsingcount).getLat()).build();
                         // WGS84 좌표계 / 1종 승용차,소형승합차,소형화물차 / 추천 경로 기본값으로 사용
-                        NaviOptions options = NaviOptions.newBuilder().setCoordType(CoordType.WGS84).setVehicleType(VehicleType.FIRST).setRpOption(RpOption.RECOMMENDED ).build();
+                        NaviOptions options = NaviOptions.newBuilder().setCoordType(CoordType.WGS84)
+                                .setVehicleType(VehicleType.FIRST)
+                                .setRpOption(RpOption.RECOMMENDED ).build();
                         // 객체 담기 / 경유지 없이
                         KakaoNaviParams.Builder builder = KakaoNaviParams.newBuilder(destination).setNaviOptions(options);
                         // 카카오내비 호출

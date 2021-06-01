@@ -472,6 +472,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         fab1.show();
         fab2.show();
         fab3.show();
+        if(lastClicked != null) {
+            lastClicked.setIcon((OverlayImage.fromResource(R.drawable.ic_marker)));
+            lastClicked = null;
+        }
     }
 
     // home 에서 뒤로가기 두번 클릭 시 종료
