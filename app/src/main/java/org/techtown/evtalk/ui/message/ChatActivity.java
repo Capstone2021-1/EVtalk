@@ -4,6 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -40,6 +44,7 @@ public class ChatActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         super.onCreate(savedInstanceState);
         binding = ActivityChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -59,6 +64,17 @@ public class ChatActivity extends AppCompatActivity {
         textView.setText(username2); // 타이틀 수정
 
         init();
+
+        // 키보드 올라올 때 리사이클러뷰 스크롤 내리기
+        final SoftKeyboardDectectorView softKeyboardDecector = new SoftKeyboardDectectorView(this);
+        addContentView(softKeyboardDecector, new RelativeLayout.LayoutParams(-1, -1));
+
+        softKeyboardDecector.setOnShownKeyboard(new SoftKeyboardDectectorView.OnShownKeyboardListener() {
+            @Override
+            public void onShowSoftKeyboard() { //키보드 등장할 때
+                binding.recyclerView.scrollToPosition(adapter.getItemCount() - 1);
+            }
+        });
     }
 
     private void init() {
@@ -73,6 +89,27 @@ public class ChatActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         binding.recyclerView.setLayoutManager(layoutManager);
         binding.recyclerView.setAdapter(adapter);
+
+        TextView tv = findViewById(R.id.content_edit);
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+
+        binding.recyclerView.setOnTouchListener(new View.OnTouchListener() { // 리사이클러 뷰 클릭 시 키보드 내리기
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                imm.hideSoftInputFromWindow(tv.getWindowToken(), 0);
+                return false;
+            }
+        });
+
+        binding.contentEdit.setOnClickListener(new View.OnClickListener() { // 텍스트뷰 클릭 시 키보드 올리기
+            @Override
+            public void onClick(View v) {
+                imm.showSoftInput(tv, 0);
+                binding.recyclerView.smoothScrollToPosition(adapter.getItemCount());
+                layoutManager.setStackFromEnd(true);
+                binding.recyclerView.setLayoutManager(layoutManager);
+            }
+        });
 
         // 메시지 전송 버튼
         binding.sendBtn.setOnClickListener(v -> sendMessage());
