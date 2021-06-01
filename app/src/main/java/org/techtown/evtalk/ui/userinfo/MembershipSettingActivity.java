@@ -15,7 +15,12 @@ import android.widget.Toast;
 import org.techtown.evtalk.MainActivity;
 import org.techtown.evtalk.R;
 import org.techtown.evtalk.user.Card;
+import org.techtown.evtalk.user.ChargingStation;
+import org.techtown.evtalk.user.Fee;
 import org.techtown.evtalk.user.RetrofitConnection;
+
+import java.io.IOException;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -83,6 +88,23 @@ public class MembershipSettingActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 Log.d("failure", "정보 수정 ㄴㄴ");
+            }
+        });
+
+        retrofit.server.getChargingFee(MainActivity.user.getId()).enqueue(new Callback<List<Fee>>() {
+            @Override
+            public void onResponse(Call<List<Fee>> call, Response<List<Fee>> response) {
+                for (Fee f : response.body()) {
+                    for (ChargingStation i : MainActivity.chargingStation) {
+                        if (i.getId().contains(f.getBusiId()))
+                            i.setFee(f.getFee());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Fee>> call, Throwable t) {
+
             }
         });
     }
