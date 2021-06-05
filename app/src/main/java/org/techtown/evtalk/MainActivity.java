@@ -173,6 +173,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         }
                         // Get new FCM registration token
                         String token = task.getResult();
+                        Log.d("token", token);
                         retrofit.server.setUserToken(user.getId(), token).enqueue(new Callback<Void>() {
                             @Override
                             public void onResponse(Call<Void> call, Response<Void> response) {
